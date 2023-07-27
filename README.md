@@ -13,9 +13,9 @@
 </p>
 
 
-本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目。
+本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。
 
-**本项目主要内容：**TBA
+**本项目主要内容：** TBA
 
 ![](./pics/screencast.gif)
 
@@ -42,7 +42,13 @@
 
 ## 模型简介
 
-TBA
+本项目推出了基于Llama-2的中文LLaMA-2以及Alpaca-2系列模型，相比[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)其主要特点如下：
+
+一、
+
+二、
+
+三、
 
 
 ## 模型下载
@@ -55,9 +61,19 @@ TBA
 
 以下是完整版模型，直接下载即可使用，无需其他合并步骤。推荐网络带宽充足的用户。
 
+| 模型名称            |   类型   | 训练数据 | 大小 |                    下载地址                     |
+| :------------------ | :------: | :------: | :--: | :---------------------------------------------: |
+| Chinese-LLaMA-2-7B  | 基座模型 |          |      | [百度网盘]<br/>[Google Drive]<br/>[HuggingFace] |
+| Chinese-Alpaca-2-7B | 指令模型 |          |      | [百度网盘]<br/>[Google Drive]<br/>[HuggingFace] |
+
 ### LoRA模型下载
 
-以下是LoRA模型，**无法直接使用，必须按照教程与重构模型进行合并**。推荐网络带宽不足，手头有原版Llama-2且需要轻量下载的用户。
+以下是LoRA模型，与上述完整模型一一对应。需要注意的是**LoRA模型无法直接使用**，必须按照教程与重构模型进行合并。推荐网络带宽不足，手头有原版Llama-2且需要轻量下载的用户。
+
+| 模型名称                 |   类型   | 训练数据 | 重构模型 | 大小 |                  LoRA下载地址                   |
+| :----------------------- | :------: | :------: | :------: | :--: | :---------------------------------------------: |
+| Chinese-LLaMA-2-7B-LoRA  | 基座模型 |          |          |      | [百度网盘]<br/>[Google Drive]<br/>[HuggingFace] |
+| Chinese-Alpaca-2-7B-LoRA | 指令模型 |          |          |      | [百度网盘]<br/>[Google Drive]<br/>[HuggingFace] |
 
 由于LoRA模型无法单独使用，必须与原版LLaMA-2进行合并才能转为完整模型，以便进行模型推理、量化或者进一步训练。请选择以下方法对模型进行转换合并。
 
