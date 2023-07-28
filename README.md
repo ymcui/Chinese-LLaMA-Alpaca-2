@@ -9,6 +9,11 @@ Stay tuned.
 
 -----
 
+#### 2023/7/28
+
+- 已完成Chinese-LLaMA-2-7B的基本训练，经过初步测试C-Eval效果显著优于一期Plus-7B/13B（仍需调整和确认）。目前我们已顺利进入到SFT阶段。非常感谢各位社区成员的耐心等待。
+- We have finished basic training of Chinese-LLaMA-2-7B. Through a preliminary test, we found that the new model achieves significant improvements over our Plus-7B/13B (first-gen). Now we are entering the SFT phase. We express our thanks to all our community members for your patience.
+
 #### 2023/7/26
 
 `[████████████████████████████............] 70%`
