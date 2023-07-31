@@ -9,8 +9,8 @@
 
 Pre-training and instruction finetuning code, Wiki:
 
-- Pre-training: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_zh
-- Instruction finetuning: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh
+- Pre-training: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_en
+- Instruction finetuning: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_en
 
 ### inference/
 
