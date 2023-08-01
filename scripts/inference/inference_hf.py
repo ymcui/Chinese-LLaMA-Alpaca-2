@@ -149,7 +149,7 @@ if __name__ == '__main__':
                     input_text = generate_prompt(instruction=raw_input_text)
                 else:
                     input_text = raw_input_text
-                
+
                 if args.use_vllm:
                     output = model.generate([input_text], SamplingParams(**generation_config), use_tqdm=False)
                     response = output[0].outputs[0].text
@@ -188,7 +188,7 @@ if __name__ == '__main__':
                     print(f"Output: {response}\n")
 
                     results.append({"Input":example,"Output":response})
-            
+
             else:
                 for index, example in enumerate(examples):
                     if args.with_prompt is True:

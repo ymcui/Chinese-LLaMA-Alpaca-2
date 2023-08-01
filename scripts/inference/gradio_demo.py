@@ -128,15 +128,15 @@ def setup():
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
         print("Start launch vllm server.")
-        subprocess.call(
-            f"python -m vllm.entrypoints.api_server \
-            --model={args.base_model} \
-            --tokenizer={args.tokenizer_path} \
-            --tokenizer-mode=slow \
-            --tensor-parallel-size={len(args.gpus.split(','))} \
-            &",
-            shell=True
-        )
+        cmd = [
+            f"python -m vllm.entrypoints.api_server",
+            f"--model={args.base_model}",
+            f"--tokenizer={args.tokenizer_path}",
+            "--tokenizer-mode=slow",
+            f"--tensor-parallel-size={len(args.gpus.split(','))}",
+            "&",
+        ]
+        subprocess.call(cmd)
     else:
         max_memory = args.max_memory
         port = args.port
@@ -375,7 +375,7 @@ def predict(
 
         api_url = f"http://{args.post_host}:{args.post_port}/generate"
 
-        
+
         response = post_http_request(prompt, api_url, **generate_params, stream=True)
 
         for h in get_streaming_response(response):
