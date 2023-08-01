@@ -12,6 +12,17 @@ from threading import Thread
 import traceback
 import gc
 
+DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
+
+TEMPLATE_WITH_SYSTEM_PROMPT = (
+    "[INST] <<SYS>>\n"
+    "{system_prompt}\n"
+    "<</SYS>>\n\n"
+    "{instruction} [/INST]"
+)
+
+TEMPLATE_WITHOUT_SYSTEM_PROMPT = "[INST] {instruction} [/INST]"
+
 # Parse command-line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -52,6 +63,12 @@ parser.add_argument(
     type=str,
     default="1.0",
     help="The scaling factor of NTK method, can be a float or 'auto'. ")
+parser.add_argument(
+    '--system_prompt',
+    type=str,
+    default=DEFAULT_SYSTEM_PROMPT,
+    help="The system prompt of the prompt template."
+)
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
@@ -132,20 +149,10 @@ def reset_state():
     return []
 
 
-DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
-
-TEMPLATE_WITH_SYSTEM_PROMPT = (
-    "[INST] <<SYS>>\n"
-    "{system_prompt}\n"
-    "<</SYS>>\n\n"
-    "{instruction} [/INST]"
-)
-
-TEMPLATE_WITHOUT_SYSTEM_PROMPT = "[INST] {instruction} [/INST]"
-
 def generate_prompt(instruction, response="", with_system_prompt=True):
     if with_system_prompt is True:
-        prompt = TEMPLATE_WITH_SYSTEM_PROMPT.format_map({'instruction': instruction,'system_prompt': DEFAULT_SYSTEM_PROMPT})
+        system_prompt = args.system_prompt or DEFAULT_SYSTEM_PROMPT
+        prompt = TEMPLATE_WITH_SYSTEM_PROMPT.format_map({'instruction': instruction,'system_prompt': system_prompt})
     else:
         prompt = TEMPLATE_WITHOUT_SYSTEM_PROMPT.format_map({'instruction': instruction})
     if len(response)>0:

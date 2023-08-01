@@ -1,5 +1,15 @@
 import argparse
 import json, os
+
+DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
+
+TEMPLATE = (
+    "[INST] <<SYS>>\n"
+    "{system_prompt}\n"
+    "<</SYS>>\n\n"
+    "{instruction} [/INST]"
+)
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--base_model', default=None, type=str, required=True)
 parser.add_argument('--lora_model', default=None, type=str,help="If None, perform inference on the base model")
@@ -12,7 +22,7 @@ parser.add_argument('--gpus', default="0", type=str)
 parser.add_argument('--only_cpu',action='store_true',help='only use CPU for inference')
 parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
 parser.add_argument('--load_in_8bit',action='store_true', help="Load the LLM in the 8bit mode")
-
+parser.add_argument('--system_prompt',type=str,default=DEFAULT_SYSTEM_PROMPT, help="The system prompt of the prompt template.")
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
@@ -39,19 +49,11 @@ generation_config = GenerationConfig(
     max_new_tokens=400
 )
 
-DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
-
-TEMPLATE = (
-    "[INST] <<SYS>>\n"
-    "{system_prompt}\n"
-    "<</SYS>>\n\n"
-    "{instruction} [/INST]"
-)
-
 sample_data = ["为什么要减少污染，保护环境？"]
 
 def generate_prompt(instruction):
-    return TEMPLATE.format_map({'instruction': instruction,'system_prompt': DEFAULT_SYSTEM_PROMPT})
+    system_prompt = args.system_prompt or DEFAULT_SYSTEM_PROMPT
+    return TEMPLATE.format_map({'instruction': instruction,'system_prompt': system_prompt})
 
 if __name__ == '__main__':
     load_type = torch.float16
