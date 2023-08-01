@@ -99,6 +99,7 @@ class ChineseLLaMAAlpaca2Adapter(BaseModelAdapter):
     def get_default_conv_template(self, model_path: str) -> Conversation:
         return get_conv_template("chinese-llama-alpaca-2")
 
+
 # add model adapters to head of List model_adapters
 model_adapters = [ChineseLLaMAAlpacaAdapter()] + model_adapters
 model_adapters = [ChineseLLaMAAlpaca2Adapter()] + model_adapters

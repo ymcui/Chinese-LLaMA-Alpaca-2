@@ -118,7 +118,7 @@ if __name__ == '__main__':
         if device==torch.device('cpu'):
             model.float()
         model.eval()
-    
+
     # test data
     if args.data_file is None:
         examples = sample_data
@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
                     results.append({"Input":example,"Output":response})
             
-            else:        
+            else:
                 for index, example in enumerate(examples):
                     if args.with_prompt is True:
                         input_text = generate_prompt(instruction=example)
