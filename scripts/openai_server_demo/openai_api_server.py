@@ -78,7 +78,7 @@ if device==torch.device('cpu'):
 
 model.eval()
 
-DEFAULT_SYSTEM_PROMPT = """你是一个乐于助人的助手。"""
+DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
 
 TEMPLATE_WITH_SYSTEM_PROMPT = (
     "[INST] <<SYS>>\n"
