@@ -312,6 +312,7 @@ class MyTrainingArguments(TrainingArguments):
     modules_to_save : Optional[str] = field(default=None)
     debug_mode : Optional[bool] = field(default=False)
     peft_path : Optional[str] = field(default=None)
+    flash_attn : Optional[bool] = field(default=False)
 
 
 logger = logging.getLogger(__name__)
@@ -326,6 +327,9 @@ def main():
         model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    if training_args.flash_attn:
+        from flash_attn_patch import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
 
     # Sending telemetry. Tracking the example usage helps us better allocate resources to maintain them. The
     # information sent is the one passed as arguments along with your Python/PyTorch versions.

@@ -199,6 +199,7 @@ class MyTrainingArguments(TrainingArguments):
     lora_alpha : Optional[float] = field(default=32.)
     modules_to_save : Optional[str] = field(default=None)
     peft_path : Optional[str] = field(default=None)
+    flash_attn : Optional[bool] = field(default=False)
 
 
 logger = logging.getLogger(__name__)
@@ -213,6 +214,9 @@ def main():
         model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    if training_args.flash_attn:
+        from flash_attn_patch import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
 
     send_example_telemetry("run_clm", model_args, data_args)
 
