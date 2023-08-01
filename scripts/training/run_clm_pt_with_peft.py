@@ -312,6 +312,7 @@ class MyTrainingArguments(TrainingArguments):
     modules_to_save : Optional[str] = field(default=None)
     debug_mode : Optional[bool] = field(default=False)
     peft_path : Optional[str] = field(default=None)
+    flash_attn : Optional[bool] = field(default=False)
 
 
 logger = logging.getLogger(__name__)
@@ -326,6 +327,9 @@ def main():
         model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    if training_args.flash_attn:
+        from flash_attn_patch import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
 
     # Sending telemetry. Tracking the example usage helps us better allocate resources to maintain them. The
     # information sent is the one passed as arguments along with your Python/PyTorch versions.
@@ -335,7 +339,6 @@ def main():
     logging.basicConfig(format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO,  # if training_args.local_rank in [-1, 0] else logging.WARN,
         handlers=[logging.StreamHandler(sys.stdout)],)
-
 
     if training_args.should_log:
         # The default of training_args.log_level is passive, so we set log level at info here to have that default.
@@ -508,7 +511,7 @@ def main():
             max_train_samples = min(len(train_dataset), data_args.max_train_samples)
             train_dataset = train_dataset.select(range(max_train_samples))
         logger.info(f"Num train_samples  {len(train_dataset)}")
-        logger.info("training example:")
+        logger.info("Training example:")
         logger.info(tokenizer.decode(train_dataset[0]['input_ids']))
     if training_args.do_eval:
         eval_dataset = lm_datasets["test"]
@@ -516,11 +519,8 @@ def main():
             max_eval_samples = min(len(eval_dataset), data_args.max_eval_samples)
             eval_dataset = eval_dataset.select(range(max_eval_samples))
         logger.info(f"Num eval_samples  {len(eval_dataset)}")
-        logger.info("training example:")
+        logger.info("Evaluation example:")
         logger.info(tokenizer.decode(eval_dataset[0]['input_ids']))
-
-
-
     if model_args.model_name_or_path:
         torch_dtype = (
             model_args.torch_dtype
