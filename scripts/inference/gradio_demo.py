@@ -129,14 +129,14 @@ def setup():
 
         print("Start launch vllm server.")
         cmd = [
-            f"python -m vllm.entrypoints.api_server",
+            "python -m vllm.entrypoints.api_server",
             f"--model={args.base_model}",
             f"--tokenizer={args.tokenizer_path}",
             "--tokenizer-mode=slow",
             f"--tensor-parallel-size={len(args.gpus.split(','))}",
             "&",
         ]
-        subprocess.call(cmd)
+        subprocess.check_call(cmd)
     else:
         max_memory = args.max_memory
         port = args.port
