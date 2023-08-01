@@ -340,7 +340,6 @@ def main():
         level=logging.INFO,  # if training_args.local_rank in [-1, 0] else logging.WARN,
         handlers=[logging.StreamHandler(sys.stdout)],)
 
-
     if training_args.should_log:
         # The default of training_args.log_level is passive, so we set log level at info here to have that default.
         transformers.utils.logging.set_verbosity_info()
@@ -512,7 +511,7 @@ def main():
             max_train_samples = min(len(train_dataset), data_args.max_train_samples)
             train_dataset = train_dataset.select(range(max_train_samples))
         logger.info(f"Num train_samples  {len(train_dataset)}")
-        logger.info("training example:")
+        logger.info("Training example:")
         logger.info(tokenizer.decode(train_dataset[0]['input_ids']))
     if training_args.do_eval:
         eval_dataset = lm_datasets["test"]
@@ -520,11 +519,8 @@ def main():
             max_eval_samples = min(len(eval_dataset), data_args.max_eval_samples)
             eval_dataset = eval_dataset.select(range(max_eval_samples))
         logger.info(f"Num eval_samples  {len(eval_dataset)}")
-        logger.info("training example:")
+        logger.info("Evaluation example:")
         logger.info(tokenizer.decode(eval_dataset[0]['input_ids']))
-
-
-
     if model_args.model_name_or_path:
         torch_dtype = (
             model_args.torch_dtype

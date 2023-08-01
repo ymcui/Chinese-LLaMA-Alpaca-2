@@ -315,7 +315,7 @@ def main():
                 data_cache_dir = None,
                 preprocessing_num_workers = data_args.preprocessing_num_workers)
         logger.info(f"Num train_samples  {len(train_dataset)}")
-        logger.info("training example:")
+        logger.info("Training example:")
         logger.info(tokenizer.decode(train_dataset[0]['input_ids']))
     if training_args.do_eval:
         with training_args.main_process_first(desc="loading and tokenization"):
@@ -328,7 +328,7 @@ def main():
                 data_cache_dir = None,
                 preprocessing_num_workers = data_args.preprocessing_num_workers)
         logger.info(f"Num eval_samples  {len(eval_dataset)}")
-        logger.info("eval example:")
+        logger.info("Evaluation example:")
         logger.info(tokenizer.decode(eval_dataset[0]['input_ids']))
 
     if model_args.model_name_or_path:
@@ -357,7 +357,6 @@ def main():
     logger.info(f"len(tokenizer):{len(tokenizer)}")
     if model_vocab_size != len(tokenizer):
         logger.info(f"Resize model vocab size to {len(tokenizer)}")
-        logger.info("resize the embedding size by the size of the tokenizer")
         model.resize_token_embeddings(len(tokenizer))
 
     if training_args.peft_path is not None:
