@@ -1,3 +1,4 @@
+# Below code is based on https://github.com/lm-sys/FastChat/blob/main/fastchat/train/llama_flash_attn_monkey_patch.py.
 from typing import List, Optional, Tuple
 import logging
 
@@ -8,11 +9,13 @@ import transformers
 from transformers.models.llama.modeling_llama import apply_rotary_pos_emb
 
 from einops import rearrange
-from flash_attn.flash_attn_interface import (  # pip3 install "flash-attn>=2.0"
-    flash_attn_varlen_qkvpacked_func,
-)
-from flash_attn.bert_padding import unpad_input, pad_input
-
+try:
+    from flash_attn.flash_attn_interface import flash_attn_varlen_qkvpacked_func
+    from flash_attn.bert_padding import unpad_input, pad_input
+except ImportError:
+    raise ImportError(
+        "FlashAttention-2 is not installed correctly. Please check the usage in https://github.com/Dao-AILab/flash-attention for more details."
+    )
 
 def forward(
     self,
@@ -110,13 +113,8 @@ def _prepare_decoder_attention_mask(
 
 
 def replace_llama_attn_with_flash_attn():
-    cuda_major, cuda_minor = torch.cuda.get_device_capability()
-    if cuda_major < 8:
-        logging.warning(
-            "Flash attention is only supported on A100 or H100 GPU during training due to head dim > 64 backward."
-            "ref: https://github.com/HazyResearch/flash-attention/issues/190#issuecomment-1523359593"
-        )
     transformers.models.llama.modeling_llama.LlamaModel._prepare_decoder_attention_mask = (
         _prepare_decoder_attention_mask
     )
     transformers.models.llama.modeling_llama.LlamaAttention.forward = forward
+replace_llama_attn_with_flash_attn()
