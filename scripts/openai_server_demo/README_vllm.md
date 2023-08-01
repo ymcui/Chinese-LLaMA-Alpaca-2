@@ -15,7 +15,7 @@ pip install fastapi uvicorn shortuuid vllm
 
 启动脚本
 ``` shell
-python scripts/openai_server_demo/openai_api_server_vllm.py --model /path/to/base_model --tokenizer-mode slow --served-model-name chinese-alpaca-2
+python scripts/openai_server_demo/openai_api_server_vllm.py --model /path/to/base_model --tokenizer-mode slow --served-model-name chinese-llama-alpaca-2
 ```
 
 ### 参数说明
@@ -28,7 +28,7 @@ python scripts/openai_server_demo/openai_api_server_vllm.py --model /path/to/bas
 
 `--tensor_parallel_size {tensor_parallel_size}`: 使用的GPU数量。默认为1
 
-`--served-model-name {served-model-name}`: API中使用的模型名。若使用中文Alpaca-2系列模型，模型名中务必包含`chinese-alpaca-2`
+`--served-model-name {served-model-name}`: API中使用的模型名。若使用中文Alpaca-2系列模型，模型名中务必包含`chinese-llama-alpaca-2`
 
 `--host {host_name}`: 部署服务的host name。默认值是`localhost`
 
