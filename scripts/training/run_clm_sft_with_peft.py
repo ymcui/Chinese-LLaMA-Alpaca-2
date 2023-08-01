@@ -199,6 +199,7 @@ class MyTrainingArguments(TrainingArguments):
     lora_alpha : Optional[float] = field(default=32.)
     modules_to_save : Optional[str] = field(default=None)
     peft_path : Optional[str] = field(default=None)
+    flash_attn : Optional[bool] = field(default=False)
 
 
 logger = logging.getLogger(__name__)
@@ -213,6 +214,9 @@ def main():
         model_args, data_args, training_args = parser.parse_json_file(json_file=os.path.abspath(sys.argv[1]))
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    if training_args.flash_attn:
+        from flash_attn_patch import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
 
     send_example_telemetry("run_clm", model_args, data_args)
 
@@ -311,7 +315,7 @@ def main():
                 data_cache_dir = None,
                 preprocessing_num_workers = data_args.preprocessing_num_workers)
         logger.info(f"Num train_samples  {len(train_dataset)}")
-        logger.info("training example:")
+        logger.info("Training example:")
         logger.info(tokenizer.decode(train_dataset[0]['input_ids']))
     if training_args.do_eval:
         with training_args.main_process_first(desc="loading and tokenization"):
@@ -324,7 +328,7 @@ def main():
                 data_cache_dir = None,
                 preprocessing_num_workers = data_args.preprocessing_num_workers)
         logger.info(f"Num eval_samples  {len(eval_dataset)}")
-        logger.info("eval example:")
+        logger.info("Evaluation example:")
         logger.info(tokenizer.decode(eval_dataset[0]['input_ids']))
 
     if model_args.model_name_or_path:
@@ -353,7 +357,6 @@ def main():
     logger.info(f"len(tokenizer):{len(tokenizer)}")
     if model_vocab_size != len(tokenizer):
         logger.info(f"Resize model vocab size to {len(tokenizer)}")
-        logger.info("resize the embedding size by the size of the tokenizer")
         model.resize_token_embeddings(len(tokenizer))
 
     if training_args.peft_path is not None:
