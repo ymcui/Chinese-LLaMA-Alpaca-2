@@ -58,11 +58,11 @@ parser.add_argument(
 parser.add_argument(
     '--load_in_8bit',
     action='store_true',
-    help='Use 8 bit quantified model')
+    help='Use 8 bit quantized model')
 parser.add_argument(
     '--load_in_4bit',
     action='store_true',
-    help='Use 4 bit quantified model')
+    help='Use 4 bit quantized model')
 parser.add_argument(
     '--only_cpu',
     action='store_true',
@@ -96,7 +96,7 @@ args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
     if args.load_in_8bit or args.load_in_4bit:
-        raise ValueError("Quantization is unavailable in CPU.")
+        raise ValueError("Quantization is unavailable on CPU.")
 if args.load_in_8bit and args.load_in_4bit:
     raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 import sys
