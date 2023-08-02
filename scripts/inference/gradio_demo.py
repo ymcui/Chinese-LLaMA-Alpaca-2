@@ -11,6 +11,10 @@ from queue import Queue
 from threading import Thread
 import traceback
 import gc
+import json
+import requests
+from typing import Iterable, List
+import subprocess
 
 DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
 
@@ -69,6 +73,20 @@ parser.add_argument(
     default=DEFAULT_SYSTEM_PROMPT,
     help="The system prompt of the prompt template."
 )
+parser.add_argument(
+    "--use_vllm",
+    action='store_true',
+    help="Use vLLM as back-end LLM service.")
+parser.add_argument(
+    "--post_host",
+    type=str,
+    default="localhost",
+    help="Host of vLLM service.")
+parser.add_argument(
+    "--post_port",
+    type=int,
+    default=8000,
+    help="Port of vLLM service.")
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
@@ -92,51 +110,79 @@ from peft import PeftModel
 
 def setup():
     global tokenizer, model, device, share, port, max_memory
-    max_memory = args.max_memory
-    port = args.port
-    share = args.share
-    load_in_8bit = args.load_in_8bit
-    load_type = torch.float16
-    if torch.cuda.is_available():
-        device = torch.device(0)
-    else:
-        device = torch.device('cpu')
-    if args.tokenizer_path is None:
-        args.tokenizer_path = args.lora_model
-        if args.lora_model is None:
+    if args.use_vllm:
+        # global share, port, max_memory
+        max_memory = args.max_memory
+        port = args.port
+        share = args.share
+
+        if args.lora_model is not None:
+            raise ValueError("vLLM currently does not support LoRA, please merge the LoRA weights to the base model.")
+        if args.load_in_8bit:
+            raise ValueError("vLLM currently does not support quantization, please use fp16 (default) or unuse --use_vllm.")
+        if args.only_cpu:
+            raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
+
+        if args.tokenizer_path is None:
             args.tokenizer_path = args.base_model
-    tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
+        tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
-    base_model = LlamaForCausalLM.from_pretrained(
-        args.base_model,
-        load_in_8bit=load_in_8bit,
-        torch_dtype=load_type,
-        low_cpu_mem_usage=True,
-        device_map='auto',
-    )
+        print("Start launch vllm server.")
+        cmd = [
+            "python -m vllm.entrypoints.api_server",
+            f"--model={args.base_model}",
+            f"--tokenizer={args.tokenizer_path}",
+            "--tokenizer-mode=slow",
+            f"--tensor-parallel-size={len(args.gpus.split(','))}",
+            "&",
+        ]
+        subprocess.check_call(cmd)
+    else:
+        max_memory = args.max_memory
+        port = args.port
+        share = args.share
+        load_in_8bit = args.load_in_8bit
+        load_type = torch.float16
+        if torch.cuda.is_available():
+            device = torch.device(0)
+        else:
+            device = torch.device('cpu')
+        if args.tokenizer_path is None:
+            args.tokenizer_path = args.lora_model
+            if args.lora_model is None:
+                args.tokenizer_path = args.base_model
+        tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
-    model_vocab_size = base_model.get_input_embeddings().weight.size(0)
-    tokenzier_vocab_size = len(tokenizer)
-    print(f"Vocab of the base model: {model_vocab_size}")
-    print(f"Vocab of the tokenizer: {tokenzier_vocab_size}")
-    if model_vocab_size!=tokenzier_vocab_size:
-        print("Resize model embeddings to fit tokenizer")
-        base_model.resize_token_embeddings(tokenzier_vocab_size)
-    if args.lora_model is not None:
-        print("loading peft model")
-        model = PeftModel.from_pretrained(
-            base_model,
-            args.lora_model,
+        base_model = LlamaForCausalLM.from_pretrained(
+            args.base_model,
+            load_in_8bit=load_in_8bit,
             torch_dtype=load_type,
+            low_cpu_mem_usage=True,
             device_map='auto',
         )
-    else:
-        model = base_model
 
-    if device == torch.device('cpu'):
-        model.float()
+        model_vocab_size = base_model.get_input_embeddings().weight.size(0)
+        tokenizer_vocab_size = len(tokenizer)
+        print(f"Vocab of the base model: {model_vocab_size}")
+        print(f"Vocab of the tokenizer: {tokenizer_vocab_size}")
+        if model_vocab_size != tokenizer_vocab_size:
+            print("Resize model embeddings to fit tokenizer")
+            base_model.resize_token_embeddings(tokenizer_vocab_size)
+        if args.lora_model is not None:
+            print("loading peft model")
+            model = PeftModel.from_pretrained(
+                base_model,
+                args.lora_model,
+                torch_dtype=load_type,
+                device_map='auto',
+            )
+        else:
+            model = base_model
 
-    model.eval()
+        if device == torch.device('cpu'):
+            model.float()
+
+        model.eval()
 
 
 # Reset the user input
@@ -239,6 +285,45 @@ def clear_torch_cache():
         torch.cuda.empty_cache()
 
 
+def post_http_request(prompt: str,
+                      api_url: str,
+                      n: int = 1,
+                      top_p: float = 0.9,
+                      top_k: int = 40,
+                      temperature: float = 0.7,
+                      max_tokens: int = 512,
+                      presence_penalty: float = 1.0,
+                      use_beam_search: bool = False,
+                      stream: bool = False) -> requests.Response:
+    headers = {"User-Agent": "Test Client"}
+    pload = {
+        "prompt": prompt,
+        "n": n,
+        "top_p": 1 if use_beam_search else top_p,
+        "top_k": -1 if use_beam_search else top_k,
+        "temperature": 0 if use_beam_search else temperature,
+        "max_tokens": max_tokens,
+        "use_beam_search": use_beam_search,
+        "best_of": 5 if use_beam_search else n,
+        "presence_penalty": presence_penalty,
+        "stream": stream,
+    }
+    print(pload)
+
+    response = requests.post(api_url, headers=headers, json=pload, stream=True)
+    return response
+
+
+def get_streaming_response(response: requests.Response) -> Iterable[List[str]]:
+    for chunk in response.iter_lines(chunk_size=8192,
+                                     decode_unicode=False,
+                                     delimiter=b"\0"):
+        if chunk:
+            data = json.loads(chunk.decode("utf-8"))
+            output = data["text"]
+            yield output
+
+
 # Perform prediction based on the user input and history
 @torch.no_grad()
 def predict(
@@ -248,7 +333,8 @@ def predict(
     temperature=0.1,
     top_k=40,
     do_sample=True,
-    repetition_penalty=1.0
+    repetition_penalty=1.0,
+    presence_penalty=0.0,
 ):
     while True:
         print("len(history):", len(history))
@@ -277,46 +363,68 @@ def predict(
         else:
             break
 
-    inputs = tokenizer(prompt, return_tensors="pt")
-    input_ids = inputs["input_ids"].to(device)
+    if args.use_vllm:
+        generate_params = {
+            'max_tokens': max_new_tokens,
+            'top_p': top_p,
+            'temperature': temperature,
+            'top_k': top_k,
+            "use_beam_search": not do_sample,
+            'presence_penalty': presence_penalty,
+        }
 
-    generate_params = {
-        'input_ids': input_ids,
-        'max_new_tokens': max_new_tokens,
-        'top_p': top_p,
-        'temperature': temperature,
-        'top_k': top_k,
-        'do_sample': do_sample,
-        'repetition_penalty': repetition_penalty,
-    }
+        api_url = f"http://{args.post_host}:{args.post_port}/generate"
 
-    def generate_with_callback(callback=None, **kwargs):
-        if 'stopping_criteria' in kwargs:
-            kwargs['stopping_criteria'].append(Stream(callback_func=callback))
-        else:
-            kwargs['stopping_criteria'] = [Stream(callback_func=callback)]
-        clear_torch_cache()
-        with torch.no_grad():
-            model.generate(**kwargs)
 
-    def generate_with_streaming(**kwargs):
-        return Iteratorize(generate_with_callback, kwargs, callback=None)
+        response = post_http_request(prompt, api_url, **generate_params, stream=True)
 
-    with generate_with_streaming(**generate_params) as generator:
-        for output in generator:
-            next_token_ids = output[len(input_ids[0]):]
-            if next_token_ids[0] == tokenizer.eos_token_id:
-                break
-            new_tokens = tokenizer.decode(
-                next_token_ids, skip_special_tokens=True)
-            if isinstance(tokenizer, LlamaTokenizer) and len(next_token_ids) > 0:
-                if tokenizer.convert_ids_to_tokens(int(next_token_ids[0])).startswith('▁'):
-                    new_tokens = ' ' + new_tokens
+        for h in get_streaming_response(response):
+            for line in h:
+                line = line.replace(prompt, '')
+                history[-1][1] = line
+                yield history
 
-            history[-1][1] = new_tokens
-            yield history
-            if len(next_token_ids) >= max_new_tokens:
-                break
+    else:
+        inputs = tokenizer(prompt, return_tensors="pt")
+        input_ids = inputs["input_ids"].to(device)
+
+        generate_params = {
+            'input_ids': input_ids,
+            'max_new_tokens': max_new_tokens,
+            'top_p': top_p,
+            'temperature': temperature,
+            'top_k': top_k,
+            'do_sample': do_sample,
+            'repetition_penalty': repetition_penalty,
+        }
+
+        def generate_with_callback(callback=None, **kwargs):
+            if 'stopping_criteria' in kwargs:
+                kwargs['stopping_criteria'].append(Stream(callback_func=callback))
+            else:
+                kwargs['stopping_criteria'] = [Stream(callback_func=callback)]
+            clear_torch_cache()
+            with torch.no_grad():
+                model.generate(**kwargs)
+
+        def generate_with_streaming(**kwargs):
+            return Iteratorize(generate_with_callback, kwargs, callback=None)
+
+        with generate_with_streaming(**generate_params) as generator:
+            for output in generator:
+                next_token_ids = output[len(input_ids[0]):]
+                if next_token_ids[0] == tokenizer.eos_token_id:
+                    break
+                new_tokens = tokenizer.decode(
+                    next_token_ids, skip_special_tokens=True)
+                if isinstance(tokenizer, LlamaTokenizer) and len(next_token_ids) > 0:
+                    if tokenizer.convert_ids_to_tokens(int(next_token_ids[0])).startswith('▁'):
+                        new_tokens = ' ' + new_tokens
+
+                history[-1][1] = new_tokens
+                yield history
+                if len(next_token_ids) >= max_new_tokens:
+                    break
 
 
 # Call the setup function to initialize the components
@@ -370,7 +478,16 @@ with gr.Blocks() as demo:
                 value=1.1,
                 step=0.1,
                 label="Repetition Penalty",
-                interactive=True)
+                interactive=True,
+                visible=False if args.use_vllm else True)
+            presence_penalty = gr.Slider(
+                -2.0,
+                2.0,
+                value=1.0,
+                step=0.1,
+                label="Presence Penalty",
+                interactive=True,
+                visible=True if args.use_vllm else False)
 
     params = [user_input, chatbot]
     predict_params = [
@@ -380,7 +497,8 @@ with gr.Blocks() as demo:
         temperature,
         top_k,
         do_sample,
-        repetition_penalty]
+        repetition_penalty,
+        presence_penalty]
 
     submitBtn.click(
         user,
