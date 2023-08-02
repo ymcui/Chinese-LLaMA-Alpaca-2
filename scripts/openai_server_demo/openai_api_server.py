@@ -9,17 +9,21 @@ parser.add_argument('--lora_model', default=None, type=str,help="If None, perfor
 parser.add_argument('--tokenizer_path',default=None,type=str)
 parser.add_argument('--gpus', default="0", type=str)
 parser.add_argument('--load_in_8bit',action='store_true', help='Load the model in 8bit mode')
+parser.add_argument('--load_in_4bit',action='store_true', help='Load the model in 4bit mode')
 parser.add_argument('--only_cpu',action='store_true',help='Only use CPU for inference')
 parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
 args = parser.parse_args()
-load_in_8bit = args.load_in_8bit
 if args.only_cpu is True:
     args.gpus = ""
+    if args.load_in_8bit or args.load_in_4bit:
+        raise ValueError("The installed version of bitsandbytes was compiled without GPU support. Quantization is unavailable")
+if args.load_in_8bit and args.load_in_4bit:
+    raise ValueError("Only one quantization method can be chosen for inference.Please check your arguments")
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 
 import torch
 import torch.nn.functional as F
-from transformers import LlamaForCausalLM, LlamaTokenizer, GenerationConfig
+from transformers import LlamaForCausalLM, LlamaTokenizer, GenerationConfig, BitsAndBytesConfig
 from peft import PeftModel
 
 import sys
@@ -54,10 +58,14 @@ tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
 base_model = LlamaForCausalLM.from_pretrained(
     args.base_model,
-    load_in_8bit=load_in_8bit,
     torch_dtype=load_type,
     low_cpu_mem_usage=True,
     device_map='auto' if not args.only_cpu else None,
+    quantization_config=BitsAndBytesConfig(
+        load_in_4bit=args.load_in_4bit,
+        load_in_8bit=args.load_in_8bit,
+        bnb_4bit_compute_dtype=load_type
+    )
     )
 
 model_vocab_size = base_model.get_input_embeddings().weight.size(0)
