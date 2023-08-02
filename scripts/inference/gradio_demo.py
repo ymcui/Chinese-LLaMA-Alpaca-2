@@ -80,7 +80,7 @@ parser.add_argument(
 parser.add_argument(
     "--post_host",
     type=str,
-    default="localhost",
+    default="0.0.0.0",
     help="Host of vLLM service.")
 parser.add_argument(
     "--post_port",
@@ -128,15 +128,15 @@ def setup():
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
         print("Start launch vllm server.")
-        cmd = [
-            "python -m vllm.entrypoints.api_server",
-            f"--model={args.base_model}",
-            f"--tokenizer={args.tokenizer_path}",
-            "--tokenizer-mode=slow",
-            f"--tensor-parallel-size={len(args.gpus.split(','))}",
-            "&",
-        ]
-        subprocess.check_call(cmd)
+        cmd = f"python -m vllm.entrypoints.api_server \
+            --model={args.base_model} \
+            --tokenizer={args.tokenizer_path} \
+            --tokenizer-mode=slow \
+            --tensor-parallel-size={len(args.gpus.split(','))} \
+            --host {args.post_host} \
+            --port {args.post_port} \
+            &"
+        subprocess.check_call(cmd, shell=True)
     else:
         max_memory = args.max_memory
         port = args.port
