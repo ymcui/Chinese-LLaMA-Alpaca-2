@@ -82,6 +82,7 @@ json返回体：
 curl http://localhost:8000/v1/completions \
   -H "Content-Type: application/json" \
   -d '{
+    "model": "chinese-llama-alpaca-2",
     "prompt": "告诉我中国和美国分别各有哪些优点缺点",
     "max_tokens": 90,
     "temperature": 0.7,
