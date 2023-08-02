@@ -3,6 +3,7 @@ from transformers import (
     LlamaForCausalLM,
     LlamaTokenizer,
     StoppingCriteria,
+    BitsAndBytesConfig
 )
 import gradio as gr
 import argparse
@@ -55,9 +56,11 @@ parser.add_argument(
     type=int,
     help='Maximum number of input tokens (including system prompt) to keep. If exceeded, earlier history will be discarded.')
 parser.add_argument(
-    '--load_in_8bit',
-    action='store_true',
-    help='Use 8 bit quantified model')
+    '--load_in_kbit',
+    default=16,
+    help='Load the LLM in the kbit mode',
+    type=int,
+    choices=[4, 8, 16])
 parser.add_argument(
     '--only_cpu',
     action='store_true',
@@ -155,10 +158,14 @@ def setup():
 
         base_model = LlamaForCausalLM.from_pretrained(
             args.base_model,
-            load_in_8bit=load_in_8bit,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
+            quantization_config=BitsAndBytesConfig(
+                load_in_4bit=args.load_in_kbit == 4,
+                load_in_8bit=args.load_in_kbit == 8,
+                bnb_4bit_compute_dtype=load_type
+            )
         )
 
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)

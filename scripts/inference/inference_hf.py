@@ -21,7 +21,7 @@ parser.add_argument('--predictions_file', default='./predictions.json', type=str
 parser.add_argument('--gpus', default="0", type=str)
 parser.add_argument('--only_cpu',action='store_true',help='only use CPU for inference')
 parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
-parser.add_argument('--load_in_8bit',action='store_true', help="Load the LLM in the 8bit mode")
+parser.add_argument('--load_in_kbit', default=16, help="Load the LLM in the kbit mode", type=int, choices=[4, 8, 16])
 parser.add_argument("--use_vllm", action='store_true', help="Use vLLM as back-end LLM service.")
 parser.add_argument('--system_prompt',type=str,default=DEFAULT_SYSTEM_PROMPT, help="The system prompt of the prompt template.")
 args = parser.parse_args()
@@ -38,6 +38,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 import torch
 from transformers import LlamaForCausalLM, LlamaTokenizer
 from transformers import GenerationConfig
+from transformers import BitsAndBytesConfig
 from peft import  PeftModel
 if args.use_vllm:
     from vllm import LLM, SamplingParams
@@ -96,10 +97,14 @@ if __name__ == '__main__':
 
         base_model = LlamaForCausalLM.from_pretrained(
             args.base_model,
-            load_in_8bit=args.load_in_8bit,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
+            quantization_config=BitsAndBytesConfig(
+                load_in_4bit=args.load_in_kbit == 4,
+                load_in_8bit=args.load_in_kbit == 8,
+                bnb_4bit_compute_dtype=load_type
+            )
             )
 
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)
