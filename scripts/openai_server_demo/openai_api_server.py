@@ -7,31 +7,21 @@ from sse_starlette.sse import EventSourceResponse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--base_model", default=None, type=str, required=True)
-parser.add_argument(
-    "--lora_model",
-    default=None,
-    type=str,
-    help="If None, perform inference on the base model",
-)
-parser.add_argument("--tokenizer_path", default=None, type=str)
-parser.add_argument("--gpus", default="0", type=str)
-parser.add_argument(
-    "--load_in_8bit", action="store_true", help="Load the model in 8bit mode"
-)
-parser.add_argument(
-    "--only_cpu", action="store_true", help="Only use CPU for inference"
-)
-parser.add_argument(
-    "--alpha",
-    type=str,
-    default="1.0",
-    help="The scaling factor of NTK method, can be a float or 'auto'. ",
-)
+parser.add_argument('--base_model', default=None, type=str, required=True)
+parser.add_argument('--lora_model', default=None, type=str,help="If None, perform inference on the base model")
+parser.add_argument('--tokenizer_path',default=None,type=str)
+parser.add_argument('--gpus', default="0", type=str)
+parser.add_argument('--load_in_8bit',action='store_true', help='Load the model in 8bit mode')
+parser.add_argument('--load_in_4bit',action='store_true', help='Load the model in 4bit mode')
+parser.add_argument('--only_cpu',action='store_true',help='Only use CPU for inference')
+parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
 args = parser.parse_args()
-load_in_8bit = args.load_in_8bit
 if args.only_cpu is True:
     args.gpus = ""
+    if args.load_in_8bit or args.load_in_4bit:
+        raise ValueError("Quantization is unavailable on CPU.")
+if args.load_in_8bit and args.load_in_4bit:
+    raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 
 import torch
@@ -41,6 +31,7 @@ from transformers import (
     LlamaTokenizer,
     GenerationConfig,
     TextIteratorStreamer,
+    BitsAndBytesConfig
 )
 from peft import PeftModel
 
@@ -80,19 +71,23 @@ tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
 
 base_model = LlamaForCausalLM.from_pretrained(
     args.base_model,
-    load_in_8bit=load_in_8bit,
     torch_dtype=load_type,
     low_cpu_mem_usage=True,
-    device_map="auto" if not args.only_cpu else None,
+    device_map='auto' if not args.only_cpu else None,
+    quantization_config=BitsAndBytesConfig(
+        load_in_4bit=args.load_in_4bit,
+        load_in_8bit=args.load_in_8bit,
+        bnb_4bit_compute_dtype=load_type
+    )
 )
 
 model_vocab_size = base_model.get_input_embeddings().weight.size(0)
-tokenzier_vocab_size = len(tokenizer)
+tokenizer_vocab_size = len(tokenizer)
 print(f"Vocab of the base model: {model_vocab_size}")
 print(f"Vocab of the tokenizer: {tokenzier_vocab_size}")
 if model_vocab_size != tokenzier_vocab_size:
     print("Resize model embeddings to fit tokenizer")
-    base_model.resize_token_embeddings(tokenzier_vocab_size)
+    base_model.resize_token_embeddings(tokenizer_vocab_size)
 if args.lora_model is not None:
     print("loading peft model")
     model = PeftModel.from_pretrained(
@@ -109,7 +104,7 @@ if device == torch.device("cpu"):
 
 model.eval()
 
-DEFAULT_SYSTEM_PROMPT = """你是一个乐于助人的助手。"""
+DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
 
 TEMPLATE_WITH_SYSTEM_PROMPT = (
     "[INST] <<SYS>>\n" "{system_prompt}\n" "<</SYS>>\n\n" "{instruction} [/INST]"

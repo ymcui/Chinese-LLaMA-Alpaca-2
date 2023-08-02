@@ -2,4 +2,4 @@ torch==2.0.1
 git+https://github.com/huggingface/peft.git@13e53fc
 transformers==4.31.0
 sentencepiece==0.1.97
-bitsandbytes==0.39.1
+bitsandbytes==0.41.0
