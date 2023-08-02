@@ -45,6 +45,10 @@ Patches for memory efficient attention and NTK context size scaling.
 
 ### merge_llama2_with_chinese_lora_low_mem.py
 
-低资源版合并LLaMA/Alpaca LoRA脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_zh)
+低资源版合并LLaMA-2/Alpaca-2 LoRA脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_zh)
 
-Script for merging LLaMA/Alpaca LoRA (low-resource version). Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_en
+Script for merging LLaMA-2/Alpaca-2 LoRA (low-resource version). Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_en
+
+### tokenizer/
+
+Chinese-LLaMA-2 & Chinese-Alpaca-2 tokenizer
