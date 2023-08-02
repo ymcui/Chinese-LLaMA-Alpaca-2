@@ -3,6 +3,7 @@ from transformers import (
     LlamaForCausalLM,
     LlamaTokenizer,
     StoppingCriteria,
+    BitsAndBytesConfig
 )
 import gradio as gr
 import argparse
@@ -57,7 +58,11 @@ parser.add_argument(
 parser.add_argument(
     '--load_in_8bit',
     action='store_true',
-    help='Use 8 bit quantified model')
+    help='Use 8 bit quantized model')
+parser.add_argument(
+    '--load_in_4bit',
+    action='store_true',
+    help='Use 4 bit quantized model')
 parser.add_argument(
     '--only_cpu',
     action='store_true',
@@ -90,7 +95,10 @@ parser.add_argument(
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
-
+    if args.load_in_8bit or args.load_in_4bit:
+        raise ValueError("Quantization is unavailable on CPU.")
+if args.load_in_8bit and args.load_in_4bit:
+    raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
@@ -118,7 +126,7 @@ def setup():
 
         if args.lora_model is not None:
             raise ValueError("vLLM currently does not support LoRA, please merge the LoRA weights to the base model.")
-        if args.load_in_8bit:
+        if args.load_in_8bit or args.load_in_4bit:
             raise ValueError("vLLM currently does not support quantization, please use fp16 (default) or unuse --use_vllm.")
         if args.only_cpu:
             raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
@@ -141,7 +149,6 @@ def setup():
         max_memory = args.max_memory
         port = args.port
         share = args.share
-        load_in_8bit = args.load_in_8bit
         load_type = torch.float16
         if torch.cuda.is_available():
             device = torch.device(0)
@@ -155,10 +162,14 @@ def setup():
 
         base_model = LlamaForCausalLM.from_pretrained(
             args.base_model,
-            load_in_8bit=load_in_8bit,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
+            quantization_config=BitsAndBytesConfig(
+                load_in_4bit=args.load_in_4bit,
+                load_in_8bit=args.load_in_8bit,
+                bnb_4bit_compute_dtype=load_type
+            )
         )
 
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)
