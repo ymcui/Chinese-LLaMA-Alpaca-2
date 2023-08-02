@@ -34,11 +34,11 @@ if args.use_vllm:
     if args.only_cpu:
         raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
 if args.load_in_8bit and args.load_in_4bit:
-    raise ValueError("Only one quantization method can be chosen for inference.Please check your arguments")
+    raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 if args.only_cpu is True:
     args.gpus = ""
     if args.load_in_8bit or args.load_in_4bit:
-        raise ValueError("The installed version of bitsandbytes was compiled without GPU support. Quantization is unavailable")
+        raise ValueError("Quantization is unavailable in CPU.")
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 import torch
 from transformers import LlamaForCausalLM, LlamaTokenizer

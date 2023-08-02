@@ -16,9 +16,9 @@ args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
     if args.load_in_8bit or args.load_in_4bit:
-        raise ValueError("The installed version of bitsandbytes was compiled without GPU support. Quantization is unavailable")
+        raise ValueError("Quantization is unavailable in CPU.")
 if args.load_in_8bit and args.load_in_4bit:
-    raise ValueError("Only one quantization method can be chosen for inference.Please check your arguments")
+    raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 
 import torch
