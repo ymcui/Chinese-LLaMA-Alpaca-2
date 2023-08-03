@@ -74,7 +74,6 @@ base_model = LlamaForCausalLM.from_pretrained(
     args.base_model,
     torch_dtype=load_type,
     low_cpu_mem_usage=True,
-    offload_folder="offload", # TODO
     device_map='auto' if not args.only_cpu else None,
     quantization_config=BitsAndBytesConfig(
         load_in_4bit=args.load_in_4bit,
