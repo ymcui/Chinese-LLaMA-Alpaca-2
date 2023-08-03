@@ -29,7 +29,9 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 ## News
 
-**[July 31, 2023] Release Chinese-LLaMA-2-7B (base model), trained with 120GB Chinese data. It was further fine-tuned using 5M instruction data, resulting in the Chinese-Alpaca-2-7B (instruction/chat model). For details, see [📚 v1.0 release notes](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)**
+**[Aug 02, 2023] Add FlashAttention-2 training support, vLLM-based inference acceleration support, a new system prompt that generates longer response, etc. For details, see [📚 v1.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.1)**
+
+[July 31, 2023] Release Chinese-LLaMA-2-7B (base model), trained with 120GB Chinese data. It was further fine-tuned using 5M instruction data, resulting in the Chinese-Alpaca-2-7B (instruction/chat model). For details, see [📚 v1.0 release notes](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)
 
 [July 19, 2023] 🚀Launched the [Chinese LLaMA-2 and Alpaca-2 open-source LLM project](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)
 
