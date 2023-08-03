@@ -446,7 +446,7 @@ with gr.Blocks() as demo:
             with gr.Column(scale=3):
                 system_prompt_input = gr.Textbox(
                     show_label=True,
-                    label="系统提示语",
+                    label="系统提示语（仅在对话开始前或清空历史后修改有效，对话过程中修改无效）",
                     placeholder=DEFAULT_SYSTEM_PROMPT,
                     lines=1).style(
                     container=True)
