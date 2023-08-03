@@ -84,8 +84,8 @@ base_model = LlamaForCausalLM.from_pretrained(
 model_vocab_size = base_model.get_input_embeddings().weight.size(0)
 tokenizer_vocab_size = len(tokenizer)
 print(f"Vocab of the base model: {model_vocab_size}")
-print(f"Vocab of the tokenizer: {tokenzier_vocab_size}")
-if model_vocab_size != tokenzier_vocab_size:
+print(f"Vocab of the tokenizer: {tokenizer_vocab_size}")
+if model_vocab_size != tokenizer_vocab_size:
     print("Resize model embeddings to fit tokenizer")
     base_model.resize_token_embeddings(tokenizer_vocab_size)
 if args.lora_model is not None:
