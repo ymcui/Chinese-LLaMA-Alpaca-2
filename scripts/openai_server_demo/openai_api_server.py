@@ -74,6 +74,7 @@ base_model = LlamaForCausalLM.from_pretrained(
     args.base_model,
     torch_dtype=load_type,
     low_cpu_mem_usage=True,
+    offload_folder="offload", # TODO
     device_map='auto' if not args.only_cpu else None,
     quantization_config=BitsAndBytesConfig(
         load_in_4bit=args.load_in_4bit,
@@ -254,8 +255,10 @@ def stream_predict(
     )
     Thread(target=model.generate, kwargs=generation_kwargs).start()
     for new_text in streamer:
-        if new_text.startswith("<s>") or new_text.startswith("[/INST]"):
+        if new_text.startswith("<s>"):
             continue
+        if new_text.startswith("[/INST]"):
+            new_text = new_text.split("[/INST]")[-1]
         if new_text.endswith("</s>"):
             new_text = new_text.split("</s>")[0]
         choice_data = ChatCompletionResponseStreamChoice(
