@@ -32,9 +32,9 @@ Inference Script for C-Eval, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca
 
 ### llama-cpp/
 
-llama.cpp启动脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh)
+llama.cpp启动脚本、server脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh)
 
-launch script for llama.cpp, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en
+launch script and server script for llama.cpp, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en
 
 
 ### attn_ang_long_ctx_patches.py
