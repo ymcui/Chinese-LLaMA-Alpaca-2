@@ -53,19 +53,19 @@ class UsageInfo(BaseModel):
 class ChatCompletionRequest(BaseModel):
     model: str
     messages: Union[str, List[Dict[str, str]]]
-    temperature: Optional[float] = 0.7
-    top_p: Optional[float] = 1.0
+    temperature: Optional[float] = 0.2
+    top_p: Optional[float] = 0.9
     n: Optional[int] = 1
-    max_tokens: Optional[int] = 16
+    max_tokens: Optional[int] = 512
     stop: Optional[Union[str, List[str]]] = Field(default_factory=list)
     stream: Optional[bool] = False
-    presence_penalty: Optional[float] = 0.0
+    presence_penalty: Optional[float] = 1.0
     frequency_penalty: Optional[float] = 0.0
     logit_bias: Optional[Dict[str, float]] = None
     user: Optional[str] = None
     # Additional parameters supported by vLLM
     best_of: Optional[int] = None
-    top_k: Optional[int] = -1
+    top_k: Optional[int] = 40
     ignore_eos: Optional[bool] = False
     use_beam_search: Optional[bool] = False
 
@@ -74,21 +74,21 @@ class CompletionRequest(BaseModel):
     model: str
     prompt: Union[str, List[str]]
     suffix: Optional[str] = None
-    max_tokens: Optional[int] = 16
-    temperature: Optional[float] = 1.0
-    top_p: Optional[float] = 1.0
+    max_tokens: Optional[int] = 512
+    temperature: Optional[float] = 0.2
+    top_p: Optional[float] = 0.9
     n: Optional[int] = 1
     stream: Optional[bool] = False
     logprobs: Optional[int] = None
     echo: Optional[bool] = False
     stop: Optional[Union[str, List[str]]] = Field(default_factory=list)
-    presence_penalty: Optional[float] = 0.0
+    presence_penalty: Optional[float] = 1.0
     frequency_penalty: Optional[float] = 0.0
     best_of: Optional[int] = None
     logit_bias: Optional[Dict[str, float]] = None
     user: Optional[str] = None
     # Additional parameters supported by vLLM
-    top_k: Optional[int] = -1
+    top_k: Optional[int] = 40
     ignore_eos: Optional[bool] = False
     use_beam_search: Optional[bool] = False
 
