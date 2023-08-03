@@ -1,6 +1,7 @@
 import argparse
 import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from threading import Thread
 from sse_starlette.sse import EventSourceResponse
@@ -294,6 +295,13 @@ def get_embedding(input):
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest):
@@ -302,7 +310,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
     if isinstance(msgs, str):
         msgs = [ChatMessage(role="user", content=msgs)]
     else:
-        msgs = [ChatMessage(role=x["role"], content=x["message"]) for x in msgs]
+        msgs = [ChatMessage(role=x["role"], content=x["content"]) for x in msgs]
     if request.stream:
         generate = stream_predict(
             input=msgs,
