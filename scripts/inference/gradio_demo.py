@@ -448,7 +448,7 @@ with gr.Blocks() as demo:
                     show_label=True,
                     label="系统提示语",
                     placeholder=DEFAULT_SYSTEM_PROMPT,
-                    lines=2).style(
+                    lines=1).style(
                     container=True)
             with gr.Column(scale=12):
                 user_input = gr.Textbox(
