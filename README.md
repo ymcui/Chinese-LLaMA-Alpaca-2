@@ -23,6 +23,8 @@
 - 🚀 支持[🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm)等LLaMA生态
 - 目前已开源的模型：Chinese-LLaMA-2-7B, Chinese-Alpaca-2-7B
 
+![](./pics/screencast.gif)
+
 ----
 
 [多模态中文LLaMA&Alpaca大模型](https://github.com/airaria/Visual-Chinese-LLaMA-Alpaca) | [多模态VLE](https://github.com/iflytek/VLE) | [中文MiniRBT](https://github.com/iflytek/MiniRBT) | [中文LERT](https://github.com/ymcui/LERT) | [中英文PERT](https://github.com/ymcui/PERT) | [中文MacBERT](https://github.com/ymcui/MacBERT) | [中文ELECTRA](https://github.com/ymcui/Chinese-ELECTRA) | [中文XLNet](https://github.com/ymcui/Chinese-XLNet) | [中文BERT](https://github.com/ymcui/Chinese-BERT-wwm) | [知识蒸馏工具TextBrewer](https://github.com/airaria/TextBrewer) | [模型裁剪工具TextPruner](https://github.com/airaria/TextPruner) | [蒸馏裁剪一体化GRAIN](https://github.com/airaria/GRAIN)
@@ -30,7 +32,9 @@
 
 ## 新闻
 
-**[2023/07/31] 正式发布Chinese-LLaMA-2-7B（基座模型），使用120G中文语料增量训练（与一代Plus系列相同）；进一步通过5M条指令数据精调（相比一代略微增加），得到Chinese-Alpaca-2-7B（指令/chat模型）。详情查看[📚 v1.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)**
+**[2023/08/02] 添加FlashAttention-2训练支持，基于vLLM的推理加速支持，提供长回复系统提示语模板等。详情查看[📚 v1.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.1)**
+
+[2023/07/31] 正式发布Chinese-LLaMA-2-7B（基座模型），使用120G中文语料增量训练（与一代Plus系列相同）；进一步通过5M条指令数据精调（相比一代略微增加），得到Chinese-Alpaca-2-7B（指令/chat模型）。详情查看[📚 v1.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)
 
 [2023/07/19] 🚀启动[中文LLaMA-2、Alpaca-2开源大模型项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)
 

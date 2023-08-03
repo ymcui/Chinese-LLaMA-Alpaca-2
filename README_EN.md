@@ -23,13 +23,17 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 - 🚀 Support for LLaMA ecosystems like [🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm) etc.
 - The currently open-source models are Chinese-LLaMA-2-7B and Chinese-Alpaca-2-7B.
 
+![](./pics/screencast.gif)
+
 ----
 
  [Visual Chinese-LLaMA-Alpaca](https://github.com/airaria/Visual-Chinese-LLaMA-Alpaca) | [Multi-modal VLE](https://github.com/iflytek/VLE) | [Chinese MiniRBT](https://github.com/iflytek/MiniRBT) | [Chinese LERT](https://github.com/ymcui/LERT) | [Chinese-English PERT](https://github.com/ymcui/PERT) | [Chinese MacBERT](https://github.com/ymcui/MacBERT) | [Chinese ELECTRA](https://github.com/ymcui/Chinese-ELECTRA) | [Chinese XLNet](https://github.com/ymcui/Chinese-XLNet) | [Chinese BERT](https://github.com/ymcui/Chinese-BERT-wwm) | [Knowledge distillation tool TextBrewer](https://github.com/airaria/TextBrewer) | [Model pruning tool TextPruner](https://github.com/airaria/TextPruner)
 
 ## News
 
-**[July 31, 2023] Release Chinese-LLaMA-2-7B (base model), trained with 120GB Chinese data. It was further fine-tuned using 5M instruction data, resulting in the Chinese-Alpaca-2-7B (instruction/chat model). For details, see [📚 v1.0 release notes](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)**
+**[Aug 02, 2023] Add FlashAttention-2 training support, vLLM-based inference acceleration support, a new system prompt that generates longer response, etc. For details, see [📚 v1.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.1)**
+
+[July 31, 2023] Release Chinese-LLaMA-2-7B (base model), trained with 120GB Chinese data. It was further fine-tuned using 5M instruction data, resulting in the Chinese-Alpaca-2-7B (instruction/chat model). For details, see [📚 v1.0 release notes](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v1.0)
 
 [July 19, 2023] 🚀Launched the [Chinese LLaMA-2 and Alpaca-2 open-source LLM project](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)
 
