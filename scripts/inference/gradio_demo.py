@@ -294,7 +294,7 @@ def post_http_request(prompt: str,
                       n: int = 1,
                       top_p: float = 0.9,
                       top_k: int = 40,
-                      temperature: float = 0.7,
+                      temperature: float = 0.2,
                       max_tokens: int = 512,
                       presence_penalty: float = 1.0,
                       use_beam_search: bool = False,
@@ -334,11 +334,11 @@ def predict(
     history,
     system_prompt,
     max_new_tokens=128,
-    top_p=0.75,
-    temperature=0.1,
+    top_p=0.9,
+    temperature=0.2,
     top_k=40,
     do_sample=True,
-    repetition_penalty=1.0,
+    repetition_penalty=1.1,
     presence_penalty=0.0,
 ):
     while True:
@@ -473,7 +473,7 @@ with gr.Blocks() as demo:
             temperature = gr.Slider(
                 0,
                 1,
-                value=0.5,
+                value=0.2,
                 step=0.01,
                 label="Temperature",
                 interactive=True)
