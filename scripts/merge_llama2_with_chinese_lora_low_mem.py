@@ -257,7 +257,7 @@ if __name__=='__main__':
         base_model_path = snapshot_download(repo_id=base_model_path)
     ckpt_filenames = sorted([f for f in os.listdir(base_model_path) if re.match('pytorch_model-(\d+)-of-(\d+).bin',f)])
     if len(ckpt_filenames)==0:
-        raise FileNotFoundError(f"Cannot found base model checkpoints in ${base_model_path}. Please make sure the checkpoints are saved in the HF format.")
+        raise FileNotFoundError(f"Cannot find base model checkpoints in ${base_model_path}. Please make sure the checkpoints are saved in the HF format.")
     embedding_size = None
     model_size = None
     total_size = 0
