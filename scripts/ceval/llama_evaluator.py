@@ -14,11 +14,12 @@ DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人
 
 
 class Llama_Evaluator(Evaluator):
-    def __init__(self, choices, k, model_path, device, temperature=0.2):
+    def __init__(self, choices, k, model_path, device, temperature=0.2, verbose=False):
         super(Llama_Evaluator, self).__init__(choices, model_path, k)
         load_type = torch.float16
         self.model_path = model_path
         self.device = device
+        self.verbose = verbose
         self.tokenizer = LlamaTokenizer.from_pretrained(model_path, legacy=True)
         self.model = LlamaForCausalLM.from_pretrained(
             model_path,
@@ -113,15 +114,15 @@ class Llama_Evaluator(Evaluator):
                 correct = 1
             else:
                 correct = 0
-            print(f"\n=======begin {str(row_index)}=======")
-            print("question: ", question)
-            print("response: ", response)
-            print("ans: ", ans)
-            print("ground truth: ", answers[row_index], "\n")
+            if self.verbose is True:
+                print(f"\n======={str(row_index)}=======")
+                print(f"question: {question}\n")
+                print(f"response: {response}\n")
+                print(f"extracted answer: {ans}")
+                print(f"ground truth: {answers[row_index]} \n")
             if save_result_dir:
                 result.append(response)
                 score.append(correct)
-            print(f"=======end {str(row_index)}=======")
 
             all_answers[str(row_index)] = ans
 
