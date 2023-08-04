@@ -257,7 +257,7 @@ def stream_predict(
         if new_text.startswith("<s>"):
             continue
         if new_text.startswith("[/INST]"):
-            new_text = new_text.split("[/INST]")[-1]
+            new_text = new_text.split("[/INST]")[-1].strip()
         if new_text.endswith("</s>"):
             new_text = new_text.split("</s>")[0]
         choice_data = ChatCompletionResponseStreamChoice(
