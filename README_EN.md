@@ -21,7 +21,7 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 - 🚀 Open-sourced the pre-training and instruction finetuning (SFT) scripts for further tuning on user's data
 - 🚀 Quickly deploy and experience the quantized LLMs on CPU/GPU of personal PC
 - 🚀 Support for LLaMA ecosystems like [🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm) etc.
-- The currently open-source models are Chinese-LLaMA-2-7B and Chinese-Alpaca-2-7B.
+- The currently open-source models are Chinese-LLaMA-2-7B and Chinese-Alpaca-2-7B (check our [first-gen project](https://github.com/ymcui/Chinese-LLaMA-Alpaca) for more models).
 
 ![](./pics/screencast.gif)
 

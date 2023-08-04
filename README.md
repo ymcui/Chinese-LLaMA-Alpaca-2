@@ -21,7 +21,7 @@
 - 🚀 开源了预训练脚本、指令精调脚本，用户可根据需要进一步训练模型
 - 🚀 使用个人电脑的CPU/GPU快速在本地进行大模型量化和部署体验
 - 🚀 支持[🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm)等LLaMA生态
-- 目前已开源的模型：Chinese-LLaMA-2-7B, Chinese-Alpaca-2-7B
+- 目前已开源的模型：Chinese-LLaMA-2-7B, Chinese-Alpaca-2-7B (更大的模型可先参考[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca))
 
 ![](./pics/screencast.gif)
 
