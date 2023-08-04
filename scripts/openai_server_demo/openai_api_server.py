@@ -138,11 +138,11 @@ def generate_chat_prompt(messages: list):
 def predict(
     input,
     max_new_tokens=128,
-    top_p=0.75,
-    temperature=0.1,
+    top_p=0.9,
+    temperature=0.2,
     top_k=40,
-    num_beams=4,
-    repetition_penalty=1.0,
+    num_beams=1,
+    repetition_penalty=1.1,
     do_sample=True,
     **kwargs,
 ):

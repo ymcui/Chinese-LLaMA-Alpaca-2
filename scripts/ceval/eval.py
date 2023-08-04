@@ -89,6 +89,7 @@ if __name__ == "__main__":
     parser.add_argument("--do_save_csv", choices=["False","True"], default="False")
     parser.add_argument("--output_dir", type=str)
     parser.add_argument("--do_test", choices=["False","True"], default="False")
+    parser.add_argument("--verbose", action="store_true", help="Print detailed information of each example.")
 
     args = parser.parse_args()
 
@@ -109,7 +110,8 @@ if __name__ == "__main__":
         k=args.ntrain,
         model_path=args.model_path,
         device=device,
-        temperature = args.temperature
+        temperature = args.temperature,
+        verbose = args.verbose
     )
     for i in range(args.n_times):
         main(args,evaluator=evaluator,take=i)

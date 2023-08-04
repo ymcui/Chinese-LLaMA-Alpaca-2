@@ -21,7 +21,7 @@
 - 🚀 开源了预训练脚本、指令精调脚本，用户可根据需要进一步训练模型
 - 🚀 使用个人电脑的CPU/GPU快速在本地进行大模型量化和部署体验
 - 🚀 支持[🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm)等LLaMA生态
-- 目前已开源的模型：Chinese-LLaMA-2-7B, Chinese-Alpaca-2-7B
+- 目前已开源的模型：Chinese-LLaMA-2-7B, Chinese-Alpaca-2-7B (更大的模型可先参考[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca))
 
 ![](./pics/screencast.gif)
 
@@ -120,14 +120,6 @@
 - [**在线转换**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/online_conversion_zh)：Colab用户可利用本项目提供的notebook进行在线转换并量化模型
 - [**手动转换**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_zh)：离线方式转换，生成不同格式的模型，以便进行量化或进一步精调
 
-以下是完整模型在FP16精度和4-bit量化后的大小。如果选择手动合并，请确保本机有足够的内存和磁盘空间。
-
-| 模型版本      |   7B    |
-| :------------ | :-----: |
-| FP16模型      | 12.9 GB |
-| 8-bit量化模型 | 6.8 GB  |
-| 4-bit量化模型 | 3.7 GB  |
-
 
 ## 推理与部署
 
@@ -181,6 +173,24 @@ Alpaca系列模型之间对比：
 
 C-Eval推理代码请参考本项目 >>> [📚 GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_zh)
 
+### 量化效果评测
+
+以Chinese-LLaMA-2-7B为例，对比不同精度下的模型大小、PPL（困惑度）、C-Eval效果，方便用户了解量化精度损失。PPL以4K上下文大小计算，C-Eval汇报的是valid集合上zero-shot和5-shot结果。
+
+| 精度      | 模型大小 |  PPL   |   C-Eval    |
+| :-------- | :------: | :----: | :---------: |
+| FP16      | 12.9 GB  | 8.1797 | 28.2 / 36.0 |
+| 8-bit量化 |  6.8 GB  | 8.2884 | 26.8 / 35.4 |
+| 4-bit量化 |  3.7 GB  | 8.8581 | 25.5 / 32.8 |
+
+特别地，以下是在llama.cpp下不同量化方法的评测数据，供用户参考，速度以ms/tok计。具体细节见[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh#关于量化方法选择及推理速度)。
+
+| | F16       | Q4_0   | Q4_1  | Q4_K  | Q5_0  | Q5_1  | Q5_K  | Q6_K  | Q8_0  |
+| --------- | -----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: |
+| PPL       | 8.640  | 8.987 | 9.175 | 8.836 | 8.730 | 8.776 | 8.707 | 8.671 | 8.640 |
+| Size      | 12.91G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
+| CPU Speed | 117    | 39    | 44    | 43    | 48    | 51    | 50    | 54    | 65    |
+| GPU Speed | 53     | 17    | 18    | 20    | n/a   | n/a  | 25    | 26    | n/a  |
 
 ## 训练与精调
 

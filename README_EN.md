@@ -21,7 +21,7 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 - 🚀 Open-sourced the pre-training and instruction finetuning (SFT) scripts for further tuning on user's data
 - 🚀 Quickly deploy and experience the quantized LLMs on CPU/GPU of personal PC
 - 🚀 Support for LLaMA ecosystems like [🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [vLLM](https://github.com/vllm-project/vllm) etc.
-- The currently open-source models are Chinese-LLaMA-2-7B and Chinese-Alpaca-2-7B.
+- The currently open-source models are Chinese-LLaMA-2-7B and Chinese-Alpaca-2-7B (check our [first-gen project](https://github.com/ymcui/Chinese-LLaMA-Alpaca) for more models).
 
 ![](./pics/screencast.gif)
 
@@ -115,14 +115,6 @@ As the LoRA models cannot be used separately, they must be merged with the origi
 - [**Online Conversion**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/online_conversion_en): Colab users can use the notebook provided by this project for online conversion and model quantization
 - [**Manual Conversion**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/manual_conversion_en): Offline method of conversion, generating different formats of models for quantization or further fine-tuning
 
-Below are the sizes of the full models in FP16 precision and 4-bit quantization. If you choose manual conversion, please ensure that your machine has enough memory and disk space.
-
-| Model Version         |   7B    |
-| :-------------------- | :-----: |
-| FP16 Model            | 12.9 GB |
-| 8-bit Quantized Model | 6.8 GB  |
-| 4-bit Quantized Model | 3.7 GB  |
-
 ## Inference and Deployment
 
 The models in this project mainly support the following quantization, inference, and deployment methods.
@@ -173,6 +165,25 @@ Comparisons between Alpaca models:
 It is important to note that the comprehensive assessment of the capabilities of large models is still an urgent and significant topic to address. It is beneficial to approach the various evaluation results of large models in a rational and balanced manner to promote the healthy development of large-scale model technology. It is recommended for users to conduct tests on their own tasks and choose models that are suitable for the relevant tasks.
 
 For C-Eval inference code, please refer to >>> [📚 GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_en)
+
+### Quantization Evaluation
+
+To understand the quality loss brought by quantization, taking Chinese-LLaMA-2-7B as an example, we report the model size, PPL, C-eval results under different quantization levels. PPL is calculated under 4K context, and we report zero-shot and 5-shot results on C-Eval valid set.
+
+| Precision | Model Size |  PPL   |   C-Eval    |
+| :-------- | :--------: | :----: | :---------: |
+| FP16      |  12.9 GB   | 8.1797 | 28.2 / 36.0 |
+| 8-bit     |   6.8 GB   | 8.2884 | 26.8 / 35.4 |
+| 4-bit     |   3.7 GB   | 8.8581 | 25.5 / 32.8 |
+
+Specifically, the followings are the benchmark for different quantization methods in llama.cpp. The speed is presented with ms/tok. For details, see our [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en#quantization-method-and-inference-speed).
+
+|           |    F16 |  Q4_0 |  Q4_1 |  Q4_K |  Q5_0 |  Q5_1 |  Q5_K |  Q6_K |  Q8_0 |
+| --------- | -----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: |
+| PPL       |  8.640 | 8.987 | 9.175 | 8.836 | 8.730 | 8.776 | 8.707 | 8.671 | 8.640 |
+| Size      | 12.91G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
+| CPU Speed |    117 |    39 |    44 |    43 |    48 |    51 |    50 |    54 |    65 |
+| GPU Speed |     53 |    17 |    18 |    20 |   n/a |   n/a |    25 |    26 |   n/a |
 
 ## Training and Fine-tuning
 
