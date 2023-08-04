@@ -254,12 +254,13 @@ def stream_predict(
     )
     Thread(target=model.generate, kwargs=generation_kwargs).start()
     for new_text in streamer:
+        new_text = new_text.strip()
         if new_text.startswith("<s>"):
             continue
         if new_text.startswith("[/INST]"):
-            new_text = new_text.split("[/INST]")[-1].strip()
+            new_text = new_text.split("[/INST]")[-1]
         if new_text.endswith("</s>"):
-            new_text = new_text.split("</s>")[0]
+            new_text = new_text.split("</s>")[0][1:]
         choice_data = ChatCompletionResponseStreamChoice(
             index=0, delta=DeltaMessage(content=new_text), finish_reason=None
         )
