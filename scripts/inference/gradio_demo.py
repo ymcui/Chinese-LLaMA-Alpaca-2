@@ -16,6 +16,7 @@ import json
 import requests
 from typing import Iterable, List
 import subprocess
+import re
 
 DEFAULT_SYSTEM_PROMPT = """You are a helpful assistant. 你是一个乐于助人的助手。"""
 
@@ -87,6 +88,17 @@ parser.add_argument(
     default=8000,
     help="Port of vLLM service.")
 args = parser.parse_args()
+
+ENABLE_CFG_SAMPLING=True
+try:
+    from transformers.generation import UnbatchedClassifierFreeGuidanceLogitsProcessor
+except ImportError:
+    ENABLE_CFG_SAMPLING=False
+    print("Install the latest transformers (commit equal or later than d533465) to enable CFG sampling.")
+if args.use_vllm is True:
+    ("CFG sampling is disabled when using vLLM.")
+    ENABLE_CFG_SAMPLING=False
+
 if args.only_cpu is True:
     args.gpus = ""
     if args.load_in_8bit or args.load_in_4bit:
@@ -333,14 +345,18 @@ def get_streaming_response(response: requests.Response) -> Iterable[List[str]]:
 def predict(
     history,
     system_prompt,
+    negative_prompt,
     max_new_tokens=128,
     top_p=0.9,
     temperature=0.2,
     top_k=40,
     do_sample=True,
     repetition_penalty=1.1,
+    guidance_scale=1.0,
     presence_penalty=0.0,
 ):
+    if len(system_prompt)==0:
+        system_prompt = DEFAULT_SYSTEM_PROMPT
     while True:
         print("len(history):", len(history))
         print("history: ", history)
@@ -390,9 +406,18 @@ def predict(
                 yield history
 
     else:
+        negative_text = None
+        if len(negative_prompt)!=0:
+            negative_text = re.sub(r"<<SYS>>\n(.*)\n<</SYS>>", f"<<SYS>>\n{negative_prompt}\n<</SYS>>", prompt)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
-
+        if negative_text is None:
+            negative_prompt_ids = None
+            negative_prompt_attention_mask = None
+        else:
+            negative_inputs = tokenizer(negative_text,return_tensors="pt")
+            negative_prompt_ids = negative_inputs["input_ids"].to(device)
+            negative_prompt_attention_mask = negative_inputs["attention_mask"].to(device)
         generate_params = {
             'input_ids': input_ids,
             'max_new_tokens': max_new_tokens,
@@ -402,6 +427,10 @@ def predict(
             'do_sample': do_sample,
             'repetition_penalty': repetition_penalty,
         }
+        if ENABLE_CFG_SAMPLING is True:
+            generate_params['guidance_scale'] = guidance_scale
+            generate_params['negative_prompt_ids'] = negative_prompt_ids
+            generate_params['negative_prompt_attention_mask'] = negative_prompt_attention_mask
 
         def generate_with_callback(callback=None, **kwargs):
             if 'stopping_criteria' in kwargs:
@@ -450,6 +479,13 @@ with gr.Blocks() as demo:
                     placeholder=DEFAULT_SYSTEM_PROMPT,
                     lines=1).style(
                     container=True)
+                negative_prompt_input = gr.Textbox(
+                    show_label=True,
+                    label="反向提示语（仅在对话开始前或清空历史后修改有效，对话过程中修改无效）",
+                    placeholder="（可选，默认为空）",
+                    lines=1,
+                    visible=ENABLE_CFG_SAMPLING).style(
+                    container=True)
             with gr.Column(scale=12):
                 user_input = gr.Textbox(
                     show_label=True,
@@ -492,6 +528,14 @@ with gr.Blocks() as demo:
                 label="Repetition Penalty",
                 interactive=True,
                 visible=False if args.use_vllm else True)
+            guidance_scale = gr.Slider(
+                1.0,
+                3.0,
+                value=1.0,
+                step=0.1,
+                label="Guidance Scale",
+                interactive=True,
+                visible=ENABLE_CFG_SAMPLING)
             presence_penalty = gr.Slider(
                 -2.0,
                 2.0,
@@ -505,12 +549,14 @@ with gr.Blocks() as demo:
     predict_params = [
         chatbot,
         system_prompt_input,
+        negative_prompt_input,
         max_new_token,
         top_p,
         temperature,
         top_k,
         do_sample,
         repetition_penalty,
+        guidance_scale,
         presence_penalty]
 
     submitBtn.click(

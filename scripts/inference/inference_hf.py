@@ -25,7 +25,16 @@ parser.add_argument('--load_in_8bit', action='store_true', help="Load the LLM in
 parser.add_argument('--load_in_4bit', action='store_true', help="Load the LLM in the 4bit mode")
 parser.add_argument("--use_vllm", action='store_true', help="Use vLLM as back-end LLM service.")
 parser.add_argument('--system_prompt', type=str, default=DEFAULT_SYSTEM_PROMPT, help="The system prompt of the prompt template.")
+parser.add_argument('--negative_prompt', type=str, default=None, help="Negative prompt in CFG sampling.")
+parser.add_argument('--guidance_scale', type=float, default=1.0, help="The guidance scale for CFG sampling. CFG is enabled by setting `guidance_scale > 1`.")
 args = parser.parse_args()
+
+if args.guidance_scale > 1:
+    try:
+        from transformers.generation import UnbatchedClassifierFreeGuidanceLogitsProcessor
+    except ImportError:
+        raise ImportError("Please install the latest transformers (commit equal or later than d533465) to enable CFG sampling.")
+
 if args.use_vllm:
     if args.lora_model is not None:
         raise ValueError("vLLM currently does not support LoRA, please merge the LoRA weights to the base model.")
@@ -33,6 +42,8 @@ if args.use_vllm:
         raise ValueError("vLLM currently does not support quantization, please use fp16 (default) or unuse --use_vllm.")
     if args.only_cpu:
         raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
+    if args.guidance_scale > 1:
+        raise ValueError("guidance_scale > 1, but vLLM does not support CFG sampling. Please unset guidance_scale. ")
 if args.load_in_8bit and args.load_in_4bit:
     raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 if args.only_cpu is True:
@@ -76,8 +87,7 @@ else:
 
 sample_data = ["为什么要减少污染，保护环境？"]
 
-def generate_prompt(instruction):
-    system_prompt = args.system_prompt or DEFAULT_SYSTEM_PROMPT
+def generate_prompt(instruction, system_prompt = DEFAULT_SYSTEM_PROMPT):
     return TEMPLATE.format_map({'instruction': instruction,'system_prompt': system_prompt})
 
 if __name__ == '__main__':
@@ -156,22 +166,44 @@ if __name__ == '__main__':
                 if len(raw_input_text.strip())==0:
                     break
                 if args.with_prompt:
-                    input_text = generate_prompt(instruction=raw_input_text)
+                    input_text = generate_prompt(instruction=raw_input_text, system_prompt=args.system_prompt)
+                    negative_text = None if args.negative_prompt is None \
+                        else generate_prompt(instruction=raw_input_text, system_prompt=args.negative_prompt)
                 else:
                     input_text = raw_input_text
+                    negative_text = args.negative_prompt
 
                 if args.use_vllm:
                     output = model.generate([input_text], SamplingParams(**generation_config), use_tqdm=False)
                     response = output[0].outputs[0].text
                 else:
                     inputs = tokenizer(input_text,return_tensors="pt")  #add_special_tokens=False ?
-                    generation_output = model.generate(
-                        input_ids = inputs["input_ids"].to(device),
-                        attention_mask = inputs['attention_mask'].to(device),
-                        eos_token_id=tokenizer.eos_token_id,
-                        pad_token_id=tokenizer.pad_token_id,
-                        generation_config = generation_config
-                    )
+                    if args.guidance_scale ==1:
+                        generation_output = model.generate(
+                            input_ids = inputs["input_ids"].to(device),
+                            attention_mask = inputs['attention_mask'].to(device),
+                            eos_token_id=tokenizer.eos_token_id,
+                            pad_token_id=tokenizer.pad_token_id,
+                            generation_config = generation_config
+                        )
+                    else: # enable CFG sampling
+                        if negative_text is None:
+                            negative_prompt_ids = None
+                            negative_prompt_attention_mask = None
+                        else:
+                            negative_inputs = tokenizer(negative_text,return_tensors="pt")
+                            negative_prompt_ids = negative_inputs["input_ids"].to(device)
+                            negative_prompt_attention_mask = negative_inputs["attention_mask"].to(device)
+                        generation_output = model.generate(
+                            input_ids = inputs["input_ids"].to(device),
+                            attention_mask = inputs['attention_mask'].to(device),
+                            eos_token_id=tokenizer.eos_token_id,
+                            pad_token_id=tokenizer.pad_token_id,
+                            generation_config = generation_config,
+                            guidance_scale = args.guidance_scale,
+                            negative_prompt_ids = negative_prompt_ids,
+                            negative_prompt_attention_mask = negative_prompt_attention_mask
+                        )
                     s = generation_output[0]
                     output = tokenizer.decode(s,skip_special_tokens=True)
                     if args.with_prompt:
@@ -185,7 +217,7 @@ if __name__ == '__main__':
             results = []
             if args.use_vllm:
                 if args.with_prompt is True:
-                    inputs = [generate_prompt(example) for example in examples]
+                    inputs = [generate_prompt(example, system_prompt=args.system_prompt) for example in examples]
                 else:
                     inputs = examples
                 outputs = model.generate(inputs, SamplingParams(**generation_config))
@@ -201,18 +233,40 @@ if __name__ == '__main__':
 
             else:
                 for index, example in enumerate(examples):
-                    if args.with_prompt is True:
-                        input_text = generate_prompt(instruction=example)
+                    if args.with_prompt:
+                        input_text = generate_prompt(instruction=example, system_prompt=args.system_prompt)
+                        negative_text = None if args.negative_prompt is None else \
+                            generate_prompt(instruction=example, system_prompt=args.negative_prompt)
                     else:
                         input_text = example
+                        negative_text = args.negative_prompt
                     inputs = tokenizer(input_text,return_tensors="pt")  #add_special_tokens=False ?
-                    generation_output = model.generate(
-                        input_ids = inputs["input_ids"].to(device),
-                        attention_mask = inputs['attention_mask'].to(device),
-                        eos_token_id=tokenizer.eos_token_id,
-                        pad_token_id=tokenizer.pad_token_id,
-                        generation_config = generation_config
-                    )
+                    if args.guidance_scale ==1:
+                        generation_output = model.generate(
+                            input_ids = inputs["input_ids"].to(device),
+                            attention_mask = inputs['attention_mask'].to(device),
+                            eos_token_id=tokenizer.eos_token_id,
+                            pad_token_id=tokenizer.pad_token_id,
+                            generation_config = generation_config
+                        )
+                    else: # enable CFG sampling
+                        if negative_text is None:
+                            negative_prompt_ids = None
+                            negative_prompt_attention_mask = None
+                        else:
+                            negative_inputs = tokenizer(negative_text,return_tensors="pt")
+                            negative_prompt_ids = negative_inputs["input_ids"].to(device)
+                            negative_prompt_attention_mask = negative_inputs["attention_mask"].to(device)
+                        generation_output = model.generate(
+                            input_ids = inputs["input_ids"].to(device),
+                            attention_mask = inputs['attention_mask'].to(device),
+                            eos_token_id=tokenizer.eos_token_id,
+                            pad_token_id=tokenizer.pad_token_id,
+                            generation_config = generation_config,
+                            guidance_scale = args.guidance_scale,
+                            negative_prompt_ids = negative_prompt_ids,
+                            negative_prompt_attention_mask = negative_prompt_attention_mask
+                        )
                     s = generation_output[0]
                     output = tokenizer.decode(s,skip_special_tokens=True)
                     if args.with_prompt:
