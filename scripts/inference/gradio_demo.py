@@ -96,7 +96,7 @@ except ImportError:
     ENABLE_CFG_SAMPLING=False
     print("Install the latest transformers (commit equal or later than d533465) to enable CFG sampling.")
 if args.use_vllm is True:
-    ("CFG sampling is disabled when using vLLM.")
+    print("CFG sampling is disabled when using vLLM.")
     ENABLE_CFG_SAMPLING=False
 
 if args.only_cpu is True:
