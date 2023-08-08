@@ -89,15 +89,15 @@ parser.add_argument(
     help="Port of vLLM service.")
 args = parser.parse_args()
 
-ENABLE_CFG_SAMPLING=True
+ENABLE_CFG_SAMPLING = True
 try:
     from transformers.generation import UnbatchedClassifierFreeGuidanceLogitsProcessor
 except ImportError:
-    ENABLE_CFG_SAMPLING=False
+    ENABLE_CFG_SAMPLING = False
     print("Install the latest transformers (commit equal or later than d533465) to enable CFG sampling.")
 if args.use_vllm is True:
     print("CFG sampling is disabled when using vLLM.")
-    ENABLE_CFG_SAMPLING=False
+    ENABLE_CFG_SAMPLING = False
 
 if args.only_cpu is True:
     args.gpus = ""
@@ -355,13 +355,13 @@ def predict(
     guidance_scale=1.0,
     presence_penalty=0.0,
 ):
-    if len(system_prompt)==0:
+    if len(system_prompt) == 0:
         system_prompt = DEFAULT_SYSTEM_PROMPT
     while True:
         print("len(history):", len(history))
         print("history: ", history)
         history[-1][1] = ""
-        if len(history)==1:
+        if len(history) == 1:
             input = history[0][0]
             prompt = generate_prompt(input,response="", with_system_prompt=True, system_prompt=system_prompt)
         else:
@@ -407,7 +407,7 @@ def predict(
 
     else:
         negative_text = None
-        if len(negative_prompt)!=0:
+        if len(negative_prompt) != 0:
             negative_text = re.sub(r"<<SYS>>\n(.*)\n<</SYS>>", f"<<SYS>>\n{negative_prompt}\n<</SYS>>", prompt)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
