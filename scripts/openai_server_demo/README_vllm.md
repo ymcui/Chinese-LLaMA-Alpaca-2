@@ -32,7 +32,7 @@ python scripts/openai_server_demo/openai_api_server_vllm.py --model /path/to/bas
 
 `--host {host_name}`: 部署服务的host name。默认值是`localhost`
 
-`--prot {port}`: 部署服务的端口号。默认值是`8000`
+`--port {port}`: 部署服务的端口号。默认值是`8000`
 
 ## API文档
 
@@ -118,7 +118,7 @@ json返回体：
 
 `temperature`: 在0和2之间选择的采样温度。较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性。temperature越高，使用随机采样最为decoding的概率越大。
 
-`use_beam_search`: 使用束搜索（beam search）。默认为`False`，即启用随机采样策略（random sampling）
+`use_beam_search`: 使用束搜索（beam search）。默认为`false`，即启用随机采样策略（random sampling）
 
 `n`: 输出序列的数量，默认为1
 
@@ -129,6 +129,8 @@ json返回体：
 `top_p`: 在随机采样（random sampling）时，累积概率超过top_p的token将作为候选token被随机采样，越低随机性越大，举个例子，当top_p设定为0.6时，概率前5的token概率分别为{0.23, 0.20, 0.18, 0.11, 0.10}时，前三个token的累积概率为0.61，那么第4个token将被过滤掉，只有前三的token将作为候选token被随机采样。
 
 `presence_penalty`: 重复惩罚，取值范围-2 ~ 2，默认值为0。值大于0表示鼓励模型使用新的token，反之鼓励重复。
+
+`stream`: 设置为`true`时，按流式输出的形式返回。默认为`false`。
 
 
 ### 聊天（chat completion）
@@ -145,7 +147,7 @@ curl http://localhost:8000/v1/chat/completions \
   -d '{
     "model": "chinese-llama-alpaca-2",
     "messages": [
-      {"role": "user","message": "给我讲一些有关杭州的故事吧"}
+      {"role": "user","content": "给我讲一些有关杭州的故事吧"}
     ]
   }'
 ```
@@ -180,9 +182,9 @@ curl http://localhost:8000/v1/chat/completions \
   -d '{
     "model": "chinese-llama-alpaca-2",
     "messages": [
-      {"role": "user","message": "给我讲一些有关杭州的故事吧"},
-      {"role": "assistant","message": "好的，请问您对杭州有什么特别的偏好吗？"},
-      {"role": "user","message": "我比较喜欢和西湖，可以给我讲一下西湖吗"}
+      {"role": "user","content": "给我讲一些有关杭州的故事吧"},
+      {"role": "assistant","content": "好的，请问您对杭州有什么特别的偏好吗？"},
+      {"role": "user","content": "我比较喜欢和西湖，可以给我讲一下西湖吗"}
     ],
     "repetition_penalty": 1.0
   }'
@@ -216,7 +218,7 @@ json返回体：
 
 `temperature`: 在0和2之间选择的采样温度。较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性。temperature越高，使用随机采样最为decoding的概率越大。
 
-`use_beam_search`: 使用束搜索（beam search）。默认为`False`，即启用随机采样策略（random sampling）
+`use_beam_search`: 使用束搜索（beam search）。默认为`false`，即启用随机采样策略（random sampling）
 
 `n`: 输出序列的数量，默认为1
 
@@ -227,3 +229,5 @@ json返回体：
 `top_p`: 在随机采样（random sampling）时，累积概率超过top_p的token将作为候选token被随机采样，越低随机性越大，举个例子，当top_p设定为0.6时，概率前5的token概率分别为{0.23, 0.20, 0.18, 0.11, 0.10}时，前三个token的累积概率为0.61，那么第4个token将被过滤掉，只有前三的token将作为候选token被随机采样。
 
 `presence_penalty`: 重复惩罚，取值范围-2 ~ 2，默认值为0。值大于0表示鼓励模型使用新的token，反之鼓励重复。
+
+`stream`: 设置为`true`时，按流式输出的形式返回。默认为`false`。
