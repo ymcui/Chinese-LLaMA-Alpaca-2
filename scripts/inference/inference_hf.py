@@ -87,7 +87,7 @@ else:
 
 sample_data = ["为什么要减少污染，保护环境？"]
 
-def generate_prompt(instruction, system_prompt = DEFAULT_SYSTEM_PROMPT):
+def generate_prompt(instruction, system_prompt=DEFAULT_SYSTEM_PROMPT):
     return TEMPLATE.format_map({'instruction': instruction,'system_prompt': system_prompt})
 
 if __name__ == '__main__':
@@ -241,7 +241,7 @@ if __name__ == '__main__':
                         input_text = example
                         negative_text = args.negative_prompt
                     inputs = tokenizer(input_text,return_tensors="pt")  #add_special_tokens=False ?
-                    if args.guidance_scale ==1:
+                    if args.guidance_scale == 1:
                         generation_output = model.generate(
                             input_ids = inputs["input_ids"].to(device),
                             attention_mask = inputs['attention_mask'].to(device),
