@@ -33,7 +33,8 @@ def main():
     # Prepare the LLM
     match model_type:
         case "LlamaCpp":
-            llm = LlamaCpp(model_path=model_path, max_tokens=model_n_ctx, n_ctx=model_n_ctx, n_gpu_layers=1, n_batch=model_n_batch, callbacks=callbacks, n_threads=8, verbose=False)
+            llm = LlamaCpp(model_path=model_path, max_tokens=model_n_ctx, n_ctx=model_n_ctx, 
+                           n_gpu_layers=1, n_batch=model_n_batch, callbacks=callbacks, n_threads=8, verbose=False)
         case "GPT4All":
             llm = GPT4All(model=model_path, max_tokens=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
         case _default:
@@ -50,8 +51,11 @@ def main():
     )
     from langchain import PromptTemplate
     input_with_prompt = PromptTemplate(template=alpaca2_prompt_template, input_variables=["context", "question"])
-    
-    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, return_source_documents= not args.hide_source, chain_type_kwargs={"prompt": input_with_prompt})
+
+    qa = RetrievalQA.from_chain_type(
+        llm=llm, chain_type="stuff", retriever=retriever, 
+        return_source_documents= not args.hide_source, 
+        chain_type_kwargs={"prompt": input_with_prompt})
 
     # Interactive questions and answers
     while True:
