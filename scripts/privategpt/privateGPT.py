@@ -33,7 +33,7 @@ def main():
     # Prepare the LLM
     match model_type:
         case "LlamaCpp":
-            llm = LlamaCpp(model_path=model_path, max_tokens=model_n_ctx, n_ctx=model_n_ctx, 
+            llm = LlamaCpp(model_path=model_path, max_tokens=model_n_ctx, n_ctx=model_n_ctx,
                            n_gpu_layers=1, n_batch=model_n_batch, callbacks=callbacks, n_threads=8, verbose=False)
         case "GPT4All":
             llm = GPT4All(model=model_path, max_tokens=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
@@ -42,7 +42,7 @@ def main():
             raise Exception(f"Model type {model_type} is not supported. Please choose one of the following: LlamaCpp, GPT4All")
 
     # The followings are specifically designed for Chinese-Alpaca-2
-    # For detailed usage: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_en    
+    # For detailed usage: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_en
     alpaca2_prompt_template = (
         "[INST] <<SYS>>\n"
         "You are a helpful assistant. 你是一个乐于助人的助手。\n"
@@ -53,8 +53,8 @@ def main():
     input_with_prompt = PromptTemplate(template=alpaca2_prompt_template, input_variables=["context", "question"])
 
     qa = RetrievalQA.from_chain_type(
-        llm=llm, chain_type="stuff", retriever=retriever, 
-        return_source_documents= not args.hide_source, 
+        llm=llm, chain_type="stuff", retriever=retriever,
+        return_source_documents= not args.hide_source,
         chain_type_kwargs={"prompt": input_with_prompt})
 
     # Interactive questions and answers
