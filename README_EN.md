@@ -108,8 +108,9 @@ Below are the full models, which can be used directly afterwards, without additi
 | :-------------------- | :---------------: | :---------------: | :-----: | :----------------------------------------------------------: |
 | Chinese-LLaMA-2-13B 🆕 | Base model | 120G General Text | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1T3RqEUSmyg6ZuBwMhwSmoQ?pwd=e9qy) [[Google]](https://drive.google.com/drive/folders/1YNa5qJ0x59OEOI7tNODxea-1YvMPoH05?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b) |
 | Chinese-LLaMA-2-7B | Base model | 120G General Text | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1E5NI3nlQpx1j8z3eIzbIlg?pwd=n8k3) [[Google]](https://drive.google.com/drive/folders/18pp4I-mvQxRA7b8vF9gP-2cH_ocnXVKh?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b) |
-| Chinese-Alpaca-2-13B 🆕 | Chat Model | 5M Instructions | 24.7 GB | [Baidu] [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
+| Chinese-Alpaca-2-13B 🆕 | Chat Model | 5M Instructions | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 | Chinese-Alpaca-2-7B | Chat Model | 5M Instructions | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-7b) |
+
 ### LoRA Model Download
 
 Below are the LoRA models, **which cannot be used directly and must be merged with the refactored models according to the tutorial**. Recommended for users with insufficient network bandwidth, who already have the original Llama-2 and light-weight download.
