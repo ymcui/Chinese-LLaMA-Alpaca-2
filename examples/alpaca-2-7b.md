@@ -1,10 +1,10 @@
-# Alpaca-2-7B
+# Chinese-Alpaca-2-7B
 
-以下是Alpaca-2-7B的输出样例。
+以下是Chinese-Alpaca-2-7B的输出样例。
 
 ## 测试设置
 
-- 对话类任务：使用llama.cpp，加载Q6_K量化版的Alpaca-2-7B进行对话，使用`scripts/llama-cpp/chat.sh`脚本启动
+- 对话类任务：使用llama.cpp，加载Q6_K量化版的Chinese-Alpaca-2-7B进行对话，使用`scripts/llama-cpp/chat.sh`脚本启动
 - 非对话类任务：使用`scripts/inference/inference_hf.py`进行解码
 
 系统指令均采用了`prompts/alpaca-2-long.txt`。
