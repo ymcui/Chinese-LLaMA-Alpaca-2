@@ -538,6 +538,7 @@ def main():
         low_cpu_mem_usage=True,
         device_map=device_map
     )
+    model.config.use_cache = False
 
     model_vocab_size = model.get_output_embeddings().weight.size(0)
     tokenizer_vocab_size = len(tokenizer)

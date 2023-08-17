@@ -347,6 +347,7 @@ def main():
         low_cpu_mem_usage=True,
         device_map=device_map
     )
+    model.config.use_cache = False
 
     model_vocab_size = model.get_input_embeddings().weight.shape[0]
     logger.info(f"Model vocab size: {model_vocab_size}")
