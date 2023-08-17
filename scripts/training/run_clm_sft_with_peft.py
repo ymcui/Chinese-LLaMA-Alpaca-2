@@ -337,6 +337,7 @@ def main():
             if model_args.torch_dtype in ["auto", None]
             else getattr(torch, model_args.torch_dtype)
         )
+        device_map = {"":int(os.environ.get("LOCAL_RANK") or 0)}
         model = LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
@@ -345,7 +346,8 @@ def main():
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
             torch_dtype=torch_dtype,
-            low_cpu_mem_usage=True
+            low_cpu_mem_usage=True,
+            device_map=device_map
         )
     else:
         model = AutoModelForCausalLM.from_config(config)
