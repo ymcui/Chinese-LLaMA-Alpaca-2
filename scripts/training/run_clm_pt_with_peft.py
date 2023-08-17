@@ -557,7 +557,7 @@ def main():
 
     if training_args.peft_path is not None:
         logger.info("Peft from pre-trained model")
-        model = PeftModel.from_pretrained(model, training_args.peft_path)
+        model = PeftModel.from_pretrained(model, training_args.peft_path, device_map=device_map)
     else:
         logger.info("Init new peft model")
         target_modules = training_args.trainable.split(',')

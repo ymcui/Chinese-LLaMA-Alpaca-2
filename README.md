@@ -249,6 +249,7 @@
 问题4：为什么不对模型做全量预训练而是用LoRA？
 问题5：二代模型支不支持某些支持一代LLaMA的工具？
 问题6：Chinese-Alpaca-2是Llama-2-Chat训练得到的吗？
+问题7：为什么24G显存微调chinese-alpaca-2-7b OOM？
 ```
 
 

@@ -232,6 +232,7 @@ Question 3: Do you accept third-party Pull Requests?
 Question 4: Why not perform full pre-training but use LoRA instead?
 Question 5: Does Llama-2 series support tools that support the first-gen LLaMA?
 Question 6: Is Chinese-Alpaca-2 trained from Llama-2-Chat?
+Question 7: Why does training with 24GB VRAM lead to an OOM error when fine-tuning chinese-alpaca-2-7b?
 ```
 
 For specific questions and answers, please refer to the project >>> [📚 GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/faq_en)

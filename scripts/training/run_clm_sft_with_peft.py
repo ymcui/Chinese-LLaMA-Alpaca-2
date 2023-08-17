@@ -51,7 +51,6 @@ from transformers.utils.versions import require_version
 from peft import LoraConfig, TaskType, get_peft_model, PeftModel, get_peft_model_state_dict
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
 
-IGNORE_INDEX = -100
 
 require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/language-modeling/requirements.txt")
 
@@ -363,7 +362,7 @@ def main():
 
     if training_args.peft_path is not None:
         logger.info("Peft from pre-trained model")
-        model = PeftModel.from_pretrained(model, training_args.peft_path)
+        model = PeftModel.from_pretrained(model, training_args.peft_path, device_map=device_map)
     else:
         logger.info("Init new peft model")
         target_modules = training_args.trainable.split(',')
