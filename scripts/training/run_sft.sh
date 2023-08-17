@@ -11,6 +11,7 @@ dataset_dir=path/to/sft/data/dir
 per_device_train_batch_size=1
 per_device_eval_batch_size=1
 gradient_accumulation_steps=8
+max_seq_length=512
 output_dir=output_dir
 peft_model=path/to/peft/model/dir
 validation_file=validation_file_name
@@ -22,7 +23,6 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_sft_with_peft.py \
     --model_name_or_path ${pretrained_model} \
     --tokenizer_name_or_path ${chinese_tokenizer_path} \
     --dataset_dir ${dataset_dir} \
-    --validation_split_percentage 0.001 \
     --per_device_train_batch_size ${per_device_train_batch_size} \
     --per_device_eval_batch_size ${per_device_eval_batch_size} \
     --do_train \
@@ -43,7 +43,7 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_sft_with_peft.py \
     --save_steps 200 \
     --gradient_accumulation_steps ${gradient_accumulation_steps} \
     --preprocessing_num_workers 8 \
-    --max_seq_length 1024 \
+    --max_seq_length ${max_seq_length} \
     --output_dir ${output_dir} \
     --overwrite_output_dir \
     --ddp_timeout 30000 \

@@ -294,7 +294,7 @@ def main():
             "You can do it from another script, save it, and load it from here, using --tokenizer_name."
         )
 
-    if (len(tokenizer))!=55296:
+    if (len(tokenizer)) != 55296:
         raise ValueError(f"The vocab size of the tokenizer should be 55296, but found {len(tokenizer)}.\n"
                          "Please use Chinese-LLaMA-2 tokenizer.")
 
@@ -330,28 +330,23 @@ def main():
         logger.info("Evaluation example:")
         logger.info(tokenizer.decode(eval_dataset[0]['input_ids']))
 
-    if model_args.model_name_or_path:
-        torch_dtype = (
-            model_args.torch_dtype
-            if model_args.torch_dtype in ["auto", None]
-            else getattr(torch, model_args.torch_dtype)
-        )
-        device_map = {"":int(os.environ.get("LOCAL_RANK") or 0)}
-        model = LlamaForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
-            config=config,
-            cache_dir=model_args.cache_dir,
-            revision=model_args.model_revision,
-            use_auth_token=True if model_args.use_auth_token else None,
-            torch_dtype=torch_dtype,
-            low_cpu_mem_usage=True,
-            device_map=device_map
-        )
-    else:
-        model = AutoModelForCausalLM.from_config(config)
-        n_params = sum({p.data_ptr(): p.numel() for p in model.parameters()}.values())
-        logger.info(f"Training new model from scratch - Total size={n_params/2**20:.2f}M params")
+    torch_dtype = (
+        model_args.torch_dtype
+        if model_args.torch_dtype in ["auto", None]
+        else getattr(torch, model_args.torch_dtype)
+    )
+    device_map = {"":int(os.environ.get("LOCAL_RANK") or 0)}
+    model = LlamaForCausalLM.from_pretrained(
+        model_args.model_name_or_path,
+        from_tf=bool(".ckpt" in model_args.model_name_or_path),
+        config=config,
+        cache_dir=model_args.cache_dir,
+        revision=model_args.model_revision,
+        use_auth_token=True if model_args.use_auth_token else None,
+        torch_dtype=torch_dtype,
+        low_cpu_mem_usage=True,
+        device_map=device_map
+    )
 
     model_vocab_size = model.get_input_embeddings().weight.shape[0]
     logger.info(f"Model vocab size: {model_vocab_size}")
