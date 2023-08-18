@@ -21,6 +21,7 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --tokenizer_name_or_path ${chinese_tokenizer_path} \
     --dataset_dir ${dataset_dir} \
     --data_cache_dir ${data_cache} \
+    --validation_split_percentage 0.001 \
     --per_device_train_batch_size ${per_device_train_batch_size} \
     --do_train \
     --seed $RANDOM \
