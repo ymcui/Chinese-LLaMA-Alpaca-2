@@ -2,11 +2,10 @@ lr=2e-4
 lora_rank=64
 lora_alpha=128
 lora_trainable="q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"
-modules_to_save="embed_tokens,lm_head"
 lora_dropout=0.05
 
-pretrained_model=path/to/hf/llama-2/dir
-chinese_tokenizer_path=path/to/chinese/llama-2/tokenizer/dir
+pretrained_model=path/to/hf/chinese-llama-2/dir
+chinese_tokenizer_path=path/to/chinese/chinese-llama-2/tokenizer/dir
 dataset_dir=path/to/pt/data/dir
 data_cache=temp_data_cache_dir
 per_device_train_batch_size=1
@@ -46,8 +45,5 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --lora_rank ${lora_rank} \
     --lora_alpha ${lora_alpha} \
     --trainable ${lora_trainable} \
-    --modules_to_save ${modules_to_save} \
     --lora_dropout ${lora_dropout} \
-    --torch_dtype float16 \
-    --gradient_checkpointing \
-    --ddp_find_unused_parameters False
+    --torch_dtype float16 
