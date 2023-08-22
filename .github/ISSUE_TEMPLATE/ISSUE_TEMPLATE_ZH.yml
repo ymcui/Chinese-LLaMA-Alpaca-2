@@ -13,9 +13,9 @@ body:
       options:
         - label: 请确保使用的是仓库最新代码（git pull），一些问题已被解决和修复。
           required: true      
-        - label: 我已阅读[项目文档](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)和[FAQ章节](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/常见问题)并且已在Issue中对问题进行了搜索，没有找到相似问题和解决方案
+        - label: 我已阅读[项目文档](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)和[FAQ章节](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/常见问题)并且已在Issue中对问题进行了搜索，没有找到相似问题和解决方案。
           required: true
-        - label: 第三方插件问题：例如[llama.cpp](https://github.com/ggerganov/llama.cpp)、[text-generation-webui](https://github.com/oobabooga/text-generation-webui)等，同时建议到对应的项目中查找解决方案
+        - label: 第三方插件问题：例如[llama.cpp](https://github.com/ggerganov/llama.cpp)、[LangChain](https://github.com/hwchase17/langchain)、[text-generation-webui](https://github.com/oobabooga/text-generation-webui)等，同时建议到对应的项目中查找解决方案。
           required: true
   - type: dropdown
     id: question-type
@@ -37,7 +37,9 @@ body:
       description: 请提供问题涉及的具体模型。
       options:
         - LLaMA-2-7B
+        - LLaMA-2-13B
         - Alpaca-2-7B
+        - Alpaca-2-13B
   - type: dropdown
     id: operating-system
     attributes:
@@ -54,7 +56,7 @@ body:
       description: 请尽量具体地描述遇到的问题，**代码程序类问题务必给出完整运行命令**，这将有助于快速定位问题所在。
       value: |
         ```
-        # 请在此处粘贴运行代码（如没有可删除该代码块）
+        # 请在此处粘贴运行代码（请粘贴在本代码块里）
         ```
   - type: textarea
     id: dependencies
@@ -63,7 +65,7 @@ body:
       description: 请提供transformers, peft, torch等常规依赖库的版本：`pip list | grep -E 'transformers|peft|torch'`
       value: |
         ```
-        # 请在此处粘贴依赖情况
+        # 请在此处粘贴依赖情况（请粘贴在本代码块里）
         ```
   - type: textarea
     id: logs
@@ -72,5 +74,5 @@ body:
       description: 请优先提供文本形式的log（过长内容请上传文件），粘贴内容放在markdown代码块。或者提供截图形式的运行记录。
       value: |
         ```
-        # 请在此处粘贴运行日志
+        # 请在此处粘贴运行日志（请粘贴在本代码块里）
         ```

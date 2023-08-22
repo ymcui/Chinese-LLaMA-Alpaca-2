@@ -15,7 +15,7 @@ body:
           required: true
         - label: I have read the [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki) and [FAQ section](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/FAQ) AND searched for similar issues and did not find a similar problem or solution
           required: true
-        - label: Third-party plugin issues - e.g., [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), we recommend checking the corresponding project for solutions
+        - label: Third-party plugin issues - e.g., [llama.cpp](https://github.com/ggerganov/llama.cpp), [LangChain](https://github.com/hwchase17/langchain), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), we recommend checking the corresponding project for solutions
           required: true
   - type: dropdown
     id: question-type
@@ -37,7 +37,9 @@ body:
       description: Please provide the type of base model. For issues related to multiple models, please select the most appropriate one and specify all models in the main text.
       options:
         - LLaMA-2-7B
+        - LLaMA-2-13B
         - Alpaca-2-7B
+        - Alpaca-2-13B
   - type: dropdown
     id: operating-system
     attributes:
