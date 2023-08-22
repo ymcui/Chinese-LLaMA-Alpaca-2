@@ -1,11 +1,14 @@
+# 运行脚本前请仔细阅读wiki(https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh)
+# Read the wiki(https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh) carefully before running the script
 lr=1e-4
 lora_rank=64
 lora_alpha=128
 lora_trainable="q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"
+modules_to_save="embed_tokens,lm_head"
 lora_dropout=0.05
 
-pretrained_model=path/to/hf/chinese-alpaca-2/dir/or/model_id
-chinese_tokenizer_path=path/to/chinese/chinese-alpaca-2/tokenizer/dir
+pretrained_model=path/to/hf/llama-2/or/chinese-llama-2/dir/or/model_id
+chinese_tokenizer_path=path/to/chinese-llama-2/tokenizer/dir
 dataset_dir=path/to/sft/data/dir
 per_device_train_batch_size=1
 per_device_eval_batch_size=1
@@ -50,5 +53,6 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_sft_with_peft.py \
     --lora_alpha ${lora_alpha} \
     --trainable ${lora_trainable} \
     --lora_dropout ${lora_dropout} \
+    --modules_to_save ${modules_to_save} \
     --torch_dtype float16 \
     --validation_file ${validation_file}
