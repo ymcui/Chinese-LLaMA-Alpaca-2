@@ -8,7 +8,7 @@ modules_to_save="embed_tokens,lm_head"
 lora_dropout=0.05
 
 pretrained_model=path/to/hf/llama-2/dir
-chinese_tokenizer_path=path/to/chinese/chinese-llama-2/tokenizer/dir
+chinese_tokenizer_path=path/to/chinese-llama-2/tokenizer/dir
 dataset_dir=path/to/pt/data/dir
 data_cache=temp_data_cache_dir
 per_device_train_batch_size=1
