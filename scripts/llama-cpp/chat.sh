@@ -9,7 +9,7 @@ MODEL_PATH=$1
 FIRST_INSTRUCTION=$2
 
 ./main -m "$MODEL_PATH" \
---color -i -c 4096 -t 8 --temp 0.5 --top_k 40 --top_p 0.9 --repeat_penalty 1.1 -eps 1e-5 \
+--color -i -c 4096 -t 8 --temp 0.5 --top_k 40 --top_p 0.9 --repeat_penalty 1.1 \
 --in-prefix-bos --in-prefix ' [INST] ' --in-suffix ' [/INST]' -p \
 "[INST] <<SYS>>
 $SYSTEM_PROMPT
