@@ -388,10 +388,10 @@ def main():
         if hasattr(model.base_model, "enable_input_require_grads"):
             model.base_model.enable_input_require_grads()
         elif hasattr(model.base_model, "get_input_embeddings"):
-            def make_inputs_require_grad(module, input, output):
-                output.requires_grad_(True)
+            def make_inputs_require_grad(_module, _input, _output):
+                _output.requires_grad_(True)
             model.base_model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-            
+
     #model.base_model.tie_weights()
     model.print_trainable_parameters()
     logger.info(f"model.modules_to_save: {model.modules_to_save}")
