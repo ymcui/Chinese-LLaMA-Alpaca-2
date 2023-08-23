@@ -26,7 +26,7 @@ python scripts/openai_server_demo/openai_api_server_vllm.py --model /path/to/bas
 
 `--tokenizer-mode {tokenizer-mode}`: tokenizer的模式。使用基于LLaMA/LLaMa-2的模型时，固定为`slow`
 
-`--tensor_parallel_size {tensor_parallel_size}`: 使用的GPU数量。默认为1
+`--tensor-parallel-size {tensor_parallel_size}`: 使用的GPU数量。默认为1
 
 `--served-model-name {served-model-name}`: API中使用的模型名。若使用中文Alpaca-2系列模型，模型名中务必包含`chinese-llama-alpaca-2`
 
