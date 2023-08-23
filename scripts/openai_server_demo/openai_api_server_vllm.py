@@ -48,7 +48,7 @@ import fastchat
 register_conv_template(
     Conversation(
         name="chinese-llama-alpaca",
-        system="Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n",
+        system_message="Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n",
         roles=("### Instruction:\n", "### Response:"),
         messages=(),
         offset=0,
@@ -62,7 +62,7 @@ register_conv_template(
 register_conv_template(
     Conversation(
         name="chinese-llama-alpaca-2",
-        system="[INST] <<SYS>>\nYou are a helpful assistant. 你是一个乐于助人的助手。\n<</SYS>>\n\n",
+        system_message="[INST] <<SYS>>\nYou are a helpful assistant. 你是一个乐于助人的助手。\n<</SYS>>\n\n",
         roles=("[INST]", "[/INST]"),
         messages=(),
         offset=0,
@@ -131,7 +131,7 @@ async def get_gen_prompt(request) -> str:
     conv = get_conversation_template(request.model)
     conv = Conversation(
         name=conv.name,
-        system=conv.system,
+        system_message=conv.system_message,
         roles=conv.roles,
         messages=list(conv.messages),  # prevent in-place modification
         offset=conv.offset,
@@ -148,7 +148,7 @@ async def get_gen_prompt(request) -> str:
         for message in request.messages:
             msg_role = message["role"]
             if msg_role == "system":
-                conv.system = message["content"]
+                conv.system_message = message["content"]
             elif msg_role == "user":
                 conv.append_message(conv.roles[0], message["content"])
             elif msg_role == "assistant":
@@ -167,7 +167,7 @@ async def get_gen_prompt_nochat(request) -> str:
     conv = get_conversation_template(request.model)
     conv = Conversation(
         name=conv.name,
-        system=conv.system,
+        system_message=conv.system_message,
         roles=conv.roles,
         messages=list(conv.messages),  # prevent in-place modification
         offset=conv.offset,
