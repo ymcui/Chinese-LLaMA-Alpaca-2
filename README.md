@@ -21,7 +21,7 @@
 - 🚀 开源了预训练脚本、指令精调脚本，用户可根据需要进一步训练模型
 - 🚀 使用个人电脑的CPU/GPU快速在本地进行大模型量化和部署体验
 - 🚀 支持[🤗transformers](https://github.com/huggingface/transformers), [llama.cpp](https://github.com/ggerganov/llama.cpp), [text-generation-webui](https://github.com/oobabooga/text-generation-webui), [LangChain](https://github.com/hwchase17/langchain), [privateGPT](https://github.com/imartinez/privateGPT), [vLLM](https://github.com/vllm-project/vllm)等LLaMA生态
-- 目前已开源的模型：Chinese-LLaMA-2（7B/13B）, Chinese-Alpaca-2（7B/13B）(更大的模型可先参考[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca))
+- 已开源的模型：Chinese-LLaMA-2（7B/13B）, Chinese-Alpaca-2（7B/13B）(更大模型可参考[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca))
 
 ![](./pics/screencast.gif)
 
@@ -214,8 +214,8 @@
 
 | llama.cpp |    F16 |   Q2_K |  Q3_K |  Q4_0 |  Q4_1 |  Q4_K |  Q5_0 |  Q5_1 |  Q5_K |  Q6_K |  Q8_0 |
 | --------- | -----: | -----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: | ----: |
-| PPL       |  9.128 | 13.640 | 9.910 | 9.476 | 9.576 | 9.257 | 9.156 | 9.213 | 9.141 | 9.143 | 9.129 |
-| Size      | 12.91G |  2.77G | 3.17G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
+| PPL       |  9.128 | 11.107 | 9.576 | 9.476 | 9.576 | 9.240 | 9.156 | 9.213 | 9.168 | 9.133 | 9.129 |
+| Size      | 12.91G |  2.41G | 3.18G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
 | CPU Speed |    117 |     42 |    51 |    39 |    44 |    43 |    48 |    51 |    50 |    54 |    65 |
 | GPU Speed |     53 |     19 |    21 |    17 |    18 |    20 |     x |     x |    25 |    26 |     x |
 
