@@ -382,6 +382,16 @@ def main():
             modules_to_save=modules_to_save)
         model = get_peft_model(model, peft_config)
 
+    if training_args.gradient_checkpointing and \
+        (not model.modules_to_save or 'embed_tokens' not in model.modules_to_save):
+        # enable requires_grad to avoid exception during backward pass when using gradient_checkpoint without tuning embed.
+        if hasattr(model.base_model, "enable_input_require_grads"):
+            model.base_model.enable_input_require_grads()
+        elif hasattr(model.base_model, "get_input_embeddings"):
+            def make_inputs_require_grad(module, input, output):
+                output.requires_grad_(True)
+            model.base_model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+            
     #model.base_model.tie_weights()
     model.print_trainable_parameters()
     logger.info(f"model.modules_to_save: {model.modules_to_save}")
