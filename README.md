@@ -13,7 +13,7 @@
 </p>
 
 
-本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K上下文长度**，并可通过NTK方法最高扩展至24K-32K。
+本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K上下文长度**，并可通过NTK方法最高扩展至24K+上下文长度。
 
 **本项目主要内容：**
 
@@ -40,7 +40,7 @@
 
 ## 新闻
 
-**[2023/08/25] 发布长上下文模型Chinese-LLaMA-2-7B-16K和Chinese-LLaMA-2-13B-16K，支持16K上下文，并可通过NTK方法进一步扩展至24-32K。详情查看[📚 v3.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v2.0)**
+**[2023/08/25] 发布长上下文模型Chinese-LLaMA-2-7B-16K和Chinese-LLaMA-2-13B-16K，支持16K上下文，并可通过NTK方法进一步扩展至24K+。详情查看[📚 v3.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)**
 
 [2023/08/14] 发布Chinese-LLaMA-2-13B和Chinese-Alpaca-2-13B，添加text-generation-webui/LangChain/privateGPT支持，添加CFG Sampling解码方法等。详情查看[📚 v2.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v2.0)
 
@@ -126,13 +126,15 @@
 | Chinese-Alpaca-2-13B | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 | Chinese-Alpaca-2-7B | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-7b) |
 
-以下是长上下文版模型，如果下游任务主要以长文本为主则建议使用，否则建议使用上述标准版。
+以下是长上下文版模型，**推荐以长文本为主的下游任务使用**，否则建议使用上述标准版。
 
-| 模型名称                  |   类型   |  大小   | 下载地址 |
-| :------------------------ | :------: | :-----: | :------: |
-| Chinese-LLaMA-2-13B-16K 🆕 | 基座模型 | 24.7 GB |          |
-| Chinese-LLaMA-2-7B-16K 🆕  | 基座模型 | 12.9 GB |          |
+| 模型名称                  |   类型   |  大小   |                           下载地址                           |
+| :------------------------ | :------: | :-----: | :----------------------------------------------------------: |
+| Chinese-LLaMA-2-13B-16K 🆕 | 基座模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1XWrh3Ru9x4UI4-XmocVT2w?pwd=f7ik) [[Google]](https://drive.google.com/drive/folders/1nii6lF0DgB1u81CnsE4cCK2jD5oq_OW-?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b-16k) |
+| Chinese-LLaMA-2-7B-16K 🆕  | 基座模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b-16k) |
 
+> [!IMPORTANT] 
+> 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)。
 
 ### LoRA模型下载
 
@@ -145,12 +147,12 @@
 | Chinese-Alpaca-2-LoRA-13B | 指令模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [[百度]](https://pan.baidu.com/s/1Y5giIXOUUzI4Na6JOcviVA?pwd=tc2j) [[Google]](https://drive.google.com/file/d/1z2FIInsYJBTXipgztc-Mv7kkeqscx442/view?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-lora-13b) |
 | Chinese-Alpaca-2-LoRA-7B | 指令模型 | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [[百度]](https://pan.baidu.com/s/1g0olPxkB_rlZ9UUVfOnbcw?pwd=5e7w) [[Google]](https://drive.google.com/file/d/1MzJL-ZIzdJW7MIcAiYIDIDJ5dlMi8Kkk/view?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-lora-7b) |
 
-以下是长上下文版模型，如果下游任务主要以长文本为主则建议使用，否则建议使用上述标准版。
+以下是长上下文版模型，只推荐以长文本为主的下游任务使用，否则建议使用上述标准版。
 
 | 模型名称                  |   类型   |                   合并所需基模型                   | 大小 |                    LoRA下载地址                    |
 | :------------------------ | :------: | :--------------------------------------------------------: | :----------------: | :----------------------------------------------------------: |
-| Chinese-LLaMA-2-LoRA-13B-16K 🆕 | 基座模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB |  |
-| Chinese-LLaMA-2-LoRA-7B-16K 🆕 | 基座模型 |        [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)        | 1.1 GB |  |
+| Chinese-LLaMA-2-LoRA-13B-16K 🆕 | 基座模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [百度] [Google] [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-13b-16k) |
+| Chinese-LLaMA-2-LoRA-7B-16K 🆕 | 基座模型 |        [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)        | 1.1 GB | [百度] [Google] [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-7b-16k) |
 
 
 > [!IMPORTANT] 
@@ -188,16 +190,16 @@
 
 **⚔️ 模型竞技场：[http://llm-arena.ymcui.com](http://llm-arena.ymcui.com/)**
 
-| 系统                                                         | 对战胜率(无平局) ↓ | Elo评分 |
-| ------------------------------------------------------------ | :----------------: | :-----: |
-| **Alpaca-2-13B**                                             |       72.37%       | 1610.34 |
-| [Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       65.72%       | 1610.73 |
-| **Alpaca-2-7B**                                              |       63.35%       | 1561.48 |
-| [Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       62.76%       | 1583.41 |
-| [Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       61.42%       | 1497.83 |
-| [Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       31.62%       | 1439.39 |
-| [Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       23.45%       | 1351.60 |
-| [Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |       20.68%       | 1345.23 |
+| 系统                                                         | 对战胜率（无平局） ↓ | Elo评分 |
+| ------------------------------------------------------------ | :------------------: | :-----: |
+| **Alpaca-2-13B**                                             |        72.37%        | 1610.34 |
+| [Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.72%        | 1610.73 |
+| **Alpaca-2-7B**                                              |        63.35%        | 1561.48 |
+| [Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.76%        | 1583.41 |
+| [Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.42%        | 1497.83 |
+| [Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.62%        | 1439.39 |
+| [Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.45%        | 1351.60 |
+| [Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        20.68%        | 1345.23 |
 
 > [!NOTE]
 > 以上结果截至2023年8月24日。最新结果请进入[**⚔️竞技场**](http://llm-arena.ymcui.com/)进行查看。
@@ -229,17 +231,14 @@
 
 ### 长上下文版模型评测
 
-PPL变化：
+[LongBench](https://github.com/THUDM/LongBench)是一个大模型**长文本理解能力**的评测基准，由6大类、20个不同的任务组成，多数任务的平均长度在5K-15K之间，共包含约4.5K条测试数据。以下是本项目长上下文版模型在该数据集（中文任务子集）上的评测效果。LongBench推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
 
-1
-
-2
-
-LongBench：
-
-1
-
-2
+| Models                      | 单文档QA | 多文档QA | 摘要 | Few-shot学习 | 代码补全 | 合成任务 | Avg  |
+| --------------------------- | :------: | :------: | :--: | :----------: | :------: | :------: | :--: |
+| Chinese-LLaMA-2-7B          |   20.7   |   14.5   | 6.5  |     12.8     |   11.5   |   5.3    | 11.9 |
+| **Chinese-LLaMA-2-7B-16K**  |          |          |      |              |          |          |      |
+| Chinese-LLaMA-2-13B         |   26.7   |   14.0   | 4.4  |     16.3     |   9.9    |   5.5    | 12.8 |
+| **Chinese-LLaMA-2-13B-16K** |          |          |      |              |          |          |      |
 
 ### 量化效果评测
 
@@ -286,7 +285,8 @@ LongBench：
 问题4：为什么不对模型做全量预训练而是用LoRA？
 问题5：二代模型支不支持某些支持一代LLaMA的工具？
 问题6：Chinese-Alpaca-2是Llama-2-Chat训练得到的吗？
-问题7：为什么24G显存微调chinese-alpaca-2-7b OOM？
+问题7：为什么24G显存微调Chinese-Alpaca-2-7B会OOM？
+问题8：可以使用16K长上下文版模型替代标准版模型吗？
 ```
 
 
