@@ -63,7 +63,8 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 from attn_and_long_ctx_patches import apply_attention_patch, apply_ntk_scaling_patch
-apply_attention_patch(use_memory_efficient_attention=True)
+if not args.only_cpu:
+    apply_attention_patch(use_memory_efficient_attention=True)
 apply_ntk_scaling_patch(args.alpha)
 
 if args.use_vllm:
@@ -131,7 +132,7 @@ if __name__ == '__main__':
             base_model.resize_token_embeddings(tokenizer_vocab_size)
         if args.lora_model is not None:
             print("loading peft model")
-            model = PeftModel.from_pretrained(base_model, args.lora_model,torch_dtype=load_type,device_map='auto',)
+            model = PeftModel.from_pretrained(base_model, args.lora_model,torch_dtype=load_type,device_map='auto',).half()
         else:
             model = base_model
 
