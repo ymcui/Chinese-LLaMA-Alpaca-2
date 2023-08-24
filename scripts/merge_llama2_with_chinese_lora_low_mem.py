@@ -317,15 +317,19 @@ if __name__=='__main__':
     if output_type=='huggingface':
         configs = ('config.json', 'generation_config.json', 'pytorch_model.bin.index.json')
         for config in configs:
-            if os.path.exists(os.path.join(base_model_path, config)):
-                print(f"Saving {config}")
+            if os.path.exists(os.path.join(lora_model_path, config)):
+                print(f"Saving {config} from {lora_model_path}")
+                with open(os.path.join(lora_model_path, config),'r') as f:
+                    obj = json.load(f)
+            else:
+                print(f"Saving {config} from {base_model_path}")
                 with open(os.path.join(base_model_path, config),'r') as f:
                     obj = json.load(f)
                 if config=='config.json':
                     obj['vocab_size'] = len(tokenizers_and_loras[-1]['tokenizer'])
                 if config=='pytorch_model.bin.index.json':
                     obj['metadata']['total_size'] = total_size
-                with open(os.path.join(output_dir, config), 'w') as f:
-                    json.dump(obj, f, indent=2)
+            with open(os.path.join(output_dir, config), 'w') as f:
+                json.dump(obj, f, indent=2)
     print("Done.")
     print(f"Check output dir: {output_dir}")
