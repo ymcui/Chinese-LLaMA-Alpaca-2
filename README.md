@@ -140,6 +140,7 @@
 
 | 工具                                                         | 特点                         | CPU  | GPU  | 量化 | GUI  | API  | vLLM |                             教程                             |
 | :----------------------------------------------------------- | ---------------------------- | :--: | :--: | :--: | :--: | :--: | :--: | :----------------------------------------------------------: |
+| [**lmdeploy**](https://github.com/internlm/lmdeploy)      | GPU 服务端极致优化，支持多 batch、w4 和 kv8 量化 |  ❌   |  ✅   |  ✅   |  ✅   |  ✅   |  ❌   | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/lmdeploy_zh) |
 | [**llama.cpp**](https://github.com/ggerganov/llama.cpp)      | 丰富的量化选项和高效本地推理 |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ❌   | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh) |
 | [**🤗Transformers**](https://github.com/huggingface/transformers) | 原生transformers推理接口     |  ✅   |  ✅   |  ✅   |  ✅   |  ❌   |  ✅  | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh) |
 | [**Colab Demo**](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) | 在Colab中启动交互界面 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | [link](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) |
