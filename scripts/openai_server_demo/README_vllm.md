@@ -10,7 +10,7 @@
 
 安装依赖
 ``` shell
-pip install fastapi uvicorn shortuuid vllm
+pip install fastapi uvicorn shortuuid vllm fschat
 ```
 
 启动脚本

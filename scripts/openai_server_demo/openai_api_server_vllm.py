@@ -4,6 +4,7 @@ from http import HTTPStatus
 import json
 import time
 from typing import AsyncGenerator, Dict, List, Optional
+from packaging import version
 
 import fastapi
 from fastapi import BackgroundTasks, Request
@@ -44,11 +45,50 @@ from fastchat.conversation import register_conv_template, get_conv_template
 from fastchat.model.model_adapter import BaseModelAdapter, model_adapters
 import fastchat
 
+def compare_version(version1, version2):
+    # if v1 >= v2, return True, else return False
+    v1 = version.parse(version1)
+    v2 = version.parse(version2)
+    return v1 >= v2
+
+if compare_version(fastchat.__version__, '0.2.23'):
+    use_old_conversation = False
+else:
+    use_old_conversation = True
+
+def getConversation(name, system, roles, messages, offset, sep_style, sep, sep2=None, stop_str=None, stop_token_ids=None):
+    if not use_old_conversation:
+        return Conversation(
+            name=name,
+            system_message=system,
+            roles=roles,
+            messages=messages,
+            offset=offset,
+            sep_style=sep_style,
+            sep=sep,
+            sep2=sep2,
+            stop_str=stop_str,
+            stop_token_ids=stop_token_ids
+        )
+    else:
+        return Conversation(
+            name=name,
+            system=system,
+            roles=roles,
+            messages=messages,
+            offset=offset,
+            sep_style=sep_style,
+            sep=sep,
+            sep2=sep2,
+            stop_str=stop_str,
+            stop_token_ids=stop_token_ids
+        )
+
 # Chinese LLaMA Alpaca default template
 register_conv_template(
-    Conversation(
+    getConversation(
         name="chinese-llama-alpaca",
-        system_message="Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n",
+        system="Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n",
         roles=("### Instruction:\n", "### Response:"),
         messages=(),
         offset=0,
@@ -60,9 +100,9 @@ register_conv_template(
 
 # Chinese LLaMA Alpaca 2 default template
 register_conv_template(
-    Conversation(
+    getConversation(
         name="chinese-llama-alpaca-2",
-        system_message="[INST] <<SYS>>\nYou are a helpful assistant. 你是一个乐于助人的助手。\n<</SYS>>\n\n",
+        system="[INST] <<SYS>>\nYou are a helpful assistant. 你是一个乐于助人的助手。\n<</SYS>>\n\n",
         roles=("[INST]", "[/INST]"),
         messages=(),
         offset=0,
@@ -129,9 +169,9 @@ async def check_model(request) -> Optional[JSONResponse]:
 
 async def get_gen_prompt(request) -> str:
     conv = get_conversation_template(request.model)
-    conv = Conversation(
+    conv = getConversation(
         name=conv.name,
-        system_message=conv.system_message,
+        system=conv.system_message if not use_old_conversation else conv.system,
         roles=conv.roles,
         messages=list(conv.messages),  # prevent in-place modification
         offset=conv.offset,
@@ -148,7 +188,10 @@ async def get_gen_prompt(request) -> str:
         for message in request.messages:
             msg_role = message["role"]
             if msg_role == "system":
-                conv.system_message = message["content"]
+                if not use_old_conversation:
+                    conv.system_message = message["content"]
+                else:
+                    conv.system = message["content"]
             elif msg_role == "user":
                 conv.append_message(conv.roles[0], message["content"])
             elif msg_role == "assistant":
@@ -165,9 +208,9 @@ async def get_gen_prompt(request) -> str:
 
 async def get_gen_prompt_nochat(request) -> str:
     conv = get_conversation_template(request.model)
-    conv = Conversation(
+    conv = getConversation(
         name=conv.name,
-        system_message=conv.system_message,
+        system=conv.system_message if not use_old_conversation else conv.system,
         roles=conv.roles,
         messages=list(conv.messages),  # prevent in-place modification
         offset=conv.offset,
