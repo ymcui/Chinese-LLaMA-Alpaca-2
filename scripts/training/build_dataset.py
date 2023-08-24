@@ -62,7 +62,7 @@ def build_instruction_dataset(data_path: Union[List[str],str],
 
         if data_cache_dir is None:
             data_cache_dir = str(os.path.dirname(file))
-        cache_path = os.path.join(data_cache_dir,os.path.basename(file).split('.')[0])
+        cache_path = os.path.join(data_cache_dir,os.path.basename(file).split('.')[0]+f"_{max_seq_length}")
         os.makedirs(cache_path, exist_ok=True)
         try:
             processed_dataset = datasets.load_from_disk(cache_path)
