@@ -42,13 +42,11 @@ def main(args, evaluator,take):
         print(f"{index/len(subject_list)} Inference starts at {run_date} on {args.model_path} with subject of {subject_name}!")
         val_file_path=os.path.join(args.input_dir+'/test',f'{subject_name}.csv')
         dev_file_path=os.path.join(args.input_dir+'/dev',f'{subject_name}.csv')
-        test_file_path=os.path.join(args.input_dir+'/test',f'{subject_name}.csv')
-
 
         val_df=pd.read_csv(val_file_path)
         dev_df=pd.read_csv(dev_file_path) if args.few_shot else None
 
-        correct_ratio, answers = evaluator.eval_subject(subject_name, val_df, dev_df, 
+        correct_ratio, answers = evaluator.eval_subject(subject_name, val_df, dev_df,
             save_result_dir=save_result_dir if args.do_save_csv else None,
             few_shot=args.few_shot,
             cot=args.cot,
@@ -62,7 +60,7 @@ def main(args, evaluator,take):
                                  "num":len(val_df),
                                  "correct":correct_ratio*len(val_df)/100}
         all_answers[subject_name] = answers
-    
+
     json.dump(all_answers,open(save_result_dir+'/submission.json','w'),ensure_ascii=False,indent=4)
     print("\n\nModel:",args.model_path)
     print("Accuracy:")

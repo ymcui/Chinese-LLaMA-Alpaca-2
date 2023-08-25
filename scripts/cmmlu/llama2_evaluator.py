@@ -97,7 +97,7 @@ class Llama_Evaluator(Evaluator):
                     generation_config = self.generation_config
                 )
 
-            batch_size, length = inputs.input_ids.shape
+            _, length = inputs.input_ids.shape
             if constrained_decoding is True:
                 logits = generation_output.scores[0][0]
 
@@ -110,7 +110,7 @@ class Llama_Evaluator(Evaluator):
                 response = self.tokenizer.decode([logits.argmax(-1).item()])
             else:
                 response = self.tokenizer.decode(generation_output[0, length:], skip_special_tokens=True)
-                ans, direct_extract = self.extract_answer(row, response)
+                ans, _ = self.extract_answer(row, response)
             if ans == answers[row_index]:
                 correct_num += 1
                 correct = 1
@@ -174,7 +174,7 @@ class Llama_Evaluator(Evaluator):
         return prompt
 
     def generate_few_shot_prompt(self, subject, dev_df, cot=False):
-        DEFAULT_SYSTEM_PROMPT = """你是一个乐于助人的助手。"""  
+        DEFAULT_SYSTEM_PROMPT = """你是一个乐于助人的助手。"""
         prompt = f"以下是中国关于{subject}考试的单项选择题，请选出其中的正确答案。\n\n"
         prompt_template = (
                                         "[INST] <<SYS>>\n"
@@ -195,7 +195,7 @@ class Llama_Evaluator(Evaluator):
 
             a=line['Answer']
             prompt+="[INST] "+q+"\n答案：[/INST]"+a+"\n"
-            
+
         return prompt
 
     def extract_answer(self, line, gen_ans):
