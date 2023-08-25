@@ -28,7 +28,13 @@ A server that implements OPENAI API using fastapi, Wiki: [https://github.com/ymc
 
 C-Eval评测脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_zh)
 
-Inference Script for C-Eval, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_en
+Inference script for C-Eval, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_en
+
+### cmmlu/
+
+CMMLU评测脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_zh)
+
+Inference script for CMMLU, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_en
 
 ### llama-cpp/
 
