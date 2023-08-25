@@ -221,7 +221,7 @@ In order to intuitively understand the generation performance of the model, this
 
 | Models                      | Single-doc QA | Multi-doc QA | Summarization | Few-shot Learning | Code Completion | Synthetic Task | Avg  |
 | --------------------------- | :-----------: | :----------: | :-----------: | :---------------: | :-------------: | :------------: | :--: |
-| **Chinese-LLaMA-2-13B-16K** |               |              |               |                   |                 |                |      |
+| **Chinese-LLaMA-2-13B-16K** |     37.3      |     18.1     |      3.4      |       30.8        |      12.8       |      3.0       | 17.6 |
 | Chinese-LLaMA-2-13B         |     26.7      |     14.0     |      4.4      |       16.3        |       9.9       |      5.5       | 12.8 |
 | **Chinese-LLaMA-2-7B-16K**  |     33.7      |     16.5     |      5.3      |       24.3        |      10.6       |      4.2       | 15.8 |
 | Chinese-LLaMA-2-7B          |     20.7      |     14.5     |      6.5      |       12.8        |      11.5       |      5.3       | 11.9 |
