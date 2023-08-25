@@ -37,7 +37,7 @@
 
 ## 新闻
 
-**[2023/08/??] TBA**
+**[2023/08/25] 发布长上下文模型Chinese-LLaMA-2-7B-16K和Chinese-LLaMA-2-13B-16K，支持16K上下文，并可通过NTK方法进一步扩展至24K+。详情查看[📚 v3.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)**
 
 [2023/08/14] 发布Chinese-LLaMA-2-13B和Chinese-Alpaca-2-13B，添加text-generation-webui/LangChain/privateGPT支持，添加CFG Sampling解码方法等。详情查看[📚 v2.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v2.0)
 
@@ -77,8 +77,8 @@
 #### 🚄 基于PI和NTK的超长上下文扩展技术
 
 - 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，我们实现了[基于NTK的上下文扩展技术](https://github.com/ymcui/Chinese-LLaMA-Alpaca/pull/743)，可在不继续训练模型的情况下支持更长的上下文
-- 本项目基于PI和NTK等方法推出了长上下文版模型，可支持16K上下文长度，并可通过NTK方法最高扩展至24K-32K
-- 我们进一步设计了**方便的自适应经验公式**，无需针对不同的上下文长度设置NTK超参，降低了使用难度
+- 基于[位置插值PI](https://arxiv.org/abs/2306.15595)和NTK等方法推出了长上下文版模型，支持16K上下文，并可通过NTK方法最高扩展至24K-32K
+- 进一步设计了**方便的自适应经验公式**，无需针对不同的上下文长度设置NTK超参，降低了使用难度
 
 #### 🤖 简化的中英双语系统提示语
 
@@ -125,13 +125,13 @@
 
 以下是长上下文版模型，**推荐以长文本为主的下游任务使用**，否则建议使用上述标准版。
 
-| 模型名称                  |   类型   |  大小   |       下载地址        |
-| :------------------------ | :------: | :-----: | :-------------------: |
-| Chinese-LLaMA-2-13B-16K 🆕 | 基座模型 | 24.7 GB | [百度] [Google] [🤗HF] |
-| Chinese-LLaMA-2-7B-16K 🆕  | 基座模型 | 12.9 GB | [百度] [Google] [🤗HF] |
+| 模型名称                  |   类型   |  大小   |                           下载地址                           |
+| :------------------------ | :------: | :-----: | :----------------------------------------------------------: |
+| Chinese-LLaMA-2-13B-16K 🆕 | 基座模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1XWrh3Ru9x4UI4-XmocVT2w?pwd=f7ik) [[Google]](https://drive.google.com/drive/folders/1nii6lF0DgB1u81CnsE4cCK2jD5oq_OW-?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b-16k) |
+| Chinese-LLaMA-2-7B-16K 🆕  | 基座模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b-16k) |
 
 > [!IMPORTANT] 
-> 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)。
+> 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署工具的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)。
 
 ### LoRA模型下载
 
@@ -148,8 +148,8 @@
 
 | 模型名称                  |   类型   |                   合并所需基模型                   | 大小 |                    LoRA下载地址                    |
 | :------------------------ | :------: | :--------------------------------------------------------: | :----------------: | :----------------------------------------------------------: |
-| Chinese-LLaMA-2-LoRA-13B-16K 🆕 | 基座模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [百度] [Google] [🤗HF] |
-| Chinese-LLaMA-2-LoRA-7B-16K 🆕 | 基座模型 |        [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)        | 1.1 GB | [百度] [Google] [🤗HF] |
+| Chinese-LLaMA-2-LoRA-13B-16K 🆕 | 基座模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [百度] [Google] [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-13b-16k) |
+| Chinese-LLaMA-2-LoRA-7B-16K 🆕 | 基座模型 |        [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)        | 1.1 GB | [[百度]](https://pan.baidu.com/s/14Jnm7QmcDx3XsK_NHZz6Uw?pwd=5b7i) [[Google]](https://drive.google.com/file/d/1yUdyQuBMAmxmUEAvGiKbjKuxTYPPI-or/view?usp=sharing) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-7b-16k) |
 
 
 > [!IMPORTANT] 
@@ -190,14 +190,14 @@
 
 | 系统                                                         | 对战胜率（无平局） ↓ | Elo评分 |
 | ------------------------------------------------------------ | :------------------: | :-----: |
-| **Alpaca-2-13B**                                             |        72.37%        | 1610.34 |
-| [Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.72%        | 1610.73 |
-| **Alpaca-2-7B**                                              |        63.35%        | 1561.48 |
-| [Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.76%        | 1583.41 |
-| [Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.42%        | 1497.83 |
-| [Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.62%        | 1439.39 |
-| [Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.45%        | 1351.60 |
-| [Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        20.68%        | 1345.23 |
+| **Chinese-Alpaca-2-13B**                                     |        72.37%        | 1610.34 |
+| [Chinese-Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.72%        | 1610.73 |
+| **Chinese-Alpaca-2-7B**                                      |        63.35%        | 1561.48 |
+| [Chinese-Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.76%        | 1583.41 |
+| [Chinese-Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.42%        | 1497.83 |
+| [Chinese-Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.62%        | 1439.39 |
+| [Chinese-Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.45%        | 1351.60 |
+| [Chinese-Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        20.68%        | 1345.23 |
 
 > [!NOTE]
 > 以上结果截至2023年8月24日。最新结果请进入[**⚔️竞技场**](http://llm-arena.ymcui.com/)进行查看。
@@ -233,10 +233,10 @@
 
 | Models                      | 单文档QA | 多文档QA | 摘要 | Few-shot学习 | 代码补全 | 合成任务 | Avg  |
 | --------------------------- | :------: | :------: | :--: | :----------: | :------: | :------: | :--: |
-| Chinese-LLaMA-2-7B          |   20.7   |   14.5   | 6.5  |     12.8     |   11.5   |   5.3    | 11.9 |
-| **Chinese-LLaMA-2-7B-16K**  |          |          |      |              |          |          |      |
-| Chinese-LLaMA-2-13B         |   26.7   |   14.0   | 4.4  |     16.3     |   9.9    |   5.5    | 12.8 |
 | **Chinese-LLaMA-2-13B-16K** |          |          |      |              |          |          |      |
+| Chinese-LLaMA-2-13B         |   26.7   |   14.0   | 4.4  |     16.3     |   9.9    |   5.5    | 12.8 |
+| **Chinese-LLaMA-2-7B-16K**  |   33.7   |   16.5   | 5.3  |     24.3     |   10.6   |   4.2    | 15.8 |
+| Chinese-LLaMA-2-7B          |   20.7   |   14.5   | 6.5  |     12.8     |   11.5   |   5.3    | 11.9 |
 
 ### 量化效果评测
 
