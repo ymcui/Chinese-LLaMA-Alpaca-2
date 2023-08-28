@@ -36,6 +36,12 @@ CMMLU评测脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki
 
 Inference script for CMMLU, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_en
 
+### longbench/
+
+LongBench评测脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
+
+Inference script for LongBench, Wiki: https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_en
+
 ### llama-cpp/
 
 llama.cpp启动脚本、server脚本，Wiki：[https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh)
