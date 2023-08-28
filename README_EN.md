@@ -167,9 +167,9 @@ The models in this project mainly support the following quantization, inference,
 | [**privateGPT**](https://github.com/imartinez/privateGPT) | LangChain-based multi-document QA framework | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_en) |
 
 > [!NOTE]
-> <sup>†</sup>: Supported by this tool, but not implemented in the tutorial. Please refer to the official documentation for details. <br/><sup>‡</sup>: Support 16K long context or not (requires customized RoPE support)</br>
-> <sup>‡</sup>: 16K context size support</br>
-> <sup>§</sup>: Not supported with vLLM backend
+> <sup>†</sup>: Supported by this tool, but not implemented in the tutorial. Please refer to the official documentation for details. <br/>
+> <sup>‡</sup>: Support 16K long context or not (requires customized RoPE support)</br>
+> <sup>§</sup>: Not supported with vLLM backend. </br>
 
 ## System Performance
 
