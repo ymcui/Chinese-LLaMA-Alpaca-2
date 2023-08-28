@@ -26,7 +26,7 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 - Base model: Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
 - Instruction/chat model: Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
-- Long context model: Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K
+- Long context model: Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-13B-16K, Chinese-Alpaca-2-7B-16K
 
 ![](./pics/screencast.gif)
 
@@ -36,7 +36,9 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 ## News
 
-**[Aug 25, 2023] Release long context models: Chinese-LLaMA-2-7B-16K and Chinese-LLaMA-2-13B-16K, which support 16K context and can be further extended up to 24K+ using NTK. For details, see [📚 v3.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)**
+[2023/??/??] TBA
+
+[Aug 25, 2023] Release long context models: Chinese-LLaMA-2-7B-16K and Chinese-LLaMA-2-13B-16K, which support 16K context and can be further extended up to 24K+ using NTK. For details, see [📚 v3.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)
 
 [Aug 14, 2023] Release Chinese-LLaMA-2-13B and Chinese-Alpaca-2-13B. Add text-generation-webui/LangChain/privateGPT support. Add CFG sampling, etc. For details, see [📚 v2.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v2.0)
 
@@ -122,8 +124,11 @@ The followings are long context models, which are recommended for long context t
 
 | Model Name                |    Type    |  Size   |                        Download Link                         |
 | :------------------------ | :--------: | :-----: | :----------------------------------------------------------: |
-| Chinese-LLaMA-2-13B-16K 🆕 | Base model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1XWrh3Ru9x4UI4-XmocVT2w?pwd=f7ik) [[Google]](https://drive.google.com/drive/folders/1nii6lF0DgB1u81CnsE4cCK2jD5oq_OW-?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b-16k) |
-| Chinese-LLaMA-2-7B-16K 🆕  | Base model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b-16k) |
+| Chinese-LLaMA-2-13B-16K | Base model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1XWrh3Ru9x4UI4-XmocVT2w?pwd=f7ik) [[Google]](https://drive.google.com/drive/folders/1nii6lF0DgB1u81CnsE4cCK2jD5oq_OW-?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b-16k) |
+| Chinese-LLaMA-2-7B-16K  | Base model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b-16k) |
+| Chinese-Alpaca-2-13B-16K 🆕 | Chat Model | 24.7 GB |                    [Baidu] [Google] [🤗HF]                    |
+| Chinese-Alpaca-2-7B-16K 🆕  | Chat Model | 12.9 GB |                    [Baidu] [Google] [🤗HF]                |
+
 
 > [!IMPORTANT] 
 > When using long context models, please follow our wiki to correctly use them. See [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki).
@@ -141,10 +146,12 @@ Below are the LoRA models, **which cannot be used directly and must be merged wi
 
 The followings are long context models, which are recommended for long context tasks. 
 
-| Model Name                     |    Type    |  Size  |                        Download Link                         |
-| :----------------------------- | :--------: | :----: | :----------------------------------------------------------: |
-| Chinese-LLaMA-2-LoRA-13B-16K 🆕 | Base model | 1.5 GB | [[Baidu]](https://pan.baidu.com/s/1VrfOJmhDnXxrXcdnfX00fA?pwd=4t2j) [[Google]](https://drive.google.com/file/d/1mSpigmHcN9YX1spa4QN3IPtx43Vfs55H/view?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-13b-16k) |
-| Chinese-LLaMA-2-LoRA-7B-16K 🆕  | Base model | 1.1 GB | [[Baidu]](https://pan.baidu.com/s/14Jnm7QmcDx3XsK_NHZz6Uw?pwd=5b7i) [[Google]](https://drive.google.com/file/d/1yUdyQuBMAmxmUEAvGiKbjKuxTYPPI-or/view?usp=sharing) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-7b-16k) |
+| Model Name                      |    Type    |                  Required Model for merging                  |  Size  |                        Download Link                         |
+| :------------------------------ | :--------: | :----------------------------------------------------------: | :----: | :----------------------------------------------------------: |
+| Chinese-LLaMA-2-LoRA-13B-16K    | Base model | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [[Baidu]](https://pan.baidu.com/s/1VrfOJmhDnXxrXcdnfX00fA?pwd=4t2j) [[Google]](https://drive.google.com/file/d/1mSpigmHcN9YX1spa4QN3IPtx43Vfs55H/view?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-13b-16k) |
+| Chinese-LLaMA-2-LoRA-7B-16K     | Base model | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [[Baidu]](https://pan.baidu.com/s/14Jnm7QmcDx3XsK_NHZz6Uw?pwd=5b7i) [[Google]](https://drive.google.com/file/d/1yUdyQuBMAmxmUEAvGiKbjKuxTYPPI-or/view?usp=sharing) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-7b-16k) |
+| Chinese-Alpaca-2-LoRA-13B-16K 🆕 | Chat Model | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB |                    [Baidu] [Google] [🤗HF]                    |
+| Chinese-Alpaca-2-LoRA-7B-16K 🆕  | Chat Model | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB |                    [Baidu] [Google] [🤗HF]                    |
 
 > [!IMPORTANT] 
 > As the LoRA models cannot be used separately, they must be merged with the original Llama-2 to form a complete model for model inference, quantization, or further training. Please choose one of the following methods to merge these models.
@@ -223,6 +230,10 @@ In order to intuitively understand the generation performance of the model, this
 
 | Models                      | Single-doc QA | Multi-doc QA | Summarization | Few-shot Learning | Code Completion | Synthetic Task | Avg  |
 | --------------------------- | :-----------: | :----------: | :-----------: | :---------------: | :-------------: | :------------: | :--: |
+| **Chinese-Alpaca-2-13B-16K** |          |          |      |              |          |          |      |
+| Chinese-Alpaca-2-13B         |          |          |      |              |          |          |      |
+| **Chinese-Alpaca-2-7B-16K**  |          |          |      |              |          |          |      |
+| Chinese-Alpaca-2-7B          |          |          |      |              |          |          |      |
 | **Chinese-LLaMA-2-13B-16K** |     37.3      |     18.1     |      3.4      |       30.8        |      12.8       |      3.0       | 17.6 |
 | Chinese-LLaMA-2-13B         |     26.7      |     14.0     |      4.4      |       16.3        |       9.9       |      5.5       | 12.8 |
 | **Chinese-LLaMA-2-7B-16K**  |     33.7      |     16.5     |      5.3      |       24.3        |      10.6       |      4.2       | 15.8 |
