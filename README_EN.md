@@ -169,7 +169,7 @@ The models in this project mainly support the following quantization, inference,
 > [!NOTE]
 > <sup>†</sup>: Supported by this tool, but not implemented in the tutorial. Please refer to the official documentation for details. <br/>
 > <sup>‡</sup>: Support 16K long context or not (requires customized RoPE support)</br>
-> <sup>§</sup>: Not supported with vLLM backend. </br>
+> <sup>§</sup>: vLLM backend does not support support our 16K long context models. </br>
 
 ## System Performance
 
