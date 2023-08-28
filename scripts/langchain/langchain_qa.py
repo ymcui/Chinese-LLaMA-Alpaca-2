@@ -77,7 +77,6 @@ if __name__ == '__main__':
                           "torch_dtype" : load_type,
                           "low_cpu_mem_usage" : True,
                           "temperature": 0.2,
-                          "max_length": 1000,
                           "repetition_penalty":1.1}
             )
 
