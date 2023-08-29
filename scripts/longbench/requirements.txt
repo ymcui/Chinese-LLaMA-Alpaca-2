@@ -5,3 +5,4 @@ jieba
 fuzzywuzzy
 torch
 transformers==4.31.0
+einops

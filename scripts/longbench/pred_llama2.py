@@ -1,6 +1,8 @@
 # The script is modified from https://github.com/THUDM/LongBench/blob/main/pred.py
-from datasets import load_dataset, load_from_disk
+from datasets import load_dataset
 import torch
+import random
+import numpy as np
 import json
 from transformers import LlamaTokenizer, LlamaForCausalLM
 from transformers import BitsAndBytesConfig
@@ -33,6 +35,7 @@ parser.add_argument('--gpus',type=str, default=None)
 parser.add_argument('--max_length',type=int, default=4096-512)
 parser.add_argument('--alpha', type=str, default="auto", help="The scaling factor of NTK method, can be a float or 'auto'. ")
 parser.add_argument('--with_inst', choices=['true','false','auto'], default = 'auto')
+parser.add_argument('--e', action='store_true', help="Evaluate on LongBench-E")
 
 
 args = parser.parse_args()
@@ -77,7 +80,7 @@ def get_pred(model, tokenizer, data, max_length, max_gen, prompt_format, dataset
             half = int(max_length/2)
             prompt = tokenizer.decode(tokenized_prompt[:half], skip_special_tokens=True)+tokenizer.decode(tokenized_prompt[-half:], skip_special_tokens=True)
         if args.with_inst == 'auto':
-            if dataset not in ["lcc", "repobench-p", "trec", "nq", "triviaqa", "lsht"]: # chat models are better off without build prompt on these tasks
+            if dataset not in ["trec", "triviaqa", "samsum", "lsht", "lcc", "repobench-p"]: # chat models are better off without build prompts on these tasks
                 prompt = fill_llama2_prompt_template(instruction=prompt)
         elif args.with_inst == 'true':
             prompt = fill_llama2_prompt_template(instruction=prompt, with_inst = True)
@@ -86,36 +89,72 @@ def get_pred(model, tokenizer, data, max_length, max_gen, prompt_format, dataset
 
         input = tokenizer(prompt, truncation=False, return_tensors="pt").to(device)
         context_length = input.input_ids.shape[-1]
-        output = model.generate(
-            **input,
-            max_new_tokens=max_gen,
-            num_beams=1,
-            do_sample=DO_SAMPLE,
-            repetition_penalty = REPETITION_PENALTY,
-            top_p = TOP_P,
-            top_k = TOP_K,
-            temperature=TEMPERATURE
-        )[0]
+        if dataset == "samsum": # prevent illegal output on samsum (model endlessly repeat "\nDialogue"), might be a prompting issue
+            output = model.generate(
+                **input,
+                max_new_tokens=max_gen,
+                num_beams=1,
+                do_sample=DO_SAMPLE,
+                repetition_penalty = REPETITION_PENALTY,
+                top_p = TOP_P,
+                top_k = TOP_K,
+                temperature=TEMPERATURE,
+                min_length=context_length+1,
+                eos_token_id=[tokenizer.eos_token_id, tokenizer.encode("\n", add_special_tokens=False)[-1]],
+            )[0]
+        else:
+            output = model.generate(
+                **input,
+                max_new_tokens=max_gen,
+                num_beams=1,
+                do_sample=DO_SAMPLE,
+                repetition_penalty = REPETITION_PENALTY,
+                top_p = TOP_P,
+                top_k = TOP_K,
+                temperature=TEMPERATURE
+            )[0]
         pred = tokenizer.decode(output[context_length:], skip_special_tokens=True)
         #print(pred)
-        preds.append({"pred": pred, "answers": json_obj["answers"], "all_classes": json_obj["all_classes"]})
+        preds.append({"pred": pred, "answers": json_obj["answers"], "all_classes": json_obj["all_classes"], "length": json_obj["length"]})
     return preds
 
+def seed_everything(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    torch.cuda.manual_seed_all(seed)
 
 if __name__ == '__main__':
+    seed_everything(42)
     load_type = torch.float16
     if torch.cuda.is_available():
         device = torch.device(0)
     else:
         device = torch.device('cpu')
 
-    en_datasets = [ "hotpotqa","2wikimqa", "musique", "narrativeqa",
-                    "qasper", "multifieldqa_en",  "gov_report",
-                    "qmsum", "trec", "nq", "triviaqa",
-                    "passage_count", "passage_retrieval_en"]
-    zh_datasets = [ "dureader", "multifieldqa_zh", 
-                    "vcsum","lsht", "passage_retrieval_zh"]
-    code_datasets = [ "lcc", "repobench-p" ]
+    if args.e:
+        en_datasets = [ "hotpotqa","2wikimqa", 
+                        "qasper", "multifieldqa_en",  "gov_report",
+                        "trec", "samsum", "triviaqa",
+                        "passage_count", "passage_retrieval_en", "multi_news"]
+        zh_datasets = []
+        code_datasets = [ "lcc", "repobench-p" ]
+        if not os.path.exists(f"{output_dir}/pred_e"):
+            os.makedirs(f"{output_dir}/pred_e")
+    else:
+        en_datasets = [ "hotpotqa","2wikimqa", "musique", "narrativeqa",
+                        "qasper", "multifieldqa_en",  "gov_report",
+                        "qmsum", "trec", "samsum", "triviaqa",
+                        "passage_count", "passage_retrieval_en", "multi_news"]
+        zh_datasets = [ "dureader", "multifieldqa_zh", 
+                        "vcsum","lsht", "passage_retrieval_zh"]
+        code_datasets = [ "lcc", "repobench-p" ]
+
+        if not os.path.exists(f"{output_dir}/pred"):
+            os.makedirs(f"{output_dir}/pred")
 
     datasets = []
     for data_type in predict_on.split(','):
@@ -151,15 +190,18 @@ if __name__ == '__main__':
     dataset2prompt = json.load(open(dir_path + "/config/dataset2prompt.json", "r"))
     dataset2maxlen = json.load(open(dir_path + "/config/dataset2maxlen.json", "r"))
     # predict on each dataset
-    if not os.path.exists(f"{output_dir}/pred"):
-        os.makedirs(f"{output_dir}/pred")
     for dataset in datasets:
         print(f"Loading dataset {dataset}")
-        data = load_dataset('THUDM/LongBench', dataset, split='test')
+        if args.e:
+            data = load_dataset('THUDM/LongBench', dataset+'_e', split='test')
+            output_path = f"{output_dir}/pred_e/{dataset}.jsonl"
+        else:
+            data = load_dataset('THUDM/LongBench', dataset, split='test')
+            output_path = f"{output_dir}/pred/{dataset}.jsonl"
         prompt_format = dataset2prompt[dataset]
         max_gen = dataset2maxlen[dataset]
         preds = get_pred(model, tokenizer, data, max_length, max_gen, prompt_format, dataset, device)
-        with open(f"{output_dir}/pred/{dataset}.jsonl", "w") as f:
+        with open(output_path, "w") as f:
             for pred in preds:
                 json.dump(pred, f, ensure_ascii=False)
                 f.write('\n')
