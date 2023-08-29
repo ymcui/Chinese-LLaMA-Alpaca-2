@@ -115,7 +115,7 @@ def rouge_score(prediction, ground_truth, **kwargs):
     rouge = Rouge()
     try:
         scores = rouge.get_scores([prediction], [ground_truth], avg=True)
-    except:
+    except Exception:
         return 0.0
     return scores["rouge-l"]["f"]
 

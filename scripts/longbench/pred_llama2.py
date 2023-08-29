@@ -87,11 +87,11 @@ def get_pred(model, tokenizer, data, max_length, max_gen, prompt_format, dataset
         else:
             prompt = fill_llama2_prompt_template(instruction=prompt, with_inst = False)
 
-        input = tokenizer(prompt, truncation=False, return_tensors="pt").to(device)
-        context_length = input.input_ids.shape[-1]
+        input_data = tokenizer(prompt, truncation=False, return_tensors="pt").to(device)
+        context_length = input_data.input_ids.shape[-1]
         if dataset == "samsum": # prevent illegal output on samsum (model endlessly repeat "\nDialogue"), might be a prompting issue
             output = model.generate(
-                **input,
+                **input_data,
                 max_new_tokens=max_gen,
                 num_beams=1,
                 do_sample=DO_SAMPLE,
@@ -104,7 +104,7 @@ def get_pred(model, tokenizer, data, max_length, max_gen, prompt_format, dataset
             )[0]
         else:
             output = model.generate(
-                **input,
+                **input_data,
                 max_new_tokens=max_gen,
                 num_beams=1,
                 do_sample=DO_SAMPLE,
