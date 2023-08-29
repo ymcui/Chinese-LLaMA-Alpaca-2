@@ -136,7 +136,7 @@ if __name__ == '__main__':
         device = torch.device('cpu')
 
     if args.e:
-        en_datasets = [ "hotpotqa","2wikimqa", 
+        en_datasets = [ "hotpotqa","2wikimqa",
                         "qasper", "multifieldqa_en",  "gov_report",
                         "trec", "samsum", "triviaqa",
                         "passage_count", "passage_retrieval_en", "multi_news"]
@@ -149,7 +149,7 @@ if __name__ == '__main__':
                         "qasper", "multifieldqa_en",  "gov_report",
                         "qmsum", "trec", "samsum", "triviaqa",
                         "passage_count", "passage_retrieval_en", "multi_news"]
-        zh_datasets = [ "dureader", "multifieldqa_zh", 
+        zh_datasets = [ "dureader", "multifieldqa_zh",
                         "vcsum","lsht", "passage_retrieval_zh"]
         code_datasets = [ "lcc", "repobench-p" ]
 

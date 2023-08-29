@@ -6,7 +6,6 @@ import jieba
 from fuzzywuzzy import fuzz
 import difflib
 
-from typing import List
 from collections import Counter
 from rouge import Rouge
 
@@ -111,7 +110,7 @@ def classification_score(prediction, ground_truth, **kwargs):
                 best_match = string
         score = float(best_match == ground_truth)
     return score
-    
+
 def rouge_score(prediction, ground_truth, **kwargs):
     rouge = Rouge()
     try:
@@ -122,7 +121,7 @@ def rouge_score(prediction, ground_truth, **kwargs):
 
 def rouge_zh_score(prediction, ground_truth, **kwargs):
     prediction = " ".join(list(jieba.cut(prediction, cut_all=False)))
-    ground_truth = " ".join(list(jieba.cut(ground_truth, cut_all=False))) 
+    ground_truth = " ".join(list(jieba.cut(ground_truth, cut_all=False)))
     score = rouge_score(prediction, ground_truth)
     return score
 
