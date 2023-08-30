@@ -280,6 +280,7 @@ Question 7: Why does training with 24GB VRAM lead to an OOM error when fine-tuni
 Question 8: Can the 16K long-context version model replace the standard version model?
 Question 9: How to interprete the results of third-party benchmarks?
 Question 10: Will you release 34B or 70B models?
+Question 11: Why the long-context model is 16K context, not 32K or 100K?
 ```
 
 For specific questions and answers, please refer to the project >>> [📚 GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/faq_en)
