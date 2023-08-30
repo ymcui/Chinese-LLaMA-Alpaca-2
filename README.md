@@ -88,6 +88,9 @@
 - 初步实验发现，Llama-2-Chat系列模型的默认系统提示语未能带来统计显著的性能提升，且其内容过于冗长
 - 本项目中的Alpaca-2系列模型简化了系统提示语，同时遵循Llama-2-Chat指令模板，以便更好地适配相关生态
 
+下图展示了本项目以及[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)推出的所有大模型之间的关系。
+
+![](./pics/models.png)
 
 ## 模型下载
 

@@ -84,6 +84,10 @@ This project launches the Chinese LLaMA-2 and Alpaca-2 models based on Llama-2. 
 - Through preliminary experiments, we found that the lengthy system prompt by Llama-2-Chat is not as effective as a simple one
 - We use a very simple system prompt while keeping the Llama-2-Chat template to better adapt to relevant ecosystems
 
+The following figure depicts all open-sourced models for our projects (including the [first-gen project](https://github.com/ymcui/Chinese-LLaMA-Alpaca)).
+
+![](./pics/models.png)
+
 ## Download
 
 ### Model Selection Guide
