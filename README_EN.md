@@ -26,7 +26,7 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 - Base model: Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
 - Instruction/chat model: Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
-- Long context model: Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-13B-16K, Chinese-Alpaca-2-7B-16K
+- Long context model: Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-7B-16K, Chinese-Alpaca-2-13B-16K
 
 ![](./pics/screencast.gif)
 
@@ -234,10 +234,10 @@ In order to intuitively understand the generation performance of the model, this
 | Chinese-Alpaca-2-13B         |          |          |      |              |          |          |      |
 | **Chinese-Alpaca-2-7B-16K**  |          |          |      |              |          |          |      |
 | Chinese-Alpaca-2-7B          |          |          |      |              |          |          |      |
-| **Chinese-LLaMA-2-13B-16K** |     37.3      |     18.1     |      3.4      |       30.8        |      12.8       |      3.0       | 17.6 |
-| Chinese-LLaMA-2-13B         |     26.7      |     14.0     |      4.4      |       16.3        |       9.9       |      5.5       | 12.8 |
-| **Chinese-LLaMA-2-7B-16K**  |     33.7      |     16.5     |      5.3      |       24.3        |      10.6       |      4.2       | 15.8 |
-| Chinese-LLaMA-2-7B          |     20.7      |     14.5     |      6.5      |       12.8        |      11.5       |      5.3       | 11.9 |
+| **Chinese-LLaMA-2-13B-16K**  |     37.3      |     18.1     |      3.4      |       30.8        |      13.0       |      3.0       | 17.6 |
+| Chinese-LLaMA-2-13B          |     26.7      |     14.0     |      4.4      |       16.3        |       9.8       |      5.5       | 12.8 |
+| **Chinese-LLaMA-2-7B-16K**   |     33.7      |     16.5     |      5.3      |       24.3        |       9.9       |      4.2       | 15.6 |
+| Chinese-LLaMA-2-7B           |     20.7      |     14.5     |      6.5      |       12.8        |      11.5       |      5.3       | 11.9 |
 
 ### Quantization Evaluation
 

@@ -26,7 +26,7 @@
 
 - 基座模型：Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
 - 聊天模型：Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
-- 长上下文模型：Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-13B-16K, Chinese-Alpaca-2-7B-16K
+- 长上下文模型：Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-7B-16K, Chinese-Alpaca-2-13B-16K
 
 ![](./pics/screencast.gif)
 
@@ -180,9 +180,9 @@
 | [**privateGPT**](https://github.com/imartinez/privateGPT) | 基于LangChain的多文档本地问答框架 | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_zh) |
 
 > [!NOTE]
-> <sup>†</sup> 工具支持该特性，但教程中未实现；详细说明请参考对应官方文档。<br/>
+> <sup>†</sup> 工具支持该特性，但教程中未实现，详细说明请参考对应官方文档<br/>
 > <sup>‡</sup> 指是否支持16K长上下文模型（需要第三方库支持自定义RoPE）<br/>
-> <sup>§</sup> vLLM后端不支持16K长上下文模型。<br/>
+> <sup>§</sup> vLLM后端不支持16K长上下文模型<br/>
 
 
 ## 系统效果
@@ -236,7 +236,7 @@
 
 ### 长上下文版模型评测
 
-[LongBench](https://github.com/THUDM/LongBench)是一个大模型长文本理解能力的评测基准，由6大类、20个不同的任务组成，多数任务的平均长度在5K-15K之间，共包含约4.5K条测试数据。以下是本项目长上下文版模型在该数据集（中文任务）上的评测效果。LongBench推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
+[LongBench](https://github.com/THUDM/LongBench)是一个大模型长文本理解能力的评测基准，由6大类、20个不同的任务组成，多数任务的平均长度在5K-15K之间，共包含约4.5K条测试数据。以下是本项目长上下文版模型（即16K系列模型）在该数据集（中文任务）上的评测效果。LongBench推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
 
 | Models                       | 单文档QA | 多文档QA | 摘要 | Few-shot学习 | 代码补全 | 合成任务 | Avg  |
 | ---------------------------- | :------: | :------: | :--: | :----------: | :------: | :------: | :--: |
@@ -244,9 +244,9 @@
 | Chinese-Alpaca-2-13B         |          |          |      |              |          |          |      |
 | **Chinese-Alpaca-2-7B-16K**  |          |          |      |              |          |          |      |
 | Chinese-Alpaca-2-7B          |          |          |      |              |          |          |      |
-| **Chinese-LLaMA-2-13B-16K**  |   37.3   |   18.1   | 3.4  |     30.8     |   12.8   |   3.0    | 17.6 |
-| Chinese-LLaMA-2-13B          |   26.7   |   14.0   | 4.4  |     16.3     |   9.9    |   5.5    | 12.8 |
-| **Chinese-LLaMA-2-7B-16K**   |   33.7   |   16.5   | 5.3  |     24.3     |   10.6   |   4.2    | 15.8 |
+| **Chinese-LLaMA-2-13B-16K**  |   37.3   |   18.1   | 3.4  |     30.8     |   13.0   |   3.0    | 17.6 |
+| Chinese-LLaMA-2-13B          |   26.7   |   14.0   | 4.4  |     16.3     |   9.8    |   5.5    | 12.8 |
+| **Chinese-LLaMA-2-7B-16K**   |   33.7   |   16.5   | 5.3  |     24.3     |   9.9    |   4.2    | 15.6 |
 | Chinese-LLaMA-2-7B           |   20.7   |   14.5   | 6.5  |     12.8     |   11.5   |   5.3    | 11.9 |
 
 ### 量化效果评测
