@@ -96,7 +96,7 @@
 
 ### 模型选择指引
 
-下面是中文LLaMA-2和Alpaca-2模型的基本对比以及建议使用场景。**如需和模型聊天交互，请选择Alpaca而不是LLaMA。**
+以下是中文LLaMA-2和Alpaca-2模型的对比以及建议使用场景。**如需聊天交互，请选择Alpaca而不是LLaMA。**
 
 | 对比项                | 中文LLaMA-2                                            | 中文Alpaca-2                                                 |
 | :-------------------- | :----------------------------------------------------: | :----------------------------------------------------------: |
@@ -134,8 +134,8 @@
 | :------------------------- | :------: | :-----: | :----------------------------------------------------------: |
 | Chinese-LLaMA-2-13B-16K    | 基座模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1XWrh3Ru9x4UI4-XmocVT2w?pwd=f7ik) [[Google]](https://drive.google.com/drive/folders/1nii6lF0DgB1u81CnsE4cCK2jD5oq_OW-?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b-16k) |
 | Chinese-LLaMA-2-7B-16K     | 基座模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b-16k) |
-| Chinese-Alpaca-2-13B-16K 🆕 | 指令模型 | 24.7 GB |                    [百度] [Google] [🤗HF]                     |
-| Chinese-Alpaca-2-7B-16K 🆕  | 指令模型 | 12.9 GB |                    [百度] [Google] [🤗HF]                     |
+| Chinese-Alpaca-2-13B-16K 🆕 | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b-16k) |
+| Chinese-Alpaca-2-7B-16K 🆕  | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-7b-16k) |
 
 > [!IMPORTANT] 
 > 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署工具的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)。
@@ -157,8 +157,8 @@
 | :------------------------ | :------: | :--------------------------------------------------------: | :----------------: | :----------------------------------------------------------: |
 | Chinese-LLaMA-2-LoRA-13B-16K | 基座模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [[百度]](https://pan.baidu.com/s/1VrfOJmhDnXxrXcdnfX00fA?pwd=4t2j) [[Google]](https://drive.google.com/file/d/1mSpigmHcN9YX1spa4QN3IPtx43Vfs55H/view?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-13b-16k) |
 | Chinese-LLaMA-2-LoRA-7B-16K | 基座模型 |        [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)        | 1.1 GB | [[百度]](https://pan.baidu.com/s/14Jnm7QmcDx3XsK_NHZz6Uw?pwd=5b7i) [[Google]](https://drive.google.com/file/d/1yUdyQuBMAmxmUEAvGiKbjKuxTYPPI-or/view?usp=sharing) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-lora-7b-16k) |
-| Chinese-Alpaca-2-LoRA-13B-16K 🆕 | 指令模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [百度] [Google] [🤗HF] |
-| Chinese-Alpaca-2-LoRA-7B-16K 🆕 | 指令模型 | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [百度] [Google] [🤗HF] |
+| Chinese-Alpaca-2-LoRA-13B-16K 🆕 | 指令模型 | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [百度] [Google] [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-lora-13b-16k) |
+| Chinese-Alpaca-2-LoRA-7B-16K 🆕 | 指令模型 | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [百度] [Google] [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-lora-7b-16k) |
 
 
 > [!IMPORTANT] 
@@ -215,7 +215,7 @@
 
 ### 客观效果评测：C-Eval
 
-[C-Eval](https://cevalbenchmark.com)是一个全面的中文基础模型评估套件，其中验证集包含1.3K个选择题，测试集包含12.3K个选择题，涵盖52个学科，题目类型为选择题。实验结果以“zero-shot / 5-shot”进行呈现。C-Eval推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_zh)
+[C-Eval](https://cevalbenchmark.com)是一个全面的中文基础模型评估套件，其中验证集和测试集分别包含1.3K和12.3K个选择题，涵盖52个学科。实验结果以“zero-shot / 5-shot”进行呈现。C-Eval推理代码请参考本项目：[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/ceval_zh)
 
 | LLaMA Models            |    Valid    |    Test     | Alpaca Models            |    Valid    |    Test     |
 | ----------------------- | :---------: | :---------: | ------------------------ | :---------: | :---------: |
@@ -227,7 +227,7 @@
 
 ### 客观效果评测：CMMLU
 
-[CMMLU](https://github.com/haonan-li/CMMLU)是另一个综合性中文评测数据集，专门用于评估语言模型在中文语境下的知识和推理能力，涵盖了从基础学科到高级专业水平的67个主题，共计11.5K个测试样例，题目类型为选择题。CMMLU推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_zh)
+[CMMLU](https://github.com/haonan-li/CMMLU)是另一个综合性中文评测数据集，专门用于评估语言模型在中文语境下的知识和推理能力，涵盖了从基础学科到高级专业水平的67个主题，共计11.5K个选择题。CMMLU推理代码请参考本项目：[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/cmmlu_zh)
 
 | LLaMA Models            | Test (0/few-shot) | Alpaca Models            | Test (0/few-shot) |
 | ----------------------- | :---------------: | ------------------------ | :---------------: |
@@ -239,7 +239,7 @@
 
 ### 长上下文版模型评测
 
-[LongBench](https://github.com/THUDM/LongBench)是一个大模型长文本理解能力的评测基准，由6大类、20个不同的任务组成，多数任务的平均长度在5K-15K之间，共包含约4.5K条测试数据。以下是本项目长上下文版模型（即16K系列模型）在该数据集（中文任务）上的评测效果。LongBench推理代码请参考本项目 [📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
+[LongBench](https://github.com/THUDM/LongBench)是一个大模型长文本理解能力的评测基准，由6大类、20个不同的任务组成，多数任务的平均长度在5K-15K之间，共包含约4.75K条测试数据。以下是本项目16K系列模型在该中文任务上的评测效果。LongBench推理代码请参考本项目：[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/longbench_zh)
 
 | Models                       | 单文档QA | 多文档QA | 摘要 | Few-shot学习 | 代码补全 | 合成任务 | Avg  |
 | ---------------------------- | :------: | :------: | :--: | :----------: | :------: | :------: | :--: |
