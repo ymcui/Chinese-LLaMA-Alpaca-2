@@ -200,17 +200,19 @@
 
 | 系统                                                         | 对战胜率（无平局） ↓ | Elo评分 |
 | ------------------------------------------------------------ | :------------------: | :-----: |
-| **Chinese-Alpaca-2-13B**                                     |        72.37%        | 1610.34 |
-| [Chinese-Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.72%        | 1610.73 |
-| **Chinese-Alpaca-2-7B**                                      |        63.35%        | 1561.48 |
-| [Chinese-Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.76%        | 1583.41 |
-| [Chinese-Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.42%        | 1497.83 |
-| [Chinese-Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.62%        | 1439.39 |
-| [Chinese-Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.45%        | 1351.60 |
-| [Chinese-Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        20.68%        | 1345.23 |
+| **Chinese-Alpaca-2-13B-16K**                                 |          ?           |    ?    |
+| **Chinese-Alpaca-2-7B-16K**                                  |          ?           |    ?    |
+| **Chinese-Alpaca-2-13B**                                     |        72.06%        |  1605   |
+| [Chinese-Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.09%        |  1573   |
+| **Chinese-Alpaca-2-7B**                                      |        64.20%        |  1661   |
+| [Chinese-Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.29%        |  1500   |
+| [Chinese-Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.39%        |  1558   |
+| [Chinese-Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.41%        |  1358   |
+| [Chinese-Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.52%        |  1285   |
+| [Chinese-Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        21.02%        |  1455   |
 
 > [!NOTE]
-> 以上结果截至2023年8月24日。最新结果请进入[**⚔️竞技场**](http://llm-arena.ymcui.com/)进行查看。
+> 以上结果截至2023年8月31日。最新结果请进入[**⚔️竞技场**](http://llm-arena.ymcui.com/)进行查看。
 
 
 ### 客观效果评测：C-Eval
@@ -244,9 +246,9 @@
 | Models                       | 单文档QA | 多文档QA | 摘要 | Few-shot学习 | 代码补全 | 合成任务 | Avg  |
 | ---------------------------- | :------: | :------: | :--: | :----------: | :------: | :------: | :--: |
 | **Chinese-Alpaca-2-13B-16K** |          |          |      |              |          |          |      |
-| Chinese-Alpaca-2-13B         |          |          |      |              |          |          |      |
+| Chinese-Alpaca-2-13B         |   38.4   |   20.0   | 12.2 |     18.0     |   46.2   |   9.0    | 24.0 |
 | **Chinese-Alpaca-2-7B-16K**  |          |          |      |              |          |          |      |
-| Chinese-Alpaca-2-7B          |          |          |      |              |          |          |      |
+| Chinese-Alpaca-2-7B          |   32.0   |   17.2   | 11.5 |     21.5     |   48.8   |   5.0    | 22.7 |
 | **Chinese-LLaMA-2-13B-16K**  |   37.3   |   18.1   | 3.4  |     30.8     |   13.0   |   3.0    | 17.6 |
 | Chinese-LLaMA-2-13B          |   26.7   |   14.0   | 4.4  |     16.3     |   9.8    |   5.5    | 12.8 |
 | **Chinese-LLaMA-2-7B-16K**   |   33.7   |   16.5   | 5.3  |     24.3     |   9.9    |   4.2    | 15.6 |
