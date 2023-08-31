@@ -34,7 +34,8 @@ parser.add_argument('--output_dir',type=str, default='pred')
 parser.add_argument('--gpus',type=str, default=None)
 parser.add_argument('--max_length',type=int, default=4096-512)
 parser.add_argument('--alpha', type=str, default="auto", help="The scaling factor of NTK method, can be a float or 'auto'. ")
-parser.add_argument('--with_inst', choices=['true','false','auto'], default = 'auto')
+parser.add_argument('--with_inst', choices=['true','false','auto'], default = 'false', 
+                    help="Whether use the system prompt and template of Chinese-Alpaca-2 when constructing the instructions.")
 parser.add_argument('--e', action='store_true', help="Evaluate on LongBench-E")
 
 
