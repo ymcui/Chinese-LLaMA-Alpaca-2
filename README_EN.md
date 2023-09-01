@@ -192,19 +192,19 @@ In order to intuitively understand the generation performance of the model, this
 
 | System                                                       | Win Rate (no tie)↓ | Elo Rating |
 | ------------------------------------------------------------ | :----------------: | :--------: |
-| **Chinese-Alpaca-2-13B-16K**                                 |          ?           |    ?    |
-| **Chinese-Alpaca-2-7B-16K**                                  |          ?           |    ?    |
-| **Chinese-Alpaca-2-13B**                                     |        72.06%        |  1605   |
-| [Chinese-Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        65.09%        |  1573   |
-| **Chinese-Alpaca-2-7B**                                      |        64.20%        |  1661   |
-| [Chinese-Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.29%        |  1500   |
-| [Chinese-Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.39%        |  1558   |
-| [Chinese-Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.41%        |  1358   |
-| [Chinese-Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.52%        |  1285   |
-| [Chinese-Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        21.02%        |  1455   |
+| **Chinese-Alpaca-2-13B-16K**                                 |        86.84%        |  1580   |
+| **Chinese-Alpaca-2-13B**                                     |        72.01%        |  1579   |
+| [Chinese-Alpaca-Pro-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        64.87%        |  1548   |
+| **Chinese-Alpaca-2-7B**                                      |        64.11%        |  1572   |
+| [Chinese-Alpaca-Pro-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        62.05%        |  1500   |
+| **Chinese-Alpaca-2-7B-16K**                                  |        61.67%        |  1540   |
+| [Chinese-Alpaca-Pro-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        61.26%        |  1567   |
+| [Chinese-Alpaca-Plus-33B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        31.29%        |  1401   |
+| [Chinese-Alpaca-Plus-13B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        23.43%        |  1329   |
+| [Chinese-Alpaca-Plus-7B](https://github.com/ymcui/Chinese-LLaMA-Alpaca) |        20.92%        |  1379   |
 
 > [!NOTE]
-> Results timestamp: Aug 31. 2023 . For the latest results, see [**⚔️Arena**](http://llm-arena.ymcui.com/).
+> Results timestamp: Sep 1. 2023 . For the latest results, see [**⚔️Arena**](http://llm-arena.ymcui.com/).
 
 ### NLU Performance Evaluation: C-Eval
 
