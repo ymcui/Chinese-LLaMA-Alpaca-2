@@ -36,10 +36,11 @@ body:
       label: 基础模型
       description: 请提供问题涉及的具体模型。
       options:
-        - LLaMA-2-7B
-        - LLaMA-2-13B
-        - Alpaca-2-7B
-        - Alpaca-2-13B
+        - Chinese-LLaMA-2 (7B/13B)
+        - Chinese-Alpaca-2 (7B/13B)
+        - Chinese-LLaMA-2-16K (7B/13B)
+        - Chinese-Alpaca-2-16K (7B/13B)
+        - Others
   - type: dropdown
     id: operating-system
     attributes:
@@ -62,7 +63,7 @@ body:
     id: dependencies
     attributes:
       label: 依赖情况（代码类问题务必提供）
-      description: 请提供transformers, peft, torch等常规依赖库的版本：`pip list | grep -E 'transformers|peft|torch'`
+      description: 请提供transformers, peft, torch等常规依赖库的版本：`pip list | grep -E 'transformers|peft|torch|sentencepiece|bitsandbytes'`
       value: |
         ```
         # 请在此处粘贴依赖情况（请粘贴在本代码块里）
