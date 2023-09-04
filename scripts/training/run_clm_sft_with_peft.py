@@ -35,7 +35,7 @@ import transformers
 from transformers import (
     CONFIG_MAPPING,
     AutoConfig,
-    AutoModelForCausalLM,
+    BitsAndBytesConfig,
     LlamaForCausalLM,
     LlamaTokenizer,
     AutoTokenizer,
@@ -49,6 +49,8 @@ from transformers.utils import send_example_telemetry
 from transformers.utils.versions import require_version
 
 from peft import LoraConfig, TaskType, get_peft_model, PeftModel, get_peft_model_state_dict
+from peft.tuners.lora import LoraLayer
+
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
 
 
@@ -74,6 +76,46 @@ class SavePeftModelCallback(transformers.TrainerCallback):
         peft_model_path = os.path.join(args.output_dir, "sft_lora_model")
         kwargs["model"].save_pretrained(peft_model_path)
         kwargs["tokenizer"].save_pretrained(peft_model_path)
+
+
+def prepare_model_for_kbit_training(model, use_gradient_checkpointing=True):
+    r"""
+    This method wraps the entire protocol for preparing a model before running a training. This includes:
+        1- Cast the layernorm in fp32 2- making output embedding layer require grads 3- Add the upcasting of the lm
+        head to fp32
+
+    Args:
+        model, (`transformers.PreTrainedModel`):
+            The loaded model from `transformers`
+    """
+    loaded_in_kbit = getattr(model, "is_loaded_in_8bit", False) or getattr(model, "is_loaded_in_4bit", False)
+
+    for name, param in model.named_parameters():
+        # freeze base model's layers
+        param.requires_grad = False
+
+    # cast all non INT8/INT4 parameters to fp32
+    for param in model.parameters():
+        if ((param.dtype == torch.float16) or (param.dtype == torch.bfloat16)) and loaded_in_kbit:
+            param.data = param.data.to(torch.float32)
+
+    for name, module in model.named_modules():
+        if 'norm' in name:
+            module = module.to(torch.float32)
+
+    if loaded_in_kbit and use_gradient_checkpointing:
+        # For backward compatibility
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
+        else:
+            def make_inputs_require_grad(module, input, output):
+                output.requires_grad_(True)
+
+            model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+        # enable gradient checkpointing for memory efficiency
+        model.gradient_checkpointing_enable()
+
+    return model
 
 
 @dataclass
@@ -199,6 +241,9 @@ class MyTrainingArguments(TrainingArguments):
     modules_to_save : Optional[str] = field(default=None)
     peft_path : Optional[str] = field(default=None)
     flash_attn : Optional[bool] = field(default=False)
+    double_quant: Optional[bool] = field(default=True)
+    quant_type: Optional[str] = field(default="nf4")
+    load_in_kbits: Optional[int] = field(default=16)
 
 
 logger = logging.getLogger(__name__)
@@ -240,7 +285,7 @@ def main():
     # Log on each process the small summary:
     logger.warning(
         f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
-        + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
+        + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16 or training_args.bf16}"
     )
 
     # Detecting last checkpoint.
@@ -335,18 +380,45 @@ def main():
         if model_args.torch_dtype in ["auto", None]
         else getattr(torch, model_args.torch_dtype)
     )
+    compute_dtype = (torch.float16 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
+    if training_args.load_in_kbits in [4, 8]:
+        load_in_4bit = training_args.load_in_kbits == 4
+        load_in_8bit = training_args.load_in_kbits == 8
+        if training_args.modules_to_save is not None:
+            load_in_8bit_skip_modules = training_args.modules_to_save.split(',')
+        else:
+            load_in_8bit_skip_modules = None
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=training_args.load_in_kbits == 4,
+            load_in_8bit=training_args.load_in_kbits == 8,
+            llm_int8_threshold=6.0,
+            load_in_8bit_skip_modules=load_in_8bit_skip_modules,
+            bnb_4bit_compute_dtype=compute_dtype,
+            bnb_4bit_use_double_quant=training_args.double_quant,
+            bnb_4bit_quant_type=training_args.quant_type # {'fp4', 'nf4'}
+        )
+    else:
+        load_in_4bit = False
+        load_in_8bit = False
+        quantization_config = None
+    if quantization_config is not None:
+        logger.info(f"quantization_config:{quantization_config.to_dict()}")
     device_map = {"":int(os.environ.get("LOCAL_RANK") or 0)}
     model = LlamaForCausalLM.from_pretrained(
         model_args.model_name_or_path,
-        from_tf=bool(".ckpt" in model_args.model_name_or_path),
         config=config,
         cache_dir=model_args.cache_dir,
         revision=model_args.model_revision,
         use_auth_token=True if model_args.use_auth_token else None,
         torch_dtype=torch_dtype,
         low_cpu_mem_usage=True,
-        device_map=device_map
+        device_map=device_map,
+        load_in_4bit=load_in_4bit,
+        load_in_8bit=load_in_8bit,
+        quantization_config=quantization_config,
     )
+    if training_args.load_in_kbits in [4, 8]:
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
     model.config.use_cache = False
 
     model_vocab_size = model.get_input_embeddings().weight.shape[0]
@@ -388,8 +460,20 @@ def main():
             def make_inputs_require_grad(_module, _input, _output):
                 _output.requires_grad_(True)
             model.base_model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-
-    #model.base_model.tie_weights()
+    for name, module in model.named_modules():
+        if isinstance(module, LoraLayer):
+            if training_args.bf16:
+                module = module.to(torch.bfloat16)
+            if training_args.fp16:
+                module = module.to(torch.float16)
+        if 'norm' in name:
+            module = module.to(torch.float16)
+        if 'lm_head' in name or 'embed_tokens' in name:
+            if hasattr(module, 'weight'):
+                if training_args.bf16 and module.weight.dtype == torch.float32:
+                    module = module.to(torch.bfloat16)
+                if training_args.fp16 and module.weight.dtype == torch.float32:
+                    module = module.to(torch.float16)
     model.print_trainable_parameters()
     logger.info(f"model.modules_to_save: {model.modules_to_save}")
     old_state_dict = model.state_dict
