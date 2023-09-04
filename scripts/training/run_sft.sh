@@ -55,4 +55,7 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_sft_with_peft.py \
     --lora_dropout ${lora_dropout} \
     --modules_to_save ${modules_to_save} \
     --torch_dtype float16 \
-    --validation_file ${validation_file}
+    --validation_file ${validation_file} \
+    --load_in_kbits 16 \
+    --gradient_checkpointing \
+    --ddp_find_unused_parameters False
