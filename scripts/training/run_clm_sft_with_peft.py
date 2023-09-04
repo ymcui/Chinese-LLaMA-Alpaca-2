@@ -108,7 +108,7 @@ def prepare_model_for_kbit_training(model, use_gradient_checkpointing=True):
         if hasattr(model, "enable_input_require_grads"):
             model.enable_input_require_grads()
         else:
-            def make_inputs_require_grad(module, input, output):
+            def make_inputs_require_grad(module, _input, output):
                 output.requires_grad_(True)
 
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
