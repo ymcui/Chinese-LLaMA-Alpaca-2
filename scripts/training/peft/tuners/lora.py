@@ -372,19 +372,10 @@ class Linear(nn.Linear, LoraLayer):
             # x = x.float()
             result = F.linear(x, transpose(self.weight, self.fan_in_fan_out), bias=self.bias)
             if self.r > 0:
-                # print(x.dtype)
-                # x.to(self.lora_A.weight.dtype)
-                # print(self.lora_A.weight.dtype)
-                # print(self.lora_B.weight.dtype)
-                # exit(0)
-                # if x.dtype != torch.float32:
-                #     x = x.float()
-                # x = x.to(self.lora_A.weight.dtype)
                 result += self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
         else:
             result = F.linear(x, transpose(self.weight, self.fan_in_fan_out), bias=self.bias)
 
-        # result = result.to(previous_dtype)
         return result
 
 
