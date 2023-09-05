@@ -288,7 +288,7 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
         except AttributeError:
             return getattr(self.base_model, name)
 
-    def forward(self, *args, **kwargs):
+    def forward(self, *args, **kwargs):  # pylint: disable=E0202
         """
         Forward pass of the model.
         """
@@ -355,7 +355,7 @@ class PeftModelForSequenceClassification(PeftModel):
         # to make sure classifier layer is trainable
         _set_trainable(self)
 
-    def forward(
+    def forward(    # pylint: disable=W0221
         self,
         input_ids=None,
         attention_mask=None,

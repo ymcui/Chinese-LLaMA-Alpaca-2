@@ -381,7 +381,7 @@ class Linear(nn.Linear, LoraLayer):
 
 class MergedLinear(nn.Linear, LoraLayer):
     # Lora implemented in a dense layer
-    def __init__(
+    def __init__(    # pylint: disable=W0102
         self,
         in_features: int,
         out_features: int,
