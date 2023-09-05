@@ -120,7 +120,7 @@ def prepare_model_for_kbit_training(model, use_gradient_checkpointing=True):
         model.gradient_checkpointing_enable()
 
     return model
-    
+
 
 def accuracy(predictions, references, normalize=True, sample_weight=None):
         return {

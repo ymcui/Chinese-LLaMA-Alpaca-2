@@ -514,7 +514,7 @@ class PeftModelForCausalLM(PeftModel):
         super().__init__(model, peft_config)
         self.base_model_prepare_inputs_for_generation = self.base_model.prepare_inputs_for_generation
 
-    def forward(
+    def forward(# pylint: disable=W0221
         self,
         input_ids=None,
         attention_mask=None,

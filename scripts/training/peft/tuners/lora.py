@@ -685,7 +685,7 @@ if is_bnb_available():
 
     class MergedLinear4bit(bnb.nn.Linear4bit, LoraLayer):
         # Lora implemented in a dense layer
-        def __init__(
+        def __init__(  # pylint: disable=W0102
             self,
             in_features: int,
             out_features: int,
