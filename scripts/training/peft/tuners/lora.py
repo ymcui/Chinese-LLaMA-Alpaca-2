@@ -554,7 +554,7 @@ if is_bnb_available():
 
     class MergedLinear8bitLt(bnb.nn.Linear8bitLt, LoraLayer):
         # Lora implemented in a dense layer
-        def __init__(
+        def __init__(  # pylint: disable=W0102
             self,
             in_features: int,
             out_features: int,

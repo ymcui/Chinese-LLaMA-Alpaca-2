@@ -35,7 +35,7 @@ class TaskType(str, enum.Enum):
     SEQ_CLS = "SEQ_CLS"
     SEQ_2_SEQ_LM = "SEQ_2_SEQ_LM"
     CAUSAL_LM = "CAUSAL_LM"
-    TOKEN_CLS = "TOKEN_CLS"
+    TOKEN_CLS = "TOKEN_CLS"  # pylint: disable=B105
 
 
 @dataclass

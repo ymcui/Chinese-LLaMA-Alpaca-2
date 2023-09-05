@@ -113,7 +113,7 @@ class PeftModel(PushToHubMixin, torch.nn.Module):
         self.peft_config.inference_mode = True
         self.peft_config.save_pretrained(save_directory)
         self.peft_config.inference_mode = inference_mode
-        
+
     @classmethod
     def from_pretrained(cls, model, model_id, **kwargs):
         r"""
