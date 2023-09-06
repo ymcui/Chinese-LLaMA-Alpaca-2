@@ -51,4 +51,7 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --trainable ${lora_trainable} \
     --lora_dropout ${lora_dropout} \
     --modules_to_save ${modules_to_save} \
-    --torch_dtype float16 
+    --torch_dtype float16 \
+    --load_in_kbits 16 \
+    --gradient_checkpointing \
+    --ddp_find_unused_parameters False
