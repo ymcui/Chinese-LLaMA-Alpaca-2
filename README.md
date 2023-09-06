@@ -304,6 +304,8 @@
 问题9：如何解读第三方公开榜单的结果？
 问题10：会出34B或者70B级别的模型吗？
 问题11：为什么长上下文版模型是16K，不是32K或者100K？
+问题12：为什么Alpaca模型会回复说自己是ChatGPT？
+问题13：为什么pt_lora_mdoel或者sft_lora_model下的adapter_model.bin只有几百k？
 ```
 
 
