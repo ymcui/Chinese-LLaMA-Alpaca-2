@@ -88,7 +88,7 @@ class Llama_Evaluator(Evaluator):
                                     )
 
                 instruction = prompt_template.format_map({'instruction': instruction,'system_prompt':DEFAULT_SYSTEM_PROMPT})
-            instruction = history + question
+            instruction = history + instruction
             inputs = self.tokenizer(instruction, return_tensors="pt")
             generation_output = self.model.generate(
                     input_ids = inputs["input_ids"].to(self.device),
@@ -158,7 +158,7 @@ class Llama_Evaluator(Evaluator):
                 if cot:
                     example += "\n答案是什么？让我们一步一步思考，\n1."
                 else:
-                    example += '\n答案是什么？ '
+                    example += '\n答案：'
         return example
 
     def generate_llama2_few_shot_prompt(self, subject, dev_df, cot=False):
@@ -174,7 +174,7 @@ class Llama_Evaluator(Evaluator):
             )
         return prompt
 
-    def generate_alapca2_few_shot_prompt(self, subject, dev_df, cot=False):
+    def generate_alpaca2_few_shot_prompt(self, subject, dev_df, cot=False):
         prompt = f"以下是中国关于{subject}考试的单项选择题，请选出其中的正确答案。\n\n"
         prompt_template = (
             "[INST] <<SYS>>\n"
@@ -182,6 +182,7 @@ class Llama_Evaluator(Evaluator):
             "<</SYS>>\n\n"
             "{instruction} [/INST]好的，我会结合{subject}相关知识回答"
         )
+
         prompt = prompt_template.format_map({'instruction':prompt,'system_prompt':DEFAULT_SYSTEM_PROMPT,'subject':subject})
         k = self.k
         if self.k == -1:
