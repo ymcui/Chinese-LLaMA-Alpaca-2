@@ -69,13 +69,16 @@ class Llama_Evaluator(Evaluator):
             result = []
             score = []
         if few_shot:
-            history = self.generate_few_shot_prompt(subject_name, dev_df, cot=cot)
+            if with_prompt:
+                history = self.generate_alpaca2_few_shot_prompt(subject_name, dev_df, cot=cot)
+            else:
+                history = self.generate_llama2_few_shot_prompt(subject_name, dev_df, cot=cot)
         else:
             history = ''
         answers = ['NA'] * len(test_df) if do_test is True else list(test_df['answer'])
         for row_index, row in tqdm(test_df.iterrows(), total=len(test_df)):
             question = self.format_example(row, include_answer=False, cot=cot,with_prompt=with_prompt)
-            instruction = history + question
+            instruction = question
             if with_prompt:
                 prompt_template = (
                                         "[INST] <<SYS>>\n"
@@ -85,7 +88,7 @@ class Llama_Evaluator(Evaluator):
                                     )
 
                 instruction = prompt_template.format_map({'instruction': instruction,'system_prompt':DEFAULT_SYSTEM_PROMPT})
-
+            instruction = history + instruction
             inputs = self.tokenizer(instruction, return_tensors="pt")
             generation_output = self.model.generate(
                     input_ids = inputs["input_ids"].to(self.device),
@@ -155,10 +158,10 @@ class Llama_Evaluator(Evaluator):
                 if cot:
                     example += "\n答案是什么？让我们一步一步思考，\n1."
                 else:
-                    example += '\n答案是什么？ '
+                    example += '\n答案：'
         return example
 
-    def generate_few_shot_prompt(self, subject, dev_df, cot=False):
+    def generate_llama2_few_shot_prompt(self, subject, dev_df, cot=False):
         prompt = f"以下是中国关于{subject}考试的单项选择题，请选出其中的正确答案。\n\n"
         k = self.k
         if self.k == -1:
@@ -169,6 +172,29 @@ class Llama_Evaluator(Evaluator):
                 include_answer=True,
                 cot=cot
             )
+        return prompt
+
+    def generate_alpaca2_few_shot_prompt(self, subject, dev_df, cot=False):
+        prompt = f"以下是中国关于{subject}考试的单项选择题，请选出其中的正确答案。\n\n"
+        prompt_template = (
+            "[INST] <<SYS>>\n"
+            "{system_prompt}\n"
+            "<</SYS>>\n\n"
+            "{instruction} [/INST]好的，我会结合{subject}相关知识回答"
+        )
+
+        prompt = prompt_template.format_map({'instruction':prompt,'system_prompt':DEFAULT_SYSTEM_PROMPT,'subject':subject})
+        k = self.k
+        if self.k == -1:
+            k = dev_df.shape[0]
+        for i in range(k):
+            line = dev_df.iloc[i, :]
+            q=line['question']
+            for choice in self.choices:
+                q += f'\n{choice}. {line[f"{choice}"]}'
+
+            a = line['answer']
+            prompt += "[INST] "+q+"\n答案：[/INST]"+a+"\n"
         return prompt
 
     def extract_answer(self, line, gen_ans):
