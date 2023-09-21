@@ -166,17 +166,21 @@ def setup():
             if args.lora_model is None:
                 args.tokenizer_path = args.base_model
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
+        if args.load_in_4bit or args.load_in_8bit:
+            quantization_config = BitsAndBytesConfig(
+                load_in_4bit=args.load_in_4bit,
+                load_in_8bit=args.load_in_8bit,
+                bnb_4bit_compute_dtype=load_type,
+            )
 
         base_model = LlamaForCausalLM.from_pretrained(
             args.base_model,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
-            quantization_config=BitsAndBytesConfig(
-                load_in_4bit=args.load_in_4bit,
-                load_in_8bit=args.load_in_8bit,
-                bnb_4bit_compute_dtype=load_type
-            )
+            load_in_4bit=args.load_in_4bit,
+            load_in_8bit=args.load_in_8bit,
+            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
         )
 
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)
