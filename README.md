@@ -24,8 +24,8 @@
 
 #### 已开源的模型
 
-- 基座模型：Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
-- 聊天模型：Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
+- 基座模型：Chinese-LLaMA-2-1.3B, Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
+- 聊天模型：Chinese-Alpaca-2-1.3B, Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
 - 长上下文模型：Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-7B-16K, Chinese-Alpaca-2-13B-16K
 
 ![](./pics/screencast.gif)
@@ -37,7 +37,9 @@
 
 ## 新闻
 
-**[2023/09/01] 发布长上下文模型Chinese-Alpaca-2-7B-16K和Chinese-Alpaca-2-13B-16K，该模型可直接应用于下游任务，例如privateGPT等。详情查看[📚 v3.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)**
+**[2023/10/XX] 发布小参数量模型Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B，结合投机采样策略，可用于提升7B、13B等大模型的推理速度。详情查看[📚 v3.2版本发布日志](XX)**
+
+[2023/09/01] 发布长上下文模型Chinese-Alpaca-2-7B-16K和Chinese-Alpaca-2-13B-16K，该模型可直接应用于下游任务，例如privateGPT等。详情查看[📚 v3.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)
 
 [2023/08/25] 发布长上下文模型Chinese-LLaMA-2-7B-16K和Chinese-LLaMA-2-13B-16K，支持16K上下文，并可通过NTK方法进一步扩展至24K+。详情查看[📚 v3.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)
 
@@ -101,9 +103,9 @@
 | 对比项                | 中文LLaMA-2                                            | 中文Alpaca-2                                                 |
 | :-------------------- | :----------------------------------------------------: | :----------------------------------------------------------: |
 | 模型类型 | **基座模型** | **指令/Chat模型（类ChatGPT）** |
-| 已开源大小 | 7B、13B | 7B、13B |
+| 已开源大小 | 1.3B、7B、13B | 1.3B、7B、13B |
 | 训练类型     | Causal-LM (CLM)           | 指令精调                                                     |
-| 训练方式 | LoRA + 全量emb/lm-head | LoRA + 全量emb/lm-head |
+| 训练方式 | 7B、13B：LoRA + 全量emb/lm-head<br/>1.3B：全量 | 7B、13B：LoRA + 全量emb/lm-head<br/>1.3B：全量 |
 | 基于什么模型训练 | [原版Llama-2](https://github.com/facebookresearch/llama)（非chat版） | 中文LLaMA-2 |
 | 训练语料 | 无标注通用语料（120G纯文本） | 有标注指令数据（500万条） |
 | 词表大小<sup>[1]</sup> | 55,296 | 55,296 |
@@ -116,6 +118,7 @@
 > [1] *本项目一代模型和二代模型的词表不同，请勿混用。二代LLaMA和Alpaca的词表相同。*</br>
 > [2] *括号内表示基于NTK上下文扩展支持的最大长度。*</br>
 > [3] *Alpaca-2采用了Llama-2-chat系列模板（格式相同，提示语不同），而不是一代Alpaca的模板，请勿混用。*</br>
+> [4] *不建议单独使用1.3B模型，而是通过投机采样搭配更大的模型（7B、13B）使用。*</br>
 
 ### 完整模型下载
 
@@ -125,8 +128,10 @@
 | :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | Chinese-LLaMA-2-13B | 基座模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1T3RqEUSmyg6ZuBwMhwSmoQ?pwd=e9qy) [[Google]](https://drive.google.com/drive/folders/1YNa5qJ0x59OEOI7tNODxea-1YvMPoH05?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b) |
 | Chinese-LLaMA-2-7B | 基座模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1E5NI3nlQpx1j8z3eIzbIlg?pwd=n8k3) [[Google]](https://drive.google.com/drive/folders/18pp4I-mvQxRA7b8vF9gP-2cH_ocnXVKh?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b) |
+| Chinese-LLaMA-2-1.3B | 基座模型 | XX GB |  |
 | Chinese-Alpaca-2-13B | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 | Chinese-Alpaca-2-7B | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-7b) |
+| Chinese-Alpaca-2-1.3B | 指令模型 | XX GB | |
 
 以下是长上下文版模型，**推荐以长文本为主的下游任务使用**，否则建议使用上述标准版。
 
@@ -172,15 +177,15 @@
 
 本项目中的相关模型主要支持以下量化、推理和部署方式，具体内容请参考对应教程。
 
-| 工具                                                         | 特点                         | CPU  | GPU  | 量化 | GUI  | API  | vLLM<sup>§</sup> |                             16K<sup>‡</sup>                             |                             教程                             |
-| :----------------------------------------------------------- | ---------------------------- | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
-| [**llama.cpp**](https://github.com/ggerganov/llama.cpp)      | 丰富的量化选项和高效本地推理 |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ❌   | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh) |
-| [**🤗Transformers**](https://github.com/huggingface/transformers) | 原生transformers推理接口     |  ✅   |  ✅   |  ✅   |  ✅   |  ❌   |  ✅  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh) |
-| [**Colab Demo**](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) | 在Colab中启动交互界面 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | [link](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) |
-| [**仿OpenAI API调用**](https://platform.openai.com/docs/api-reference) | 仿OpenAI API接口的服务器Demo |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ✅  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/api_calls_zh) |
-| [**text-generation-webui**](https://github.com/oobabooga/text-generation-webui) | 前端Web UI界面的部署方式 |  ✅   |  ✅   |  ✅   |  ✅   |  ✅<sup>†</sup>  | ❌  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/text-generation-webui_zh) |
-| [**LangChain**](https://github.com/hwchase17/langchain) | 适合二次开发的大模型应用开源框架 |  ✅<sup>†</sup>  |  ✅   |  ✅<sup>†</sup>   |  ❌   |  ❌   | ❌  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/langchain_zh) |
-| [**privateGPT**](https://github.com/imartinez/privateGPT) | 基于LangChain的多文档本地问答框架 | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_zh) |
+| 工具                                                         | 特点                         | CPU  | GPU  | 量化 | GUI  | API  | vLLM<sup>§</sup> |                             16K<sup>‡</sup>                             | 投机采样 |                      教程                             |
+| :----------------------------------------------------------- | ---------------------------- | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| [**llama.cpp**](https://github.com/ggerganov/llama.cpp)      | 丰富的量化选项和高效本地推理 |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ❌   | ✅ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh) |
+| [**🤗Transformers**](https://github.com/huggingface/transformers) | 原生transformers推理接口     |  ✅   |  ✅   |  ✅   |  ✅   |  ❌   |  ✅  | ✅ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh) |
+| [**Colab Demo**](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) | 在Colab中启动交互界面 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | [link](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) |
+| [**仿OpenAI API调用**](https://platform.openai.com/docs/api-reference) | 仿OpenAI API接口的服务器Demo |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ✅  | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/api_calls_zh) |
+| [**text-generation-webui**](https://github.com/oobabooga/text-generation-webui) | 前端Web UI界面的部署方式 |  ✅   |  ✅   |  ✅   |  ✅   |  ✅<sup>†</sup>  | ❌  | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/text-generation-webui_zh) |
+| [**LangChain**](https://github.com/hwchase17/langchain) | 适合二次开发的大模型应用开源框架 |  ✅<sup>†</sup>  |  ✅   |  ✅<sup>†</sup>   |  ❌   |  ❌   | ❌  | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/langchain_zh) |
+| [**privateGPT**](https://github.com/imartinez/privateGPT) | 基于LangChain的多文档本地问答框架 | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_zh) |
 
 > [!NOTE]
 > <sup>†</sup> 工具支持该特性，但教程中未实现，详细说明请参考对应官方文档<br/>
@@ -272,6 +277,18 @@
 | Size      | 12.91G |  2.41G | 3.18G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
 | CPU Speed |    117 |     42 |    51 |    39 |    44 |    43 |    48 |    51 |    50 |    54 |    65 |
 | GPU Speed |     53 |     19 |    21 |    17 |    18 |    20 |     x |     x |    25 |    26 |     x |
+
+### 投机采样加速效果评测
+
+Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B分别适用于作为draft model加速更大的（7B、13B）的LLaMA和Alpaca模型。
+速度由XXX脚本测得。详细说明见wiki。
+
+| Draft Model |  Draft Model Speed | Target Model | Target Model Speed | Speed Up |
+| ----------- |  ----------------- | ------------ |  ----------------- | -------- |
+| Chinese-LLaMA-2-1.3B |  ----------------- | Chinese-LLaMA-2-7B |  ----------------- | -------- |
+| Chinese-LLaMA-2-1.3B |  ----------------- | Chinese-LLaMA-2-13B |  ----------------- | -------- |
+| Chinese-Alpaca-2-1.3B |  ----------------- | Chinese-Alpaca-2-7B |  ----------------- | -------- |
+| Chinese-Alpaca-2-1.3B |  ----------------- | Chinese-Alpaca-2-13B |  ----------------- | -------- |
 
 ## 训练与精调
 
