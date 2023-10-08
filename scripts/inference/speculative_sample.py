@@ -13,7 +13,7 @@ def norm_logits(
     x: torch.Tensor,
     logits: torch.Tensor,
     logits_processor: LogitsProcessorList,
-    logits_warper: LogitsProcessorList, 
+    logits_warper: LogitsProcessorList,
     do_sample: bool = False,
     cur_len=None,
 ) -> torch.Tensor:
@@ -42,7 +42,7 @@ def norm_logits(
     if do_sample and len(logits_warper) > 0:
         for i in range(x.shape[1]-cur_len+1):
             new_logits[:,i,:] = logits_warper(x[:,:cur_len+i], new_logits[:,i,:])
-    
+
     probs = new_logits.softmax(dim=-1)
 
     return probs
@@ -61,7 +61,7 @@ def max_fn(x):
     norm(max (x, 0))
     """
     x_max = torch.where(x > 0, x, torch.zeros_like(x))
-    x_max_sum = torch.sum(x_max, dim=1, keepdim=True) 
+    x_max_sum = torch.sum(x_max, dim=1, keepdim=True)
     return x_max / x_max_sum
 
 
@@ -131,7 +131,7 @@ def _draft_model_serial_forward(
 
 def _speculative_sampling(
     prefix : torch.Tensor,
-    target_model : torch.nn.Module, 
+    target_model : torch.nn.Module,
     draft_model : torch.nn.Module,
     max_new_tokens : int ,
     draft_k : int = 4,
@@ -183,6 +183,7 @@ def _speculative_sampling(
     target_probs = None
     rejected = False
     unfinished_sequences = prefix.new(prefix.shape[0]).fill_(1)
+    last_draft_token_is_eos = False
 
     logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
     logits_warper = logits_warper if logits_warper is not None else LogitsProcessorList()
@@ -324,7 +325,7 @@ def speculative_sample(
     logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
     stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
 
-    inputs_tensor, model_input_name, model_kwargs = target_model._prepare_model_inputs(
+    inputs_tensor, _, model_kwargs = target_model._prepare_model_inputs(
         input_ids, generation_config.bos_token_id, model_kwargs
     )
 
@@ -356,13 +357,13 @@ def speculative_sample(
             f" the maximum length ({generation_config.max_length})"
         )
     if input_ids_seq_length >= generation_config.max_length:
-        input_ids_string = "decoder_input_ids" if target_model.config.is_encoder_decoder else "input_ids"
+        # input_ids_string = "decoder_input_ids" if target_model.config.is_encoder_decoder else "input_ids"
         # logger.warning(
         #     f"Input length of {input_ids_string} is {input_ids_seq_length}, but `max_length` is set to"
         #     f" {generation_config.max_length}. This can lead to unexpected behavior. You should consider"
         #     " increasing `max_new_tokens`."
         # )
-
+        pass
     # prepare logis_processor, stopping_criteria, logits_warper
     try:
         logits_processor = target_model._get_logits_processor(
