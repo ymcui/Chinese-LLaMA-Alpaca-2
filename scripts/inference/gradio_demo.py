@@ -154,7 +154,9 @@ from peft import PeftModel
 # Set up the required components: model and tokenizer
 
 def setup():
-    global tokenizer, model, device, share, port, max_memory, draft_model
+    global tokenizer, model, device, share, port, max_memory
+    if args.speculative_sampling:
+        global draft_model
     if args.use_vllm:
         # global share, port, max_memory
         max_memory = args.max_memory
