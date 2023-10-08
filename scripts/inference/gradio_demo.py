@@ -154,9 +154,7 @@ from peft import PeftModel
 # Set up the required components: model and tokenizer
 
 def setup():
-    global tokenizer, model, device, share, port, max_memory
-    if args.speculative_sampling:
-        global draft_model
+    global tokenizer, model, device, share, port, max_memory, draft_model
     if args.use_vllm:
         # global share, port, max_memory
         max_memory = args.max_memory
@@ -509,7 +507,7 @@ def predict(
             generate_params['draft_model'] = draft_model
             generate_params['draft_k'] = draft_k
             generate_params['generation_config'] = GenerationConfig()
-            
+
         def generate_with_callback(callback=None, **kwargs):
             if 'stopping_criteria' in kwargs:
                 kwargs['stopping_criteria'].append(Stream(callback_func=callback))
