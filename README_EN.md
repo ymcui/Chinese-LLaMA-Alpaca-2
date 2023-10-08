@@ -269,7 +269,7 @@ Specifically, the followings are the benchmark for different quantization method
 
 ### Speculative Sampling Evaluation
 
-Using speculative sampling and leveraging Chinese-LLaMA-2-1.3B and Chinese-Alpaca-2-1.3B can accelerate the inference speed of 7B and 13B LLaMA and Alpaca models. The followings are the inference speeds (ms/token) evaluated on the questions in [Generation Performance Evaluation](#Generation-Performance-Evaluation) on 1*A40-48G。For details, see our [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh)。
+Using speculative sampling and leveraging Chinese-LLaMA-2-1.3B and Chinese-Alpaca-2-1.3B can accelerate the inference speed of 7B and 13B LLaMA and Alpaca models. The followings are the inference speeds (ms/token) evaluated on the questions in [Generation Performance Evaluation](#Generation-Performance-Evaluation) on 1*A40-48G. All the models are in fp16 format. For details, see our [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh).
 
 | Draft Model           | Draft Model Speed | Target Model         | Target Model Speed | Speculative Sampling Speed |
 | :-------------------- | :---------------: | :------------------- | :----------------: | :------------------------: |
