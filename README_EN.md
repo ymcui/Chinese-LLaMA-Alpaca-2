@@ -24,8 +24,8 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 #### Open-sourced Models
 
-- Base model: Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
-- Instruction/chat model: Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
+- Base model: Chinese-LLaMA-2-1.3B, Chinese-LLaMA-2-7B, Chinese-LLaMA-2-13B
+- Instruction/chat model: Chinese-Alpaca-2-1.3B, Chinese-Alpaca-2-7B, Chinese-Alpaca-2-13B
 - Long context model: Chinese-LLaMA-2-7B-16K, Chinese-LLaMA-2-13B-16K, Chinese-Alpaca-2-7B-16K, Chinese-Alpaca-2-13B-16K
 
 ![](./pics/screencast.gif)
@@ -97,9 +97,9 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 | Comparison                    |                       Chinese LLaMA-2                        |                       Chinese Alpaca-2                       |
 | :---------------------------- | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | Model Type                    |                        **Base Model**                        |          **Instruction/Chat Model (like ChatGPT)**           |
-| Released Sizes                |                           7B, 13B                            |                           7B, 13B                            |
+| Released Sizes                |                        1.3B, 7B, 13B                         |                        1.3B, 7B, 13B                         |
 | Training Method               |                       Causal-LM (CLM)                        |                   Instruction fine-tuning                    |
-| Training Parts                |                      LoRA + emb/lm-head                      |                      LoRA + emb/lm-head                      |
+| Training Parts                |      7B, 13B：LoRA + emb/lm-head</br> 1.3B: full params      |      7B, 13B：LoRA + emb/lm-head</br> 1.3B: full params      |
 | Trained on                    | [Original Llama-2](https://github.com/facebookresearch/llama) (non-chat) |                       Chinese LLaMA-2                        |
 | Training Corpus               |           Unlabeled general corpus (120G raw text)           |            Labeled instruction data (5M samples)             |
 | Vocabulary Size<sup>[1]</sup> |                            55,296                            |                            55,296                            |
@@ -112,6 +112,7 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 > [1] *The vocabulary of the first and second generation models in this project are different, do not mix them. The vocabularies of the second generation LLaMA and Alpaca are the same.*</br> 
 > [2] *Extended context size with NTK method is depicted in brackets.*</br>
 > [3] *Alpaca-2 uses the Llama-2-chat series templates (different prompts), not the templates of the first-generation Alpaca, do not mix them.*</br>
+> [4] *1.3B models are not intended for standalone use; instead, use it together with larger models (7B, 13B) through speculative sampling.*</br>
 
 ### Full Model Download
 
@@ -121,8 +122,10 @@ Below are the full models, which can be used directly afterwards, without additi
 | :-------------------- | :---------------: | :-----: | :----------------------------------------------------------: |
 | Chinese-LLaMA-2-13B | Base model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1T3RqEUSmyg6ZuBwMhwSmoQ?pwd=e9qy) [[Google]](https://drive.google.com/drive/folders/1YNa5qJ0x59OEOI7tNODxea-1YvMPoH05?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-13b) |
 | Chinese-LLaMA-2-7B | Base model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1E5NI3nlQpx1j8z3eIzbIlg?pwd=n8k3) [[Google]](https://drive.google.com/drive/folders/18pp4I-mvQxRA7b8vF9gP-2cH_ocnXVKh?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-llama-2-7b) |
+| Chinese-LLaMA-2-1.3B | Base model | 2.4 GB |  |
 | Chinese-Alpaca-2-13B | Chat Model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 | Chinese-Alpaca-2-7B | Chat Model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-7b) |
+| Chinese-Alpaca-2-1.3B | Chat model | 2.4 GB |  |
 
 The followings are long context models, which are recommended for long context tasks. 
 
@@ -167,15 +170,15 @@ The followings are long context models, which are recommended for long context t
 
 The models in this project mainly support the following quantization, inference, and deployment methods.
 
-| Tool                                                         | Features                                                | CPU  | GPU  | Quant | GUI  | API  | vLLM<sup>§</sup> | 16K<sup>‡</sup> |                           Tutorial                           |
-| :----------------------------------------------------------- | ------------------------------------------------------- | :--: | :--: | :---: | :--: | :--: | :--: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| [**llama.cpp**](https://github.com/ggerganov/llama.cpp)      | Rich quantization options and efficient local inference |  ✅   |  ✅   |   ✅   |  ❌   |  ✅   |  ❌   |  ✅  | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en) |
-| [**🤗Transformers**](https://github.com/huggingface/transformers) | Native transformers inference interface                 |  ✅   |  ✅   |   ✅   |  ✅   |  ❌   |  ✅  |  ✅  | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_en) |
-| [**Colab Demo**](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) | Running a Gradio web demo in Colab | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | [link](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) |
-| [**OpenAI API Calls**](https://platform.openai.com/docs/api-reference) | A server that implements OpenAI API |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ✅  |  ✅  | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/api_calls_en) |
-| [**text-generation-webui**](https://github.com/oobabooga/text-generation-webui) | A tool for deploying model as a web UI |  ✅   |  ✅   |  ✅   |  ✅   | ✅<sup>†</sup> | ❌  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/text-generation-webui_en) |
-| [**LangChain**](https://github.com/hwchase17/langchain) | LLM application development framework, suitable for secondary development |  ✅<sup>†</sup>  |  ✅   |  ✅<sup>†</sup>   |  ❌   |  ❌   | ❌  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/langchain_en) |
-| [**privateGPT**](https://github.com/imartinez/privateGPT) | LangChain-based multi-document QA framework | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_en) |
+| Tool                                                         | Features                                                | CPU  | GPU  | Quant | GUI  | API  | vLLM<sup>§</sup> | 16K<sup>‡</sup> | Speculative  Sampling |                           Tutorial                           |
+| :----------------------------------------------------------- | ------------------------------------------------------- | :--: | :--: | :---: | :--: | :--: | :--: | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ |
+| [**llama.cpp**](https://github.com/ggerganov/llama.cpp)      | Rich quantization options and efficient local inference |  ✅   |  ✅   |   ✅   |  ❌   |  ✅   |  ❌   |  ✅  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en) |
+| [**🤗Transformers**](https://github.com/huggingface/transformers) | Native transformers inference interface                 |  ✅   |  ✅   |   ✅   |  ✅   |  ❌   |  ✅  |  ✅  | ✅ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_en) |
+| [**Colab Demo**](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) | Running a Gradio web demo in Colab | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | [link](https://colab.research.google.com/drive/1yu0eZ3a66by8Zqm883LLtRQrguBAb9MR?usp=sharing) |
+| [**OpenAI API Calls**](https://platform.openai.com/docs/api-reference) | A server that implements OpenAI API |  ✅   |  ✅   |  ✅   |  ❌   |  ✅   |  ✅  |  ✅  | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/api_calls_en) |
+| [**text-generation-webui**](https://github.com/oobabooga/text-generation-webui) | A tool for deploying model as a web UI |  ✅   |  ✅   |  ✅   |  ✅   | ✅<sup>†</sup> | ❌  | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/text-generation-webui_en) |
+| [**LangChain**](https://github.com/hwchase17/langchain) | LLM application development framework, suitable for secondary development |  ✅<sup>†</sup>  |  ✅   |  ✅<sup>†</sup>   |  ❌   |  ❌   | ❌  | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/langchain_en) |
+| [**privateGPT**](https://github.com/imartinez/privateGPT) | LangChain-based multi-document QA framework | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | [link](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/privategpt_en) |
 
 > [!NOTE]
 > <sup>†</sup>: Supported by this tool, but not implemented in the tutorial. Please refer to the official documentation for details. <br/>
@@ -263,6 +266,19 @@ Specifically, the followings are the benchmark for different quantization method
 | Size      | 12.91G |  2.41G | 3.18G | 3.69G | 4.08G | 3.92G | 4.47G | 4.86G | 4.59G | 5.30G | 6.81G |
 | CPU Speed |    117 |     42 |    51 |    39 |    44 |    43 |    48 |    51 |    50 |    54 |    65 |
 | GPU Speed |     53 |     19 |    21 |    17 |    18 |    20 |     x |     x |    25 |    26 |     x |
+
+### Speculative Sampling Evaluation
+
+Using speculative sampling and leveraging Chinese-LLaMA-2-1.3B and Chinese-Alpaca-2-1.3B can accelerate the inference speed of 7B and 13B LLaMA and Alpaca models. The followings are the inference speeds (ms/token) evaluated on the questions in [Generation Performance Evaluation](#Generation-Performance-Evaluation) on 1*A40-48G。For details, see our [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh)。
+
+| Draft Model           | Draft Model Speed | Target Model         | Target Model Speed | Speculative Sampling Speed |
+| :-------------------- | :---------------: | :------------------- | :----------------: | :------------------------: |
+| Chinese-LLaMA-2-1.3B  |        7.6        | Chinese-LLaMA-2-7B   |        49.3        |       36.0（1.37x）        |
+| Chinese-LLaMA-2-1.3B  |        7.6        | Chinese-LLaMA-2-13B  |        66.0        |       47.1（1.40x）        |
+| Chinese-Alpaca-2-1.3B |        8.1        | Chinese-Alpaca-2-7B  |        50.2        |       34.9（1.44x）        |
+| Chinese-Alpaca-2-1.3B |        8.2        | Chinese-Alpaca-2-13B |        67.0        |       41.6（1.61x）        |
+
+
 
 ## Training and Fine-tuning
 

@@ -37,9 +37,7 @@
 
 ## 新闻
 
-**[2023/10/XX] 发布小参数量模型Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B，结合投机采样策略，可用于提升7B、13B等大模型的推理速度。详情查看[📚 v3.2版本发布日志](XX)**
-
-[2023/09/01] 发布长上下文模型Chinese-Alpaca-2-7B-16K和Chinese-Alpaca-2-13B-16K，该模型可直接应用于下游任务，例如privateGPT等。详情查看[📚 v3.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)
+**[2023/09/01] 发布长上下文模型Chinese-Alpaca-2-7B-16K和Chinese-Alpaca-2-13B-16K，该模型可直接应用于下游任务，例如privateGPT等。详情查看[📚 v3.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)**
 
 [2023/08/25] 发布长上下文模型Chinese-LLaMA-2-7B-16K和Chinese-LLaMA-2-13B-16K，支持16K上下文，并可通过NTK方法进一步扩展至24K+。详情查看[📚 v3.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)
 
@@ -280,15 +278,14 @@
 
 ### 投机采样加速效果评测
 
-Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B分别适用于作为draft model加速更大的（7B、13B）的LLaMA和Alpaca模型。
-以下是使用[投机采样脚本](scripts/inference/speculative_sample.py)在1*A40-48G上测得的速度，供用户参考，速度以ms/token计。详细说明见[wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh)。
+通过投机采样方法并借助Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B，可以分别加速7B、13B的LLaMA和Alpaca模型的推理速度。以下是使用[投机采样脚本](scripts/inference/speculative_sample.py)在1*A40-48G上解码[生成效果评测](#生成效果评测)中的问题测得的平均速度（以ms/token计），供用户参考。详细说明见[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh)。
 
-| Draft Model |  Draft Model Speed | Target Model | Target Model Speed | Speculative Sampling Speed Up |
-| ----------- |  :-----------------: | ------------ |  :-----------------: | :--------: |
-| Chinese-LLaMA-2-1.3B |  7.6 | Chinese-LLaMA-2-7B |  49.3 | 1.37 |
-| Chinese-LLaMA-2-1.3B |  7.6 | Chinese-LLaMA-2-13B |  66.0 | 1.40 |
-| Chinese-Alpaca-2-1.3B |  8.1 | Chinese-Alpaca-2-7B |  50.2 | 1.44 |
-| Chinese-Alpaca-2-1.3B |  8.2 | Chinese-Alpaca-2-13B |  67.0 | 1.61 |
+| 草稿模型 | 草稿模型速度 | 目标模型 | 目标模型速度 | 投机采样速度（加速比） |
+| :---------- |  :-----------------: | :----------- |  :-----------------: | :--------: |
+| Chinese-LLaMA-2-1.3B |  7.6 | Chinese-LLaMA-2-7B |  49.3 | 36.0（1.37x） |
+| Chinese-LLaMA-2-1.3B |  7.6 | Chinese-LLaMA-2-13B |  66.0 | 47.1（1.40x） |
+| Chinese-Alpaca-2-1.3B |  8.1 | Chinese-Alpaca-2-7B |  50.2 | 34.9（1.44x） |
+| Chinese-Alpaca-2-1.3B |  8.2 | Chinese-Alpaca-2-13B |  67.0 | 41.6（1.61x） |
 
 ## 训练与精调
 
