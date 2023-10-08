@@ -278,7 +278,7 @@
 
 ### 投机采样加速效果评测
 
-通过投机采样方法并借助Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B，可以分别加速7B、13B的LLaMA和Alpaca模型的推理速度。以下是使用[投机采样脚本](scripts/inference/speculative_sample.py)在1*A40-48G上解码[生成效果评测](#生成效果评测)中的问题测得的平均速度（速度以ms/token计，模型均为fp16精度），供用户参考。详细说明见[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh)。
+通过投机采样方法并借助Chinese-LLaMA-2-1.3B和Chinese-Alpaca-2-1.3B，可以分别加速7B、13B的LLaMA和Alpaca模型的推理速度。以下是使用[投机采样脚本](scripts/inference/speculative_sample.py)在1*A40-48G上解码[生成效果评测](#生成效果评测)中的问题测得的平均速度（速度以ms/token计，模型均为fp16精度），供用户参考。详细说明见[📖GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/inference_with_transformers_zh#投机采样解码)。
 
 | 草稿模型 | 草稿模型速度 | 目标模型 | 目标模型速度 | 投机采样速度（加速比） |
 | :---------- |  :-----------------: | :----------- |  :-----------------: | :--------: |
