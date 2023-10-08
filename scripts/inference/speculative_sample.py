@@ -248,7 +248,7 @@ def _speculative_sampling(
 
         n_valid = min(n_valid, T - 1)
         prefix = x[:, :n_valid]
-        
+
         if is_all_accept:
             target_new_token = sample(target_probs[:, -1, :], do_sample=do_sample)
             rejected = False
