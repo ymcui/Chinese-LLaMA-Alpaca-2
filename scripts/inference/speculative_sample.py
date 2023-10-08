@@ -424,7 +424,7 @@ if __name__ == "__main__":
         return TEMPLATE.format_map({'instruction': instruction,'system_prompt': system_prompt})
 
     inputs = ["我能用lightning数据线给安卓手机充电吗？"]
-    
+
     negative_text = generate_prompt(inputs[0], system_prompt="回复尽可能多的内容。")
     inputs = [generate_prompt(text) for text in inputs]
 
