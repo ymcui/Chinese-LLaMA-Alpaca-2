@@ -183,7 +183,6 @@ def _speculative_sampling(
     target_probs = None
     rejected = False
     unfinished_sequences = prefix.new(prefix.shape[0]).fill_(1)
-    last_draft_token_is_eos = False
 
     logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
     logits_warper = logits_warper if logits_warper is not None else LogitsProcessorList()
@@ -193,7 +192,7 @@ def _speculative_sampling(
     stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
     while prefix.shape[1] < T:
         prefix_len = prefix.shape[1]
-        x, new_draft_probs, draft_past_key_values, last_draft_token_is_eos = _draft_model_serial_forward(
+        x, new_draft_probs, draft_past_key_values, _ = _draft_model_serial_forward(
             prefix,
             draft_k,
             draft_model,
@@ -204,7 +203,7 @@ def _speculative_sampling(
             rejected,
             eos_token_id_tensor
         )
-        
+
         if draft_probs != None and new_draft_probs != None:
             draft_probs = torch.concat((draft_probs, new_draft_probs), dim=1)
         elif new_draft_probs == None:
