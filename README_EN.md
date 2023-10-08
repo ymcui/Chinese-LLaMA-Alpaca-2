@@ -99,7 +99,7 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 | Model Type                    |                        **Base Model**                        |          **Instruction/Chat Model (like ChatGPT)**           |
 | Released Sizes                |                        1.3B, 7B, 13B                         |                        1.3B, 7B, 13B                         |
 | Training Method               |                       Causal-LM (CLM)                        |                   Instruction fine-tuning                    |
-| Training Parts                |      7B, 13B：LoRA + emb/lm-head</br> 1.3B: full params      |      7B, 13B：LoRA + emb/lm-head</br> 1.3B: full params      |
+| Training Parts                |      7B, 13B: LoRA + emb/lm-head</br> 1.3B: full params      |      7B, 13B: LoRA + emb/lm-head</br> 1.3B: full params      |
 | Trained on                    | [Original Llama-2](https://github.com/facebookresearch/llama) (non-chat) |                       Chinese LLaMA-2                        |
 | Training Corpus               |           Unlabeled general corpus (120G raw text)           |            Labeled instruction data (5M samples)             |
 | Vocabulary Size<sup>[1]</sup> |                            55,296                            |                            55,296                            |
