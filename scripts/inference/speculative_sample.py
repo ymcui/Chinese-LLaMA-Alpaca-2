@@ -146,7 +146,7 @@ def _speculative_sampling(
     DeepMind version Speculative Sampling.
     Accelerating Large Language Model Decoding with Speculative Sampling
     https://arxiv.org/abs/2302.01318
-    
+
     Args:
         prefix (torch.Tensor): input sequence, (batch, prefix_seqlen), Note that the batch dim is always 1 now.
         target_model (torch.nn.Module): target model, the large one
@@ -210,7 +210,7 @@ def _speculative_sampling(
             draft_probs = draft_probs
         else:
             draft_probs = new_draft_probs
-        
+
         if target_past_key_values != None:
             unchecked_token_count = x.shape[1] - target_probs.shape[1] - 1
             outputs = target_model(x[:,-(unchecked_token_count+1):], past_key_values=target_past_key_values, use_cache=True)
@@ -451,14 +451,14 @@ if __name__ == "__main__":
     draft_model.eval()
     target_model.eval()
     print("finish loading models")
-    
+
     torch_device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     input_ids = tokenizer.encode(inputs[0], return_tensors='pt').to(torch_device)
-    
+
     negative_inputs = tokenizer(negative_text,return_tensors="pt")
     negative_prompt_ids = negative_inputs["input_ids"].to(torch_device)
     negative_prompt_attention_mask = negative_inputs["attention_mask"].to(torch_device)
-    
+
     generation_config = GenerationConfig(
         temperature=0.2,
         top_k=40,
@@ -468,7 +468,7 @@ if __name__ == "__main__":
         repetition_penalty=1.1,
         max_new_tokens=128
     )
-    
+
     outputs = speculative_sample(
         input_ids=input_ids,
         target_model=target_model,
