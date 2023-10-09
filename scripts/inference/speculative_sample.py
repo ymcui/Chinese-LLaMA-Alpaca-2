@@ -283,6 +283,9 @@ def _speculative_sampling(
         prefix = torch.cat((prefix, target_new_token), dim=1)
         if streamer is not None:
             streamer.put(prefix.cpu())
+        if stopping_criteria(prefix, target_probs):
+            # this_peer_finished = True
+            break
         if eos_token_id_tensor is not None:
             unfinished_sequences = unfinished_sequences.mul(
                 prefix[:, -1]
@@ -294,9 +297,6 @@ def _speculative_sampling(
             if unfinished_sequences.max() == 0:
                 # this_peer_finished = True
                 break
-        if stopping_criteria(prefix, target_probs):
-            # this_peer_finished = True
-            break
 
     if streamer is not None:
         streamer.end()

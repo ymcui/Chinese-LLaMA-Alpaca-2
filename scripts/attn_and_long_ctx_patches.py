@@ -47,8 +47,10 @@ def xformers_forward(
     value_states = self.v_proj(hidden_states).view(bsz, q_len, self.num_heads, self.head_dim).transpose(1, 2)
 
     kv_seq_len = key_states.shape[-2]
+    past_kv_len = 0
     if past_key_value is not None:
-        kv_seq_len += past_key_value[0].shape[-2]
+        past_kv_len = past_key_value[0].shape[-2]
+        kv_seq_len += past_kv_len
 
     if STORE_KV_BEFORE_ROPE is False:
         cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
@@ -75,12 +77,31 @@ def xformers_forward(
         position_ids = position_ids.unsqueeze(0).view(-1, kv_seq_len)
         key_states = apply_rotary_pos_emb_single(key_states, cos, sin, position_ids)
 
+    pad_query = False
     if xops is not None and USE_MEM_EFF_ATTENTION:
         attn_weights = None
         query_states = query_states.transpose(1, 2)
         key_states = key_states.transpose(1, 2)
         value_states = value_states.transpose(1, 2)
-        attn_bias = None if (query_states.size(1)==1 and key_states.size(1)>1) else xops.LowerTriangularMask()
+        if query_states.size(1)==1 and key_states.size(1)>1:
+            attn_bias = None
+        elif query_states.size(1)<key_states.size(1) and key_states.size(1)>1 and past_kv_len > 0:
+            attn_bias = xops.LowerTriangularMask()
+            query_states = torch.cat(
+                (
+                    torch.full(
+                        (bsz, past_kv_len, self.num_heads, self.head_dim),
+                        0.0,
+                        dtype=query_states.dtype,
+                        device=query_states.device,
+                    ),
+                    query_states,
+                ),
+                dim=1,
+            )
+            pad_query = True
+        else:
+            attn_bias = xops.LowerTriangularMask()
         attn_output = xops.memory_efficient_attention(
             query_states, key_states, value_states, attn_bias=attn_bias, p=0)
     else:
@@ -113,6 +134,8 @@ def xformers_forward(
             )
 
         attn_output = attn_output.transpose(1, 2)
+    if pad_query:
+        attn_output = attn_output[:,past_kv_len:]
     attn_output = attn_output.reshape(bsz, q_len, self.hidden_size)
 
     attn_output = self.o_proj(attn_output)
