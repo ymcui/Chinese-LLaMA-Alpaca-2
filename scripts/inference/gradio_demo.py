@@ -161,7 +161,7 @@ def setup():
         # global share, port, max_memory
         max_memory = args.max_memory
         port = args.port
-        share = args.share
+        share = args.share == 'True' or args.share is True
 
         if args.lora_model is not None:
             raise ValueError("vLLM currently does not support LoRA, please merge the LoRA weights to the base model.")
@@ -189,7 +189,7 @@ def setup():
     else:
         max_memory = args.max_memory
         port = args.port
-        share = args.share
+        share = args.share == 'True' or args.share is True
         load_type = torch.float16
         if torch.cuda.is_available():
             device = torch.device(0)
