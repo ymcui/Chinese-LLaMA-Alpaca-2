@@ -27,6 +27,12 @@ parser.add_argument("--use_vllm", action='store_true', help="Use vLLM as back-en
 parser.add_argument('--system_prompt', type=str, default=DEFAULT_SYSTEM_PROMPT, help="The system prompt of the prompt template.")
 parser.add_argument('--negative_prompt', type=str, default=None, help="Negative prompt in CFG sampling.")
 parser.add_argument('--guidance_scale', type=float, default=1.0, help="The guidance scale for CFG sampling. CFG is enabled by setting `guidance_scale > 1`.")
+parser.add_argument('--speculative_sampling', action='store_true', help="Use speculative sampling to speed up inference.")
+parser.add_argument('--draft_k', type=int, default=-1, help="Number of new tokens the draft model generates each times. Should be a positive integer. Using adaptive number K if `draft_k <= 0`.")
+parser.add_argument('--draft_base_model', default=None, type=str, help="Draft base model used in speculative sampling.")
+parser.add_argument('--draft_lora_model', default=None, type=str, help="If None, perform inference on the draft base model")
+parser.add_argument('--draft_model_load_in_8bit', action='store_true', help="Load the draft model in the 8bit mode")
+parser.add_argument('--draft_model_load_in_4bit', action='store_true', help="Load the draft model in the 4bit mode")
 args = parser.parse_args()
 
 if args.guidance_scale > 1:
@@ -44,12 +50,15 @@ if args.use_vllm:
         raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
     if args.guidance_scale > 1:
         raise ValueError("guidance_scale > 1, but vLLM does not support CFG sampling. Please unset guidance_scale. ")
+    if args.speculative_sampling:
+        raise ValueError("speculative_sampling is set, but vLLM does not support speculative sampling. Please unset speculative_sampling. ")
 if args.load_in_8bit and args.load_in_4bit:
     raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
 if args.only_cpu is True:
     args.gpus = ""
     if args.load_in_8bit or args.load_in_4bit:
         raise ValueError("Quantization is unavailable on CPU.")
+
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 import torch
 from transformers import LlamaForCausalLM, LlamaTokenizer
@@ -66,6 +75,12 @@ from attn_and_long_ctx_patches import apply_attention_patch, apply_ntk_scaling_p
 if not args.only_cpu:
     apply_attention_patch(use_memory_efficient_attention=True)
 apply_ntk_scaling_patch(args.alpha)
+if args.speculative_sampling:
+    if args.draft_base_model == None:
+        raise ValueError("Speculative sampling requires a draft model. Please specify the draft model.")
+    if args.draft_model_load_in_8bit and args.draft_model_load_in_4bit:
+        raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
+    from speculative_sample import speculative_sample
 
 if args.use_vllm:
     generation_config = dict(
@@ -125,6 +140,23 @@ if __name__ == '__main__':
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
             quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+        )
+
+        if args.speculative_sampling:
+            if args.load_in_4bit or args.load_in_8bit:
+                draft_quantization_config = BitsAndBytesConfig(
+                    load_in_4bit=args.draft_model_load_in_4bit,
+                    load_in_8bit=args.draft_model_load_in_8bit,
+                    bnb_4bit_compute_dtype=load_type,
+                )
+            draft_base_model = LlamaForCausalLM.from_pretrained(
+                args.draft_base_model,
+                torch_dtype=load_type,
+                low_cpu_mem_usage=True,
+                device_map='auto',
+                load_in_4bit=args.draft_model_load_in_4bit,
+                load_in_8bit=args.draft_model_load_in_8bit,
+                quantization_config=draft_quantization_config if (args.draft_model_load_in_4bit or args.draft_model_load_in_8bit) else None
             )
 
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)
@@ -134,15 +166,31 @@ if __name__ == '__main__':
         if model_vocab_size!=tokenizer_vocab_size:
             print("Resize model embeddings to fit tokenizer")
             base_model.resize_token_embeddings(tokenizer_vocab_size)
+        if args.speculative_sampling:
+            draft_model_vocab_size = draft_base_model.get_input_embeddings().weight.size(0)
+            print(f"Vocab of the draft base model: {draft_model_vocab_size}")
+            if draft_model_vocab_size!=tokenizer_vocab_size:
+                print("Resize draft model embeddings to fit tokenizer")
+                draft_base_model.resize_token_embeddings(tokenizer_vocab_size)
         if args.lora_model is not None:
             print("loading peft model")
             model = PeftModel.from_pretrained(base_model, args.lora_model,torch_dtype=load_type,device_map='auto',).half()
         else:
             model = base_model
+        if args.speculative_sampling:
+            if args.draft_lora_model is not None:
+                print("loading peft draft model")
+                draft_model = PeftModel.from_pretrained(draft_base_model, args.draft_lora_model,torch_dtype=load_type,device_map='auto',).half()
+            else:
+                draft_model = draft_base_model
 
         if device==torch.device('cpu'):
             model.float()
         model.eval()
+        if args.speculative_sampling:
+            if device==torch.device('cpu'):
+                draft_model.float()
+            draft_model.eval()
 
     # test data
     if args.data_file is None:
@@ -184,13 +232,24 @@ if __name__ == '__main__':
                 else:
                     inputs = tokenizer(input_text,return_tensors="pt")  #add_special_tokens=False ?
                     if args.guidance_scale ==1:
-                        generation_output = model.generate(
-                            input_ids = inputs["input_ids"].to(device),
-                            attention_mask = inputs['attention_mask'].to(device),
-                            eos_token_id=tokenizer.eos_token_id,
-                            pad_token_id=tokenizer.pad_token_id,
-                            generation_config = generation_config
-                        )
+                        if not args.speculative_sampling:
+                            generation_output = model.generate(
+                                input_ids = inputs["input_ids"].to(device),
+                                attention_mask = inputs['attention_mask'].to(device),
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                generation_config = generation_config
+                            )
+                        else: # enable speculative sampling
+                            generation_output = speculative_sample(
+                                input_ids=inputs["input_ids"].to(device),
+                                target_model=model,
+                                draft_model=draft_model,
+                                draft_k=args.draft_k,
+                                generation_config=generation_config,
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                            )
                     else: # enable CFG sampling
                         if negative_text is None:
                             negative_prompt_ids = None
@@ -199,16 +258,30 @@ if __name__ == '__main__':
                             negative_inputs = tokenizer(negative_text,return_tensors="pt")
                             negative_prompt_ids = negative_inputs["input_ids"].to(device)
                             negative_prompt_attention_mask = negative_inputs["attention_mask"].to(device)
-                        generation_output = model.generate(
-                            input_ids = inputs["input_ids"].to(device),
-                            attention_mask = inputs['attention_mask'].to(device),
-                            eos_token_id=tokenizer.eos_token_id,
-                            pad_token_id=tokenizer.pad_token_id,
-                            generation_config = generation_config,
-                            guidance_scale = args.guidance_scale,
-                            negative_prompt_ids = negative_prompt_ids,
-                            negative_prompt_attention_mask = negative_prompt_attention_mask
-                        )
+                        if not args.speculative_sampling:
+                            generation_output = model.generate(
+                                input_ids = inputs["input_ids"].to(device),
+                                attention_mask = inputs['attention_mask'].to(device),
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                generation_config = generation_config,
+                                guidance_scale = args.guidance_scale,
+                                negative_prompt_ids = negative_prompt_ids,
+                                negative_prompt_attention_mask = negative_prompt_attention_mask
+                            )
+                        else: # enable speculative sampling
+                            generation_output = speculative_sample(
+                                input_ids=inputs["input_ids"].to(device),
+                                target_model=model,
+                                draft_model=draft_model,
+                                draft_k=args.draft_k,
+                                generation_config=generation_config,
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                guidance_scale=args.guidance_scale,
+                                negative_prompt_ids=negative_prompt_ids,
+                                negative_prompt_attention_mask=negative_prompt_attention_mask,
+                            )
                     s = generation_output[0]
                     output = tokenizer.decode(s,skip_special_tokens=True)
                     if args.with_prompt:
@@ -247,13 +320,24 @@ if __name__ == '__main__':
                         negative_text = args.negative_prompt
                     inputs = tokenizer(input_text,return_tensors="pt")  #add_special_tokens=False ?
                     if args.guidance_scale == 1:
-                        generation_output = model.generate(
-                            input_ids = inputs["input_ids"].to(device),
-                            attention_mask = inputs['attention_mask'].to(device),
-                            eos_token_id=tokenizer.eos_token_id,
-                            pad_token_id=tokenizer.pad_token_id,
-                            generation_config = generation_config
-                        )
+                        if not args.speculative_sampling:
+                            generation_output = model.generate(
+                                input_ids = inputs["input_ids"].to(device),
+                                attention_mask = inputs['attention_mask'].to(device),
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                generation_config = generation_config
+                            )
+                        else: # enable speculative sampling
+                            generation_output = speculative_sample(
+                                input_ids=inputs["input_ids"].to(device),
+                                target_model=model,
+                                draft_model=draft_model,
+                                draft_k=args.draft_k,
+                                generation_config=generation_config,
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                            )
                     else: # enable CFG sampling
                         if negative_text is None:
                             negative_prompt_ids = None
@@ -262,16 +346,30 @@ if __name__ == '__main__':
                             negative_inputs = tokenizer(negative_text,return_tensors="pt")
                             negative_prompt_ids = negative_inputs["input_ids"].to(device)
                             negative_prompt_attention_mask = negative_inputs["attention_mask"].to(device)
-                        generation_output = model.generate(
-                            input_ids = inputs["input_ids"].to(device),
-                            attention_mask = inputs['attention_mask'].to(device),
-                            eos_token_id=tokenizer.eos_token_id,
-                            pad_token_id=tokenizer.pad_token_id,
-                            generation_config = generation_config,
-                            guidance_scale = args.guidance_scale,
-                            negative_prompt_ids = negative_prompt_ids,
-                            negative_prompt_attention_mask = negative_prompt_attention_mask
-                        )
+                        if not args.speculative_sampling:
+                            generation_output = model.generate(
+                                input_ids = inputs["input_ids"].to(device),
+                                attention_mask = inputs['attention_mask'].to(device),
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                generation_config = generation_config,
+                                guidance_scale = args.guidance_scale,
+                                negative_prompt_ids = negative_prompt_ids,
+                                negative_prompt_attention_mask = negative_prompt_attention_mask
+                            )
+                        else: # enable speculative sampling
+                            generation_output = speculative_sample(
+                                input_ids=inputs["input_ids"].to(device),
+                                target_model=model,
+                                draft_model=draft_model,
+                                draft_k=args.draft_k,
+                                generation_config=generation_config,
+                                eos_token_id=tokenizer.eos_token_id,
+                                pad_token_id=tokenizer.pad_token_id,
+                                guidance_scale=args.guidance_scale,
+                                negative_prompt_ids=negative_prompt_ids,
+                                negative_prompt_attention_mask=negative_prompt_attention_mask,
+                            )
                     s = generation_output[0]
                     output = tokenizer.decode(s,skip_special_tokens=True)
                     if args.with_prompt:

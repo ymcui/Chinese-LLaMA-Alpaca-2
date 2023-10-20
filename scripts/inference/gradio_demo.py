@@ -3,7 +3,8 @@ from transformers import (
     LlamaForCausalLM,
     LlamaTokenizer,
     StoppingCriteria,
-    BitsAndBytesConfig
+    BitsAndBytesConfig,
+    GenerationConfig
 )
 import gradio as gr
 import argparse
@@ -87,6 +88,29 @@ parser.add_argument(
     type=int,
     default=8000,
     help="Port of vLLM service.")
+parser.add_argument(
+    "--speculative_sampling",
+    action='store_true',
+    help="Use speculative sampling to speed up inference.")
+parser.add_argument(
+    "--draft_base_model",
+    default=None,
+    type=str,
+    help="Draft base model used in speculative sampling.")
+parser.add_argument(
+    "--draft_lora_model",
+    default=None,
+    type=str,
+    help="If None, perform inference on the draft base model")
+parser.add_argument(
+    "--draft_model_load_in_8bit",
+    action='store_true',
+    help="Load the draft model in the 8bit mode")
+parser.add_argument(
+    "--draft_model_load_in_4bit",
+    action='store_true',
+    help="Load the draft model in the 4bit mode")
+
 args = parser.parse_args()
 
 ENABLE_CFG_SAMPLING = True
@@ -112,6 +136,12 @@ from attn_and_long_ctx_patches import apply_attention_patch, apply_ntk_scaling_p
 if not args.only_cpu:
     apply_attention_patch(use_memory_efficient_attention=True)
 apply_ntk_scaling_patch(args.alpha)
+if args.speculative_sampling:
+    if args.draft_base_model == None:
+        raise ValueError("Speculative sampling requires a draft model. Please specify the draft model.")
+    if args.draft_model_load_in_8bit and args.draft_model_load_in_4bit:
+        raise ValueError("Only one quantization method can be chosen for inference. Please check your arguments")
+    from speculative_sample import speculative_sample
 
 # Set CUDA devices if available
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
@@ -125,11 +155,13 @@ from peft import PeftModel
 
 def setup():
     global tokenizer, model, device, share, port, max_memory
+    if args.speculative_sampling:
+        global draft_model
     if args.use_vllm:
         # global share, port, max_memory
         max_memory = args.max_memory
         port = args.port
-        share = args.share
+        share = args.share == 'True' or args.share is True
 
         if args.lora_model is not None:
             raise ValueError("vLLM currently does not support LoRA, please merge the LoRA weights to the base model.")
@@ -137,6 +169,8 @@ def setup():
             raise ValueError("vLLM currently does not support quantization, please use fp16 (default) or unuse --use_vllm.")
         if args.only_cpu:
             raise ValueError("vLLM requires GPUs with compute capability not less than 7.0. If you want to run only on CPU, please unuse --use_vllm.")
+        if args.speculative_sampling:
+            raise ValueError("speculative_sampling is set, but vLLM does not support speculative sampling. Please unset speculative_sampling. ")
 
         if args.tokenizer_path is None:
             args.tokenizer_path = args.base_model
@@ -155,7 +189,7 @@ def setup():
     else:
         max_memory = args.max_memory
         port = args.port
-        share = args.share
+        share = args.share == 'True' or args.share is True
         load_type = torch.float16
         if torch.cuda.is_available():
             device = torch.device(0)
@@ -183,6 +217,23 @@ def setup():
             quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
         )
 
+        if args.speculative_sampling:
+            if args.load_in_4bit or args.load_in_8bit:
+                draft_quantization_config = BitsAndBytesConfig(
+                    load_in_4bit=args.draft_model_load_in_4bit,
+                    load_in_8bit=args.draft_model_load_in_8bit,
+                    bnb_4bit_compute_dtype=load_type,
+                )
+            draft_base_model = LlamaForCausalLM.from_pretrained(
+                args.draft_base_model,
+                torch_dtype=load_type,
+                low_cpu_mem_usage=True,
+                device_map='auto',
+                load_in_4bit=args.draft_model_load_in_4bit,
+                load_in_8bit=args.draft_model_load_in_8bit,
+                quantization_config=draft_quantization_config if (args.draft_model_load_in_4bit or args.draft_model_load_in_8bit) else None
+            )
+
         model_vocab_size = base_model.get_input_embeddings().weight.size(0)
         tokenizer_vocab_size = len(tokenizer)
         print(f"Vocab of the base model: {model_vocab_size}")
@@ -190,6 +241,12 @@ def setup():
         if model_vocab_size != tokenizer_vocab_size:
             print("Resize model embeddings to fit tokenizer")
             base_model.resize_token_embeddings(tokenizer_vocab_size)
+        if args.speculative_sampling:
+            draft_model_vocab_size = draft_base_model.get_input_embeddings().weight.size(0)
+            print(f"Vocab of the draft base model: {draft_model_vocab_size}")
+            if draft_model_vocab_size!=tokenizer_vocab_size:
+                print("Resize draft model embeddings to fit tokenizer")
+                draft_base_model.resize_token_embeddings(tokenizer_vocab_size)
         if args.lora_model is not None:
             print("loading peft model")
             model = PeftModel.from_pretrained(
@@ -200,11 +257,20 @@ def setup():
             ).half()
         else:
             model = base_model
+        if args.speculative_sampling:
+            if args.draft_lora_model is not None:
+                print("loading peft draft model")
+                draft_model = PeftModel.from_pretrained(draft_base_model, args.draft_lora_model,torch_dtype=load_type,device_map='auto',).half()
+            else:
+                draft_model = draft_base_model
 
         if device == torch.device('cpu'):
             model.float()
-
         model.eval()
+        if args.speculative_sampling:
+            if device==torch.device('cpu'):
+                draft_model.float()
+            draft_model.eval()
 
 
 # Reset the user input
@@ -359,6 +425,7 @@ def predict(
     repetition_penalty=1.1,
     guidance_scale=1.0,
     presence_penalty=0.0,
+    draft_k=0,
 ):
     if len(system_prompt) == 0:
         system_prompt = DEFAULT_SYSTEM_PROMPT
@@ -431,11 +498,17 @@ def predict(
             'top_k': top_k,
             'do_sample': do_sample,
             'repetition_penalty': repetition_penalty,
+            'eos_token_id': tokenizer.eos_token_id,
         }
         if ENABLE_CFG_SAMPLING is True:
             generate_params['guidance_scale'] = guidance_scale
             generate_params['negative_prompt_ids'] = negative_prompt_ids
             generate_params['negative_prompt_attention_mask'] = negative_prompt_attention_mask
+        if args.speculative_sampling:
+            generate_params['target_model'] = model
+            generate_params['draft_model'] = draft_model
+            generate_params['draft_k'] = draft_k
+            generate_params['generation_config'] = GenerationConfig()
 
         def generate_with_callback(callback=None, **kwargs):
             if 'stopping_criteria' in kwargs:
@@ -444,7 +517,10 @@ def predict(
                 kwargs['stopping_criteria'] = [Stream(callback_func=callback)]
             clear_torch_cache()
             with torch.no_grad():
-                model.generate(**kwargs)
+                if not args.speculative_sampling:
+                    model.generate(**kwargs)
+                else: # enable speculative sampling
+                    speculative_sample(**kwargs)
 
         def generate_with_streaming(**kwargs):
             return Iteratorize(generate_with_callback, kwargs, callback=None)
@@ -549,6 +625,14 @@ with gr.Blocks() as demo:
                 label="Presence Penalty",
                 interactive=True,
                 visible=True if args.use_vllm else False)
+            draft_k = gr.Slider(
+                0,
+                10,
+                value=0,
+                step=1.0,
+                label="Draft K",
+                interactive=True,
+                visible=args.speculative_sampling==True)
 
     params = [user_input, chatbot]
     predict_params = [
@@ -562,7 +646,8 @@ with gr.Blocks() as demo:
         do_sample,
         repetition_penalty,
         guidance_scale,
-        presence_penalty]
+        presence_penalty,
+        draft_k]
 
     submitBtn.click(
         user,
