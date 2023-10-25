@@ -111,6 +111,7 @@ def _prepare_decoder_attention_mask(
 
 
 def replace_llama_attn_with_flash_attn():
+    print("USE_FLASH_ATTENTION: ", True)
     transformers.models.llama.modeling_llama.LlamaModel._prepare_decoder_attention_mask = (
         _prepare_decoder_attention_mask
     )

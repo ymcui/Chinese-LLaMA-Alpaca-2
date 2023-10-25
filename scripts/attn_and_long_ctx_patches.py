@@ -217,7 +217,7 @@ def apply_attention_patch(
     global USE_MEM_EFF_ATTENTION, STORE_KV_BEFORE_ROPE
     if use_memory_efficient_attention is True and xops is not None:
         USE_MEM_EFF_ATTENTION = use_memory_efficient_attention
-    print("USE_MEM_EFF_ATTENTION: ",USE_MEM_EFF_ATTENTION)
+    print("USE_XFORMERS_ATTENTION: ", USE_MEM_EFF_ATTENTION)
     STORE_KV_BEFORE_ROPE = store_kv_before_rope
     print("STORE_KV_BEFORE_ROPE:", STORE_KV_BEFORE_ROPE)
     transformers.models.llama.modeling_llama.LlamaAttention.forward = xformers_forward

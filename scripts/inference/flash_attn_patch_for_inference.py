@@ -88,5 +88,8 @@ def _prepare_decoder_attention_mask(
 
 def replace_llama_attn_with_flash_attn():
     if flash_attn_with_kvcache != None:
+        print("USE_FLASH_ATTENTION: ", True)
         transformers.models.llama.modeling_llama.LlamaModel._prepare_decoder_attention_mask = _prepare_decoder_attention_mask
         transformers.models.llama.modeling_llama.LlamaAttention.forward = forward
+    else:
+        print("USE_FLASH_ATTENTION: ", False)
