@@ -110,6 +110,10 @@ parser.add_argument(
     "--draft_model_load_in_4bit",
     action='store_true',
     help="Load the draft model in the 4bit mode")
+parser.add_argument(
+    '--flash_attn',
+    action='store_true',
+    help="Use flash attention to replace the LLaMA attention")
 
 args = parser.parse_args()
 
@@ -132,9 +136,14 @@ if args.load_in_8bit and args.load_in_4bit:
 import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
-from attn_and_long_ctx_patches import apply_attention_patch, apply_ntk_scaling_patch
 if not args.only_cpu:
-    apply_attention_patch(use_memory_efficient_attention=True)
+    if args.flash_attn:
+        from flash_attn_patch_for_inference import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
+    else:
+        from attn_and_long_ctx_patches import apply_attention_patch
+        apply_attention_patch(use_memory_efficient_attention=True)
+from attn_and_long_ctx_patches import apply_ntk_scaling_patch
 apply_ntk_scaling_patch(args.alpha)
 if args.speculative_sampling:
     if args.draft_base_model == None:

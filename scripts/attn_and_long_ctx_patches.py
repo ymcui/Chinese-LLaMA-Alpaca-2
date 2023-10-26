@@ -39,6 +39,7 @@ def xformers_forward(
     past_key_value: Optional[Tuple[torch.Tensor]] = None,
     output_attentions: bool = False,
     use_cache: bool = False,
+    padding_mask=None,
 ) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[Tuple[torch.Tensor]]]:
     bsz, q_len, _ = hidden_states.size()
 
@@ -216,7 +217,7 @@ def apply_attention_patch(
     global USE_MEM_EFF_ATTENTION, STORE_KV_BEFORE_ROPE
     if use_memory_efficient_attention is True and xops is not None:
         USE_MEM_EFF_ATTENTION = use_memory_efficient_attention
-    print("USE_MEM_EFF_ATTENTION: ",USE_MEM_EFF_ATTENTION)
+    print("USE_XFORMERS_ATTENTION: ", USE_MEM_EFF_ATTENTION)
     STORE_KV_BEFORE_ROPE = store_kv_before_rope
     print("STORE_KV_BEFORE_ROPE:", STORE_KV_BEFORE_ROPE)
     transformers.models.llama.modeling_llama.LlamaAttention.forward = xformers_forward

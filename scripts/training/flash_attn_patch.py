@@ -22,6 +22,7 @@ def forward(
     past_key_value: Optional[Tuple[torch.Tensor]] = None,
     output_attentions: bool = False,
     use_cache: bool = False,
+    padding_mask=None,
 ) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[Tuple[torch.Tensor]]]:
     """Input shape: Batch x Time x Channel
 
@@ -110,6 +111,7 @@ def _prepare_decoder_attention_mask(
 
 
 def replace_llama_attn_with_flash_attn():
+    print("USE_FLASH_ATTENTION: ", True)
     transformers.models.llama.modeling_llama.LlamaModel._prepare_decoder_attention_mask = (
         _prepare_decoder_attention_mask
     )
