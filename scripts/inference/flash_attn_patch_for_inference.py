@@ -70,7 +70,7 @@ def forward(
         q, key_cache, value_cache, k, v, rotary_cos=cos, rotary_sin=sin, cache_seqlens=past_kv_len, softmax_scale=None, causal=True, rotary_interleaved=False
     )
     output = rearrange(output, "b s h d -> b s (h d)", b=bsz)
-    
+
     past_key_value = (key_cache[:,:kv_seq_len].transpose(1,2), value_cache[:,:kv_seq_len].transpose(1,2)) if use_cache else None
 
     output = self.o_proj(output)
