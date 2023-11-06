@@ -53,5 +53,6 @@ torchrun --nnodes 1 --nproc_per_node 1 run_clm_pt_with_peft.py \
     --modules_to_save ${modules_to_save} \
     --torch_dtype float16 \
     --load_in_kbits 16 \
+    --save_safetensors False \
     --gradient_checkpointing \
     --ddp_find_unused_parameters False
