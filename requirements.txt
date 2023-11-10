@@ -3,3 +3,6 @@ torch==2.0.1
 transformers==4.31.0
 sentencepiece==0.1.97
 bitsandbytes==0.41.0
+datasets==2.14.6
+scipy==1.11.3
+deepspeed==0.12.2
