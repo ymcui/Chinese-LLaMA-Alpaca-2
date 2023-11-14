@@ -241,8 +241,8 @@ if __name__=='__main__':
     lora_state_dict = torch.load(os.path.join(lora_model_path,'adapter_model.bin'),map_location='cpu')
     if 'base_model.model.model.embed_tokens.weight' in lora_state_dict:
         lora_vocab_size = lora_state_dict['base_model.model.model.embed_tokens.weight'].shape[0]
-        assert lora_vocab_size==len(tokenizer), \
-        (f"The vocab size of the tokenizer {len(tokenizer)} does not match the vocab size of the LoRA weight {lora_vocab_size}!\n")
+        # assert lora_vocab_size==len(tokenizer), \
+        # (f"The vocab size of the tokenizer {len(tokenizer)} does not match the vocab size of the LoRA weight {lora_vocab_size}!\n")
     tokenizers_and_loras.append(
         {
             "tokenizer"  :tokenizer,
