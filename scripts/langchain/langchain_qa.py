@@ -13,7 +13,7 @@ embedding_path = args.embedding_path
 model_path = args.model_path
 
 import torch
-from langchain import HuggingFacePipeline
+from langchain.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.document_loaders import TextLoader

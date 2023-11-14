@@ -304,7 +304,7 @@ Question 9: How to interprete the results of third-party benchmarks?
 Question 10: Will you release 34B or 70B models?
 Question 11: Why the long-context model is 16K context, not 32K or 100K?
 Question 12: Why does the Alpaca model reply that it is ChatGPT?
-Question 13: Why is the adapter_model.bin in the pt_lora_mdoel or sft_lora_model folder only a few hundred kb?
+Question 13: Why is the adapter_model.bin in the pt_lora_model or sft_lora_model folder only a few hundred kb?
 ```
 
 For specific questions and answers, please refer to the project >>> [📚 GitHub Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/faq_en)
