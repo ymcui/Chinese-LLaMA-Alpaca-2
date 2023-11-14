@@ -158,8 +158,8 @@ def _set_cos_sin_cache(self, seq_len, device, dtype):
     freqs = torch.einsum("i,j->ij", t, self.ntk_inv_freq.to(device))
     # Different from paper, but it uses a different permutation in order to obtain the same calculation
     emb = torch.cat((freqs, freqs), dim=-1)
-    self.register_buffer("cos_cached", emb.cos()[None, None, :, :], persistent=False)
-    self.register_buffer("sin_cached", emb.sin()[None, None, :, :], persistent=False)
+    self.register_buffer("cos_cached", emb.cos().to(dtype), persistent=False)
+    self.register_buffer("sin_cached", emb.sin().to(dtype), persistent=False)
 
 
 def adaptive_ntk_init(self, dim, max_position_embeddings=2048, base=10000, device=None, scaling_factor=None):
@@ -198,15 +198,15 @@ def adaptive_ntk_forward(self, x, seq_len=None):
 
             freqs = torch.einsum("i,j->ij", t, ntk_inv_freq)
             emb = torch.cat((freqs, freqs), dim=-1).to(x.device)
-            cos_cached = emb.cos()[None, None, :, :]
-            sin_cached = emb.sin()[None, None, :, :]
+            cos_cached = emb.cos()
+            sin_cached = emb.sin()
             return (
-                cos_cached[:, :, :seq_len, ...].to(dtype=x.dtype),
-                sin_cached[:, :, :seq_len, ...].to(dtype=x.dtype)
+                cos_cached[:seq_len].to(dtype=x.dtype),
+                sin_cached[:seq_len].to(dtype=x.dtype)
             )
     return (
-        self.cos_cached[:, :, :seq_len, ...].to(dtype=x.dtype),
-        self.sin_cached[:, :, :seq_len, ...].to(dtype=x.dtype)
+        self.cos_cached[:seq_len].to(dtype=x.dtype),
+        self.sin_cached[:seq_len].to(dtype=x.dtype)
     )
 
 
