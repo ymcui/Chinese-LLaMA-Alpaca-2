@@ -418,7 +418,7 @@ def main():
     )
     if training_args.load_in_kbits in [4, 8]:
         model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
-
+    model.config.use_cache = False
     model_vocab_size = model.get_input_embeddings().weight.shape[0]
     logger.info(f"Model vocab size: {model_vocab_size}")
     logger.info(f"len(tokenizer):{len(tokenizer)}")
