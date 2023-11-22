@@ -448,8 +448,14 @@ def main():
                 lora_dropout=lora_dropout,
                 modules_to_save=modules_to_save)
             model = get_peft_model(model, peft_config)
+        model.print_trainable_parameters()
+        logger.info(f"model.modules_to_save: {model.modules_to_save}")
+        old_state_dict = model.state_dict
+        model.state_dict = (
+            lambda self, *_, **__: get_peft_model_state_dict(self, old_state_dict())
+        ).__get__(model, type(model))
 
-    if training_args.gradient_checkpointing and \
+    if not training_args.full_finetuning and training_args.gradient_checkpointing and \
         (not model.modules_to_save or 'embed_tokens' not in model.modules_to_save):
         # enable requires_grad to avoid exception during backward pass when using gradient_checkpoint without tuning embed.
         if hasattr(model.base_model, "enable_input_require_grads"):
@@ -458,12 +464,6 @@ def main():
             def make_inputs_require_grad(_module, _input, _output):
                 _output.requires_grad_(True)
             model.base_model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-    model.print_trainable_parameters()
-    logger.info(f"model.modules_to_save: {model.modules_to_save}")
-    old_state_dict = model.state_dict
-    model.state_dict = (
-        lambda self, *_, **__: get_peft_model_state_dict(self, old_state_dict())
-    ).__get__(model, type(model))
 
     # Initialize our Trainer
     trainer = Trainer(
