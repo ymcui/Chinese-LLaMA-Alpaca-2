@@ -271,7 +271,10 @@ if __name__=='__main__':
     if not os.path.exists(base_model_path):
         print("Cannot find lora model on the disk. Downloading lora model from hub...")
         base_model_path = snapshot_download(repo_id=base_model_path)
-    ckpt_filenames = sorted([f for f in os.listdir(base_model_path) if re.match('pytorch_model-(\d+)-of-(\d+).bin',f)])
+    if os.path.exists(os.path.join(base_model_path, "pytorch_model.bin")):
+        ckpt_filenames = ["pytorch_model.bin"]
+    else:
+        ckpt_filenames = sorted([f for f in os.listdir(base_model_path) if re.match('pytorch_model-(\d+)-of-(\d+).bin',f)])
     if len(ckpt_filenames) == 0:
         raise FileNotFoundError(f"Cannot find base model checkpoints in ${base_model_path}. Please make sure the checkpoints are saved in the HF format.")
     layers = jsonload(os.path.join(base_model_path, "config.json"))["num_hidden_layers"]
