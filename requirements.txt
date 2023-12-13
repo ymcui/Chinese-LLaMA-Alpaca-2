@@ -1,4 +1,4 @@
-peft>=0.3.0
+peft==0.3.0
 torch==2.0.1
 transformers==4.35.0
 sentencepiece==0.1.99
