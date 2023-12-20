@@ -16,6 +16,7 @@ from transformers import LlamaTokenizer
 from transformers.modeling_utils import dtype_byte_size
 from huggingface_hub import snapshot_download
 import re
+import shutil
 
 parser = argparse.ArgumentParser(description='Script to merge Llama-2-hf with Chinese LLaMA-2 or Alpaca-2 LoRA weights')
 parser.add_argument('--base_model', default=None, required=True,
@@ -351,5 +352,8 @@ if __name__=='__main__':
                     obj['metadata']['total_size'] = total_size
             with open(os.path.join(output_dir, config), 'w') as f:
                 json.dump(obj, f, indent=2)
+        for f in os.listdir(lora_model_path):
+            if re.match("(.*).py", f):
+                shutil.copy2(os.path.join(lora_model_path, f), output_dir)
     print("Done.")
     print(f"Check output dir: {output_dir}")
