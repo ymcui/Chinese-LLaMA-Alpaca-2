@@ -6,7 +6,7 @@ from tqdm import tqdm
 import random
 import numpy as np
 import torch
-from transformers import LlamaForCausalLM, LlamaTokenizer
+from transformers import AutoModelForCausalLM, LlamaTokenizer
 from transformers import GenerationConfig
 from evaluator import Evaluator
 
@@ -18,12 +18,13 @@ class Llama_Evaluator(Evaluator):
         self.device = device
         self.verbose = verbose
         self.tokenizer = LlamaTokenizer.from_pretrained(model_path, legacy=True)
-        self.model = LlamaForCausalLM.from_pretrained(
+        self.model = AutoModelForCausalLM.from_pretrained(
             model_path,
             load_in_8bit=False,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
-            device_map='auto')
+            device_map='auto',
+            trust_remote_code=True)
         self.generation_config = GenerationConfig(
             temperature=temperature,
             top_k=40,

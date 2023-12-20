@@ -34,6 +34,7 @@ parser.add_argument('--draft_lora_model', default=None, type=str, help="If None,
 parser.add_argument('--draft_model_load_in_8bit', action='store_true', help="Load the draft model in the 8bit mode")
 parser.add_argument('--draft_model_load_in_4bit', action='store_true', help="Load the draft model in the 4bit mode")
 parser.add_argument('--flash_attn', action='store_true', help="Use flash attention to replace the LLaMA attention")
+parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
 args = parser.parse_args()
 
 if args.guidance_scale > 1:
@@ -62,7 +63,7 @@ if args.only_cpu is True:
 
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 import torch
-from transformers import LlamaForCausalLM, LlamaTokenizer
+from transformers import AutoModelForCausalLM, LlamaForCausalLM, LlamaTokenizer
 from transformers import GenerationConfig
 from transformers import BitsAndBytesConfig
 from peft import  PeftModel
@@ -79,8 +80,9 @@ if not args.only_cpu:
     else:
         from attn_and_long_ctx_patches import apply_attention_patch
         apply_attention_patch(use_memory_efficient_attention=True)
-from attn_and_long_ctx_patches import apply_ntk_scaling_patch
-apply_ntk_scaling_patch(args.alpha)
+if args.use_ntk:
+    from attn_and_long_ctx_patches import apply_ntk_scaling_patch
+    apply_ntk_scaling_patch(args.alpha)
 if args.speculative_sampling:
     if args.draft_base_model == None:
         raise ValueError("Speculative sampling requires a draft model. Please specify the draft model.")
@@ -138,14 +140,15 @@ if __name__ == '__main__':
                 bnb_4bit_compute_dtype=load_type,
             )
 
-        base_model = LlamaForCausalLM.from_pretrained(
+        base_model = AutoModelForCausalLM.from_pretrained(
             args.base_model,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
-            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+            trust_remote_code=True
         )
 
         if args.speculative_sampling:
