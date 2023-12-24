@@ -17,7 +17,7 @@ parser.add_argument('--load_in_4bit',action='store_true', help='Load the model i
 parser.add_argument('--only_cpu',action='store_true',help='Only use CPU for inference')
 parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
 parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
-parser.add_argument('--use_flash_attn2', action='store_true', help="Use flash-attention2 to accelerate inference")
+parser.add_argument('--use_flash_attention_2', action='store_true', help="Use flash-attention2 to accelerate inference")
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
@@ -86,7 +86,7 @@ base_model = AutoModelForCausalLM.from_pretrained(
     load_in_4bit=args.load_in_4bit,
     load_in_8bit=args.load_in_8bit,
     quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
-    use_flash_attention_2=args.use_flash_attn2,
+    use_flash_attention_2=args.use_flash_attention_2,
     trust_remote_code=True
 )
 
