@@ -33,7 +33,7 @@ parser.add_argument('--draft_base_model', default=None, type=str, help="Draft ba
 parser.add_argument('--draft_lora_model', default=None, type=str, help="If None, perform inference on the draft base model")
 parser.add_argument('--draft_model_load_in_8bit', action='store_true', help="Load the draft model in the 8bit mode")
 parser.add_argument('--draft_model_load_in_4bit', action='store_true', help="Load the draft model in the 4bit mode")
-parser.add_argument('--flash_attn', action='store_true', help="Use flash attention to replace the LLaMA attention")
+parser.add_argument('--use_flash_attention_2', action='store_true', help="Use flash attention to replace the LLaMA attention")
 parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
 args = parser.parse_args()
 
@@ -74,12 +74,8 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 if not args.only_cpu:
-    if args.flash_attn:
-        from flash_attn_patch_for_inference import replace_llama_attn_with_flash_attn
-        replace_llama_attn_with_flash_attn()
-    else:
-        from attn_and_long_ctx_patches import apply_attention_patch
-        apply_attention_patch(use_memory_efficient_attention=True)
+    from attn_and_long_ctx_patches import apply_attention_patch
+    apply_attention_patch(use_memory_efficient_attention=True)
 if args.use_ntk:
     from attn_and_long_ctx_patches import apply_ntk_scaling_patch
     apply_ntk_scaling_patch(args.alpha)
@@ -148,6 +144,7 @@ if __name__ == '__main__':
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
             quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+            use_flash_attention_2=args.use_flash_attention_2,
             trust_remote_code=True
         )
 

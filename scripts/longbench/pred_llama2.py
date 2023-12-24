@@ -4,7 +4,7 @@ import torch
 import random
 import numpy as np
 import json
-from transformers import LlamaTokenizer, LlamaForCausalLM
+from transformers import LlamaTokenizer, AutoModelForCausalLM
 from transformers import BitsAndBytesConfig
 from tqdm import tqdm
 import os
@@ -37,6 +37,8 @@ parser.add_argument('--alpha', type=str, default="auto", help="The scaling facto
 parser.add_argument('--with_inst', choices=['true','false','auto'], default = 'false',
                     help="Whether use the system prompt and template of Chinese-Alpaca-2 when constructing the instructions.")
 parser.add_argument('--e', action='store_true', help="Evaluate on LongBench-E")
+parser.add_argument('--use_flash_attention_2', action='store_true', help="Use flash attention to replace the LLaMA attention")
+parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
 
 
 args = parser.parse_args()
@@ -59,7 +61,8 @@ TOP_K = 40
 if gpus is not None:
     os.environ["CUDA_VISIBLE_DEVICES"] = gpus
 apply_attention_patch(use_memory_efficient_attention=True)
-apply_ntk_scaling_patch(args.alpha)
+if args.use_ntk:
+    apply_ntk_scaling_patch(args.alpha)
 
 
 def fill_llama2_prompt_template(instruction, with_inst = True, with_system_prompt = True, system_prompt = DEFAULT_SYSTEM_PROMPT):
@@ -177,12 +180,14 @@ if __name__ == '__main__':
             load_in_8bit=args.load_in_8bit,
             bnb_4bit_compute_dtype=load_type,
         )
-    model = LlamaForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         model_path,
         torch_dtype=load_type,
         low_cpu_mem_usage=True,
         device_map='auto',
-        quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+        quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+        use_flash_attention_2=args.use_flash_attention_2,
+        trust_remote_code=True
         )
     model = model.eval()
     model_vocab_size = model.get_input_embeddings().weight.size(0)
