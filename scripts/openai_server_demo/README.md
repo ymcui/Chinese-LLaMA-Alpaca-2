@@ -34,7 +34,7 @@ python scripts/openai_server_demo/openai_api_server.py --base_model /path/to/bas
 
 `--use_ntk`：使用NTK方法拓展上下文长度,只对基础版和16K版有效，64K版无需设置该参数。
 
-`--use_flash_attn2`：使用flash-attention2加速推理。
+`--use_flash_attention_2`：使用flash-attention2加速推理。
 
 ## API文档
 
