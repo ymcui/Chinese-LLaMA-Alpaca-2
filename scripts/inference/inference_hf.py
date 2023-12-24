@@ -74,8 +74,12 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 if not args.only_cpu:
-    from attn_and_long_ctx_patches import apply_attention_patch
-    apply_attention_patch(use_memory_efficient_attention=True)
+    if args.use_flash_attention_2:
+        from flash_attn_patch_for_inference import replace_llama_attn_with_flash_attn
+        replace_llama_attn_with_flash_attn()
+    else:
+        from attn_and_long_ctx_patches import apply_attention_patch
+        apply_attention_patch(use_memory_efficient_attention=True)
 if args.use_ntk:
     from attn_and_long_ctx_patches import apply_ntk_scaling_patch
     apply_ntk_scaling_patch(args.alpha)
@@ -144,7 +148,6 @@ if __name__ == '__main__':
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
             quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
-            use_flash_attention_2=args.use_flash_attention_2,
             trust_remote_code=True
         )
 
