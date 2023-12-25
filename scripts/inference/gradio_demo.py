@@ -1,5 +1,6 @@
 import torch
 from transformers import (
+    AutoModelForCausalLM,
     LlamaForCausalLM,
     LlamaTokenizer,
     StoppingCriteria,
@@ -217,14 +218,15 @@ def setup():
                 bnb_4bit_compute_dtype=load_type,
             )
 
-        base_model = LlamaForCausalLM.from_pretrained(
+        base_model = AutoModelForCausalLM.from_pretrained(
             args.base_model,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
-            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+            trust_remote_code=True
         )
 
         if args.speculative_sampling:
