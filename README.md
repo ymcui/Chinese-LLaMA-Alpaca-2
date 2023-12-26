@@ -141,6 +141,12 @@
 | Chinese-Alpaca-2-13B-16K 🆕 | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k-gguf) |
 | Chinese-Alpaca-2-7B-16K 🆕  | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k-gguf) |
 
+以下是人类偏好对齐版模型，对涉及法律、道德的问题较标准版有更优的价值导向。
+| 模型名称                  |   类型   | 大小 |                    下载地址                    |                    GGUF                    |
+| :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| Chinese-Alpaca-2-RLHF-1.3B | 指令模型 | 2.4 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
+| Chinese-Alpaca-2-RLHF-7B | 指令模型 | 12.9 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
+
 > [!IMPORTANT] 
 >
 > 1. 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署工具的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)
