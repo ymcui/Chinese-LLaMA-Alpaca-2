@@ -297,6 +297,27 @@
 | Chinese-Alpaca-2-1.3B |  8.1 | Chinese-Alpaca-2-7B |  50.2 | 34.9（1.44x） |
 | Chinese-Alpaca-2-1.3B |  8.2 | Chinese-Alpaca-2-13B |  67.0 | 41.6（1.61x） |
 
+### 人类偏好对齐（RLHF）版本评测
+
+#### 对齐水平
+为评估中文模型与人类价值偏好对齐程度，我们自行构建了评测数据集，覆盖了道德、色情、毒品、暴力等人类价值偏好重点关注的多个方面。实验结果以价值体现正确率进行呈现（体系正确价值观题目数 / 总题数）。
+
+| Alpaca Models            | Accuracy |  Alpaca Models            | Accuracy |
+| ------------------------ | :---------------: |------------------------ | :---------------: |
+| Chinese-Alpaca-2-1.3B |   79.3%    | Chinese-Alpaca-2-7B  |    88.3%    |
+| **Chinese-Alpaca-2-RLHF-1.3B**  |    95.8%    | **Chinese-Alpaca-2-RLHF-7B**  |    97.5%    |
+
+
+#### 客观效果评测：C-Eval & CMMLU
+| Alpaca Models            | C-Eval (0/few-shot) | CMMLU (0/few-shot) |
+| ------------------------ | :---------------: | :---------------: |
+| Chinese-Alpaca-2-1.3B |    23.8 / 26.8    |    24.8 / 25.1    |
+| Chinese-Alpaca-2-7B  |    42.1 / 41.0    |    40.0 / 41.8    |
+| **Chinese-Alpaca-2-RLHF-1.3B**  |    23.6 / 27.1    |    24.9 / 25.0    |
+| **Chinese-Alpaca-2-RLHF-7B**  |    40.6 / 41.2    |    39.5 / 41.0    |
+
+
+
 ## 训练与精调
 
 ### 预训练
