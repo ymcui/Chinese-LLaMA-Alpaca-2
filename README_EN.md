@@ -26,10 +26,10 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 - Base model: Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - Instruction/chat model: Chinese-Alpaca-2 (1.3B, 7B, 13B)
-- Long context model(16K/64K): 
+- Long context model (16K/64K): 
   - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
-- RLHF model：Chinese-Alpaca-2-RLHF-1.3B, Chinese-Alpaca-2-RLHF-7B
+- RLHF model：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
 ![](./pics/screencast.gif)
 
@@ -112,11 +112,11 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 | Trained on                    | [Original Llama-2](https://github.com/facebookresearch/llama) (non-chat) |                       Chinese LLaMA-2                        |
 | Training Corpus               |           Unlabeled general corpus (120G raw text)           |            Labeled instruction data (5M samples)             |
 | Vocabulary Size<sup>[1]</sup> |                            55,296                            |                            55,296                            |
-| Context Size<sup>[2]</sup>    |      Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K     |      Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K      |
+| Context Size<sup>[2]</sup>    | Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K | Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K |
 | Input Template                |                         Not required                         |          Requires specific templates<sup>[3]</sup>           |
 | Suitable Scenarios            | Text continuation: Given the context, the model generates the following text | Instruction understanding: Q&A, writing, chatting, interaction, etc. |
 | Unsuitable Scenarios          |       Instruction understanding, multi-turn chat, etc.       |                 Unrestricted text generation                 |
-| Preference Alignment          | No                                  |  1.3B、7B RLHF version                                                       |
+| Preference Alignment          |                              No                              |                   RLHF version (1.3B, 7B)                    |
 
 > [!NOTE]
 > [1] *The vocabulary of the first and second generation models in this project are different, do not mix them. The vocabularies of the second generation LLaMA and Alpaca are the same.*</br> 
@@ -312,7 +312,7 @@ To assess the degree of alignment of the RLHF models with human preferences, we 
 | Alpaca Models            | Accuracy |  Alpaca Models            | Accuracy |
 | ------------------------ | :---------------: |------------------------ | :---------------: |
 | Chinese-Alpaca-2-1.3B |   79.3%    | Chinese-Alpaca-2-7B  |    88.3%    |
-| **Chinese-Alpaca-2-RLHF-1.3B**  |    95.8%    | **Chinese-Alpaca-2-RLHF-7B**  |    97.5%    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    95.8%    | **Chinese-Alpaca-2-7B-RLHF** |    97.5%    |
 
 
 #### NLU Performance Evaluation： C-Eval & CMMLU
@@ -320,8 +320,8 @@ To assess the degree of alignment of the RLHF models with human preferences, we 
 | ------------------------ | :---------------: | :---------------: |
 | Chinese-Alpaca-2-1.3B |    23.8 / 26.8    |    24.8 / 25.1    |
 | Chinese-Alpaca-2-7B  |    42.1 / 41.0    |    40.0 / 41.8    |
-| **Chinese-Alpaca-2-RLHF-1.3B**  |    23.6 / 27.1    |    24.9 / 25.0    |
-| **Chinese-Alpaca-2-RLHF-7B**  |    40.6 / 41.2    |    39.5 / 41.0    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    23.6 / 27.1    |    24.9 / 25.0    |
+| **Chinese-Alpaca-2-7B-RLHF** |    40.6 / 41.2    |    39.5 / 41.0    |
 
 
 ## Training and Fine-tuning

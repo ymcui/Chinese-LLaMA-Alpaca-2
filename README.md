@@ -27,10 +27,10 @@
 
 - 基座模型（4K上下文）：Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - 聊天模型（4K上下文）：Chinese-Alpaca-2 (1.3B, 7B, 13B)
-- 长上下文模型（16K、64K上下文）：
+- 长上下文模型（16K/64K）：
   - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
-- 偏好对齐模型：Chinese-Alpaca-2-RLHF-1.3B, Chinese-Alpaca-2-RLHF-7B
+- 偏好对齐模型：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
 
 ![](./pics/screencast.gif)
@@ -124,7 +124,7 @@
 | 输入模板              | 不需要                                                 | 需要套用特定模板<sup>[3]</sup>，类似Llama-2-Chat |
 | 适用场景            | 文本续写：给定上文，让模型生成下文            | 指令理解：问答、写作、聊天、交互等 |
 | 不适用场景          | 指令理解 、多轮聊天等                                  |  文本无限制自由生成                                                       |
-| 偏好对齐          | 无                                  |  1.3B、7B RLHF版本                                                       |
+| 偏好对齐          | 无                                  |  RLHF版本（1.3B、7B）                                          |
 
 > [!NOTE]
 > [1] *本项目一代模型和二代模型的词表不同，请勿混用。二代LLaMA和Alpaca的词表相同。*</br>
@@ -324,7 +324,7 @@
 | Alpaca Models            | Accuracy |  Alpaca Models            | Accuracy |
 | ------------------------ | :---------------: |------------------------ | :---------------: |
 | Chinese-Alpaca-2-1.3B |   79.3%    | Chinese-Alpaca-2-7B  |    88.3%    |
-| **Chinese-Alpaca-2-RLHF-1.3B**  |    95.8%    | **Chinese-Alpaca-2-RLHF-7B**  |    97.5%    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    95.8%    | **Chinese-Alpaca-2-7B-RLHF** |    97.5%    |
 
 
 #### 客观效果评测：C-Eval & CMMLU
@@ -332,8 +332,8 @@
 | ------------------------ | :---------------: | :---------------: |
 | Chinese-Alpaca-2-1.3B |    23.8 / 26.8    |    24.8 / 25.1    |
 | Chinese-Alpaca-2-7B  |    42.1 / 41.0    |    40.0 / 41.8    |
-| **Chinese-Alpaca-2-RLHF-1.3B**  |    23.6 / 27.1    |    24.9 / 25.0    |
-| **Chinese-Alpaca-2-RLHF-7B**  |    40.6 / 41.2    |    39.5 / 41.0    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    23.6 / 27.1    |    24.9 / 25.0    |
+| **Chinese-Alpaca-2-7B-RLHF** |    40.6 / 41.2    |    39.5 / 41.0    |
 
 
 
