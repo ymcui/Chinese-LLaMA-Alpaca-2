@@ -32,6 +32,10 @@ python scripts/openai_server_demo/openai_api_server.py --base_model /path/to/bas
 
 `--alpha {alpha}`：使用NTK方法拓展上下文长度的系数，可以提升可处理的输入长度。默认为1。如果不知道怎么设置，可以保持默认值，或设为`"auto"`
 
+`--use_ntk`：使用NTK方法拓展上下文长度,只对基础版和16K版有效，64K版无需设置该参数。
+
+`--use_flash_attention_2`：使用flash-attention2加速推理。
+
 ## API文档
 
 ### 文字接龙（completion）
