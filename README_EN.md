@@ -13,7 +13,7 @@
 </p>
 
 
-This project is based on the Llama-2, released by Meta, and it is the second generation of the Chinese LLaMA & Alpaca LLM project. We open-source Chinese LLaMA-2 (foundation model) and Alpaca-2 (instruction-following model). These models have been expanded and optimized with Chinese vocabulary beyond the original Llama-2. We used large-scale Chinese data for incremental pre-training, which further improved the fundamental semantic understanding of the Chinese language, resulting in a significant performance improvement compared to the first-generation models. Standard version supports 4K context, and long context version supports 16K context. All models' context size can be further extended with NTK method (up to 24K+). The RLHF models are fine-tuned for human preference alignment and have gained significant performance improvements in the representation of correct values compared to the standard version of the model.
+This project is based on the Llama-2, released by Meta, and it is the second generation of the Chinese LLaMA & Alpaca LLM project. We open-source Chinese LLaMA-2 (foundation model) and Alpaca-2 (instruction-following model). These models have been expanded and optimized with Chinese vocabulary beyond the original Llama-2. We used large-scale Chinese data for incremental pre-training, which further improved the fundamental semantic understanding of the Chinese language, resulting in a significant performance improvement compared to the first-generation models. Standard version supports 4K context, and long context version supports 16K and 64K context. The RLHF models are fine-tuned for human preference alignment and have gained significant performance improvements in the representation of correct values compared to the standard version of the model.
 
 #### Main Contents
 
@@ -75,10 +75,11 @@ This project launches the Chinese LLaMA-2 and Alpaca-2 models based on Llama-2. 
 - [FlashAttention-2](https://github.com/Dao-AILab/flash-attention) is an implementation of efficient attention mechanisms, offering **faster speed and optimized memory usage** compared to its first-generation.
 - When the context length is longer, using efficient attention technology is essential to prevent explosive growth in memory usage.
 
-**🚄 Adaptive Context Extension based on PI and NTK**
+**🚄 Adaptive Context Extension based on PI and YaRN**
 
 - In the [first generation of the project](https://github.com/ymcui/Chinese-LLaMA-Alpaca), we implemented the [context extension based on NTK](https://github.com/ymcui/Chinese-LLaMA-Alpaca/pull/743), which can support longer contexts without further training the model.
 - We release long context models, using [PI](https://arxiv.org/abs/2306.15595) and NTK methods, supporting 16K context, and can be further extended up to 24K-32K
+- We further release long context models, using [YaRN](https://arxiv.org/abs/2309.00071), supporting 64K context
 - Based on the above, we further designed a **convenient adaptive empirical formula** that does not require manually setting corresponding hyperparameters for different context lengths.
 
 **🤖 Simplified Bilingual System Prompt**

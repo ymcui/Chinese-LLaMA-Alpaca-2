@@ -13,7 +13,7 @@
 </p>
 
 
-本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K上下文长度**，并可通过NTK方法最高扩展至24K+上下文长度。**RLHF系列模型**为标准版模型基础上进行人类偏好对齐精调，相比标准版模型在**正确价值观体现**方面获得了显著性能提升。
+本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K、64k上下文长度**。**RLHF系列模型**为标准版模型基础上进行人类偏好对齐精调，相比标准版模型在**正确价值观体现**方面获得了显著性能提升。
 
 #### 本项目主要内容
 
@@ -81,10 +81,11 @@
 - 当上下文长度更长时，为了避免显存爆炸式的增长，使用此类高效注意力技术尤为重要
 - 本项目的所有模型均使用了FlashAttention-2技术进行训练
 
-#### 🚄 基于PI和NTK的超长上下文扩展技术
+#### 🚄 基于PI和YaRN的超长上下文扩展技术
 
 - 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，我们实现了[基于NTK的上下文扩展技术](https://github.com/ymcui/Chinese-LLaMA-Alpaca/pull/743)，可在不继续训练模型的情况下支持更长的上下文
-- 基于[位置插值PI](https://arxiv.org/abs/2306.15595)和NTK等方法推出了长上下文版模型，支持16K上下文，并可通过NTK方法最高扩展至24K-32K
+- 基于[位置插值PI](https://arxiv.org/abs/2306.15595)和NTK等方法推出了16K长上下文版模型，支持16K上下文，并可通过NTK方法最高扩展至24K-32K
+- 基于[YaRN](https://arxiv.org/abs/2309.00071)方法进一步推出了64K长上下文版模型，支持64K上下文
 - 进一步设计了**方便的自适应经验公式**，无需针对不同的上下文长度设置NTK超参，降低了使用难度
 
 #### 🤖 简化的中英双语系统提示语
