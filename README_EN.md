@@ -331,6 +331,8 @@ Please refer to the corresponding Wiki for information on pre-training (Chinese 
 
 - **Pre-training**: The code is adapted from [run_clm.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_clm.py) in 🤗transformers. For usage, see the [Pre-training Script Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_en).
 - **Instruction Fine-tuning**: The code refers to the relevant parts of dataset handling in the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) project. For usage, see the [Instruction Fine-tuning Script Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_en).
+- **RLHF Fine-tuning**: Reinforcement learning from human feedback fine-tuning using preference data and PPO algorithm based on Chinese-Alpaca-2. For details, see the [📖Reward Modeling Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rm_en)和[📖Reinforcement Learning Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rl_en).
+
 
 ## FAQ
 
