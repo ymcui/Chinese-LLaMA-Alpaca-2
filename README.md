@@ -88,6 +88,14 @@
 - 初步实验发现，Llama-2-Chat系列模型的默认系统提示语未能带来统计显著的性能提升，且其内容过于冗长
 - 本项目中的Alpaca-2系列模型简化了系统提示语，同时遵循Llama-2-Chat指令模板，以便更好地适配相关生态
 
+#### 👮 人类偏好对齐
+
+- 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，中文Alpaca系列模型仅完成预训练和指令精调，获得了基本的对话能力
+- 通过基于人类反馈的强化学习（RLHF）实验，发现可显著提升模型传递正确价值观的能力
+- 本项目推出了Alpaca-2-RLHF系列模型，使用方式与SFT模型一致
+
+
+
 下图展示了本项目以及[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)推出的所有大模型之间的关系。
 
 ![](./pics/models.png)
