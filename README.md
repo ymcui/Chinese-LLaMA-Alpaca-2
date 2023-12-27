@@ -356,7 +356,7 @@
 
 - 在Chinese-Alpaca-2系列模型基础上，利用偏好数据和PPO算法进行人类偏好对齐精调，得到Chinese-Alpaca-2-RLHF系列模型
 - 训练数据基于多个开源项目中的人类偏好数据和本项目指令精调数据进行采样，奖励模型阶段、强化学习阶段分别约69.5K、25.6K条样本
-- 训练代码基于[DeepSpeed-Chat](https://github.com/microsoft/DeepSpeedExamples/tree/master/applications/DeepSpeed-Chat)开发，具体流程见[📖RLHF精调Wiki]()
+- 训练代码基于[DeepSpeed-Chat](https://github.com/microsoft/DeepSpeedExamples/tree/master/applications/DeepSpeed-Chat)开发，具体流程见[📖奖励模型Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rm_zh)和[📖强化学习Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rl_zh)
 
 ## 常见问题
 
