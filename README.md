@@ -159,8 +159,8 @@
 以下是人类偏好对齐版模型，对涉及法律、道德的问题较标准版有更优的价值导向。
 | 模型名称                  |   类型   | 大小 |                    下载地址                    |                    GGUF                    |
 | :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| Chinese-Alpaca-2-RLHF-7B | 指令模型 | 12.9 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
-| Chinese-Alpaca-2-RLHF-1.3B | 指令模型 | 2.4 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
+| Chinese-Alpaca-2-7B-RLHF 🆕 | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
+| Chinese-Alpaca-2-1.3B-RLHF 🆕 | 指令模型 | 2.4 GB | [[百度]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
 
 
 > [!IMPORTANT] 

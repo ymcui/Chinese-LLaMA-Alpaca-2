@@ -152,8 +152,8 @@ The following lists the RLHF models which exhibit a better value orientation tha
 
 | Model Name                |    Type    |  Size   |                        Download Link                         |                        GGUF                        |
 | :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| Chinese-Alpaca-2-RLHF-7B | Chat Model | 12.9 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
-| Chinese-Alpaca-2-RLHF-1.3B | Chat Model | 2.4 GB | [[百度]]() [[Google]]() [[🤗HF]]() | [[🤗HF]]() |
+| Chinese-Alpaca-2-7B-RLHF 🆕 | Chat Model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
+| Chinese-Alpaca-2-1.3B-RLHF 🆕 | Chat Model | 2.4 GB | [[Baidu]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
 
 > [!IMPORTANT] 
 >
