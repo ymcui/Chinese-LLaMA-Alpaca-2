@@ -16,6 +16,8 @@ parser.add_argument('--load_in_8bit',action='store_true', help='Load the model i
 parser.add_argument('--load_in_4bit',action='store_true', help='Load the model in 4bit mode')
 parser.add_argument('--only_cpu',action='store_true',help='Only use CPU for inference')
 parser.add_argument('--alpha',type=str,default="1.0", help="The scaling factor of NTK method, can be a float or 'auto'. ")
+parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
+parser.add_argument('--use_flash_attention_2', action='store_true', help="Use flash-attention2 to accelerate inference")
 args = parser.parse_args()
 if args.only_cpu is True:
     args.gpus = ""
@@ -28,7 +30,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 import torch
 import torch.nn.functional as F
 from transformers import (
-    LlamaForCausalLM,
+    AutoModelForCausalLM,
     LlamaTokenizer,
     GenerationConfig,
     TextIteratorStreamer,
@@ -43,7 +45,8 @@ sys.path.append(parent_dir)
 from attn_and_long_ctx_patches import apply_attention_patch, apply_ntk_scaling_patch
 
 apply_attention_patch(use_memory_efficient_attention=True)
-apply_ntk_scaling_patch(args.alpha)
+if args.use_ntk:
+    apply_ntk_scaling_patch(args.alpha)
 
 from openai_api_protocol import (
     ChatCompletionRequest,
@@ -75,14 +78,16 @@ if args.load_in_4bit or args.load_in_8bit:
         load_in_8bit=args.load_in_8bit,
         bnb_4bit_compute_dtype=load_type,
     )
-base_model = LlamaForCausalLM.from_pretrained(
+base_model = AutoModelForCausalLM.from_pretrained(
     args.base_model,
     torch_dtype=load_type,
     low_cpu_mem_usage=True,
     device_map='auto' if not args.only_cpu else None,
     load_in_4bit=args.load_in_4bit,
     load_in_8bit=args.load_in_8bit,
-    quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+    quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+    use_flash_attention_2=args.use_flash_attention_2,
+    trust_remote_code=True
 )
 
 model_vocab_size = base_model.get_input_embeddings().weight.size(0)

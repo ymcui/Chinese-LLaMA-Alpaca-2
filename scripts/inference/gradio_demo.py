@@ -1,5 +1,6 @@
 import torch
 from transformers import (
+    AutoModelForCausalLM,
     LlamaForCausalLM,
     LlamaTokenizer,
     StoppingCriteria,
@@ -111,10 +112,10 @@ parser.add_argument(
     action='store_true',
     help="Load the draft model in the 4bit mode")
 parser.add_argument(
-    '--flash_attn',
+    '--use_flash_attention_2',
     action='store_true',
     help="Use flash attention to replace the LLaMA attention")
-
+parser.add_argument('--use_ntk', action='store_true', help="Use dynamic-ntk to extend context window")
 args = parser.parse_args()
 
 ENABLE_CFG_SAMPLING = True
@@ -137,14 +138,15 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 if not args.only_cpu:
-    if args.flash_attn:
+    if args.use_flash_attention_2:
         from flash_attn_patch_for_inference import replace_llama_attn_with_flash_attn
         replace_llama_attn_with_flash_attn()
     else:
         from attn_and_long_ctx_patches import apply_attention_patch
         apply_attention_patch(use_memory_efficient_attention=True)
 from attn_and_long_ctx_patches import apply_ntk_scaling_patch
-apply_ntk_scaling_patch(args.alpha)
+if args.use_ntk:
+    apply_ntk_scaling_patch(args.alpha)
 if args.speculative_sampling:
     if args.draft_base_model == None:
         raise ValueError("Speculative sampling requires a draft model. Please specify the draft model.")
@@ -216,14 +218,15 @@ def setup():
                 bnb_4bit_compute_dtype=load_type,
             )
 
-        base_model = LlamaForCausalLM.from_pretrained(
+        base_model = AutoModelForCausalLM.from_pretrained(
             args.base_model,
             torch_dtype=load_type,
             low_cpu_mem_usage=True,
             device_map='auto',
             load_in_4bit=args.load_in_4bit,
             load_in_8bit=args.load_in_8bit,
-            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None
+            quantization_config=quantization_config if (args.load_in_4bit or args.load_in_8bit) else None,
+            trust_remote_code=True
         )
 
         if args.speculative_sampling:

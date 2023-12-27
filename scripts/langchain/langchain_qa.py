@@ -82,7 +82,8 @@ if __name__ == '__main__':
                 "repetition_penalty": 1.1},
             model_kwargs={
                 "torch_dtype": load_type,
-                "low_cpu_mem_usage": True}
+                "low_cpu_mem_usage": True,
+                "trust_remote_code": True}
             )
 
     if args.chain_type == "stuff":
