@@ -13,7 +13,7 @@
 </p>
 
 
-本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K上下文长度**，并可通过NTK方法最高扩展至24K+上下文长度。
+本项目基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K、64k上下文长度**。**RLHF系列模型**为标准版模型基础上进行人类偏好对齐精调，相比标准版模型在**正确价值观体现**方面获得了显著性能提升。
 
 #### 本项目主要内容
 
@@ -24,11 +24,13 @@
 
 #### 已开源的模型
 
+
 - 基座模型（4K上下文）：Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - 聊天模型（4K上下文）：Chinese-Alpaca-2 (1.3B, 7B, 13B)
-- 长上下文模型（16K、64K上下文）：
+- 长上下文模型（16K/64K）：
   - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
+- 偏好对齐模型：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
 
 ![](./pics/screencast.gif)
@@ -79,10 +81,11 @@
 - 当上下文长度更长时，为了避免显存爆炸式的增长，使用此类高效注意力技术尤为重要
 - 本项目的所有模型均使用了FlashAttention-2技术进行训练
 
-#### 🚄 基于PI和NTK的超长上下文扩展技术
+#### 🚄 基于PI和YaRN的超长上下文扩展技术
 
 - 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，我们实现了[基于NTK的上下文扩展技术](https://github.com/ymcui/Chinese-LLaMA-Alpaca/pull/743)，可在不继续训练模型的情况下支持更长的上下文
-- 基于[位置插值PI](https://arxiv.org/abs/2306.15595)和NTK等方法推出了长上下文版模型，支持16K上下文，并可通过NTK方法最高扩展至24K-32K
+- 基于[位置插值PI](https://arxiv.org/abs/2306.15595)和NTK等方法推出了16K长上下文版模型，支持16K上下文，并可通过NTK方法最高扩展至24K-32K
+- 基于[YaRN](https://arxiv.org/abs/2309.00071)方法进一步推出了64K长上下文版模型，支持64K上下文
 - 进一步设计了**方便的自适应经验公式**，无需针对不同的上下文长度设置NTK超参，降低了使用难度
 
 #### 🤖 简化的中英双语系统提示语
@@ -90,6 +93,14 @@
 - 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，中文Alpaca系列模型使用了[Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)的指令模板和系统提示语
 - 初步实验发现，Llama-2-Chat系列模型的默认系统提示语未能带来统计显著的性能提升，且其内容过于冗长
 - 本项目中的Alpaca-2系列模型简化了系统提示语，同时遵循Llama-2-Chat指令模板，以便更好地适配相关生态
+
+#### 👮 人类偏好对齐
+
+- 在[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)中，中文Alpaca系列模型仅完成预训练和指令精调，获得了基本的对话能力
+- 通过基于人类反馈的强化学习（RLHF）实验，发现可显著提升模型传递正确价值观的能力
+- 本项目推出了Alpaca-2-RLHF系列模型，使用方式与SFT模型一致
+
+
 
 下图展示了本项目以及[一期项目](https://github.com/ymcui/Chinese-LLaMA-Alpaca)推出的所有大模型之间的关系。
 
@@ -114,6 +125,7 @@
 | 输入模板              | 不需要                                                 | 需要套用特定模板<sup>[3]</sup>，类似Llama-2-Chat |
 | 适用场景            | 文本续写：给定上文，让模型生成下文            | 指令理解：问答、写作、聊天、交互等 |
 | 不适用场景          | 指令理解 、多轮聊天等                                  |  文本无限制自由生成                                                       |
+| 偏好对齐          | 无                                  |  RLHF版本（1.3B、7B）                                          |
 
 > [!NOTE]
 > [1] *本项目一代模型和二代模型的词表不同，请勿混用。二代LLaMA和Alpaca的词表相同。*</br>
@@ -144,6 +156,13 @@
 | Chinese-LLaMA-2-7B-16K    | 基座模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1ZH7T7KU_up61ugarSIXw2g?pwd=pquq) [[Google]](https://drive.google.com/drive/folders/1Zc6jI5bl3myQbQsY79dWJJ8mP_fyf3iF?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-llama-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-llama-2-7b-16k-gguf) |
 | Chinese-Alpaca-2-13B-16K  | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k-gguf) |
 | Chinese-Alpaca-2-7B-16K   | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k-gguf) |
+
+以下是人类偏好对齐版模型，对涉及法律、道德的问题较标准版有更优的价值导向。
+| 模型名称                  |   类型   | 大小 |                    下载地址                    |                    GGUF                    |
+| :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| Chinese-Alpaca-2-7B-RLHF 🆕 | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
+| Chinese-Alpaca-2-1.3B-RLHF 🆕 | 指令模型 | 2.4 GB | [[百度]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
+
 
 > [!IMPORTANT] 
 >
@@ -298,6 +317,27 @@
 | Chinese-Alpaca-2-1.3B |  8.1 | Chinese-Alpaca-2-7B |  50.2 | 34.9（1.44x） |
 | Chinese-Alpaca-2-1.3B |  8.2 | Chinese-Alpaca-2-13B |  67.0 | 41.6（1.61x） |
 
+### 人类偏好对齐（RLHF）版本评测
+
+#### 对齐水平
+为评估中文模型与人类价值偏好对齐程度，我们自行构建了评测数据集，覆盖了道德、色情、毒品、暴力等人类价值偏好重点关注的多个方面。实验结果以价值体现正确率进行呈现（体现正确价值观题目数 / 总题数）。
+
+| Alpaca Models            | Accuracy |  Alpaca Models            | Accuracy |
+| ------------------------ | :---------------: |------------------------ | :---------------: |
+| Chinese-Alpaca-2-1.3B |   79.3%    | Chinese-Alpaca-2-7B  |    88.3%    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    95.8%    | **Chinese-Alpaca-2-7B-RLHF** |    97.5%    |
+
+
+#### 客观效果评测：C-Eval & CMMLU
+| Alpaca Models            | C-Eval (0/few-shot) | CMMLU (0/few-shot) |
+| ------------------------ | :---------------: | :---------------: |
+| Chinese-Alpaca-2-1.3B |    23.8 / 26.8    |    24.8 / 25.1    |
+| Chinese-Alpaca-2-7B  |    42.1 / 41.0    |    40.0 / 41.8    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    23.6 / 27.1    |    24.9 / 25.0    |
+| **Chinese-Alpaca-2-7B-RLHF** |    40.6 / 41.2    |    39.5 / 41.0    |
+
+
+
 ## 训练与精调
 
 ### 预训练
@@ -312,6 +352,11 @@
 - 训练数据采用了一期项目中Pro版本模型使用的指令数据，其总量约500万条指令数据（相比一期略增加）
 - 训练代码参考了[Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)项目中数据集处理的相关部分，使用方法见[📖指令精调脚本Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh)
 
+### RLHF精调
+
+- 在Chinese-Alpaca-2系列模型基础上，利用偏好数据和PPO算法进行人类偏好对齐精调，得到Chinese-Alpaca-2-RLHF系列模型
+- 训练数据基于多个开源项目中的人类偏好数据和本项目指令精调数据进行采样，奖励模型阶段、强化学习阶段分别约69.5K、25.6K条样本
+- 训练代码基于[DeepSpeed-Chat](https://github.com/microsoft/DeepSpeedExamples/tree/master/applications/DeepSpeed-Chat)开发，具体流程见[📖奖励模型Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rm_zh)和[📖强化学习Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rl_zh)
 
 ## 常见问题
 

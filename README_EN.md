@@ -13,7 +13,7 @@
 </p>
 
 
-This project is based on the Llama-2, released by Meta, and it is the second generation of the Chinese LLaMA & Alpaca LLM project. We open-source Chinese LLaMA-2 (foundation model) and Alpaca-2 (instruction-following model). These models have been expanded and optimized with Chinese vocabulary beyond the original Llama-2. We used large-scale Chinese data for incremental pre-training, which further improved the fundamental semantic understanding of the Chinese language, resulting in a significant performance improvement compared to the first-generation models. Standard version supports 4K context, and long context version supports 16K context. All models' context size can be further extended with NTK method (up to 24K+).
+This project is based on the Llama-2, released by Meta, and it is the second generation of the Chinese LLaMA & Alpaca LLM project. We open-source Chinese LLaMA-2 (foundation model) and Alpaca-2 (instruction-following model). These models have been expanded and optimized with Chinese vocabulary beyond the original Llama-2. We used large-scale Chinese data for incremental pre-training, which further improved the fundamental semantic understanding of the Chinese language, resulting in a significant performance improvement compared to the first-generation models. Standard version supports 4K context, and long context version supports 16K and 64K context. The RLHF models are fine-tuned for human preference alignment and have gained significant performance improvements in the representation of correct values compared to the standard version of the model.
 
 #### Main Contents
 
@@ -26,9 +26,10 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 - Base model: Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - Instruction/chat model: Chinese-Alpaca-2 (1.3B, 7B, 13B)
-- Long context model(16K/64K): 
+- Long context model (16K/64K): 
   - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
+- RLHF model：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
 ![](./pics/screencast.gif)
 
@@ -74,10 +75,11 @@ This project launches the Chinese LLaMA-2 and Alpaca-2 models based on Llama-2. 
 - [FlashAttention-2](https://github.com/Dao-AILab/flash-attention) is an implementation of efficient attention mechanisms, offering **faster speed and optimized memory usage** compared to its first-generation.
 - When the context length is longer, using efficient attention technology is essential to prevent explosive growth in memory usage.
 
-**🚄 Adaptive Context Extension based on PI and NTK**
+**🚄 Adaptive Context Extension based on PI and YaRN**
 
 - In the [first generation of the project](https://github.com/ymcui/Chinese-LLaMA-Alpaca), we implemented the [context extension based on NTK](https://github.com/ymcui/Chinese-LLaMA-Alpaca/pull/743), which can support longer contexts without further training the model.
 - We release long context models, using [PI](https://arxiv.org/abs/2306.15595) and NTK methods, supporting 16K context, and can be further extended up to 24K-32K
+- We further release long context models, using [YaRN](https://arxiv.org/abs/2309.00071), supporting 64K context
 - Based on the above, we further designed a **convenient adaptive empirical formula** that does not require manually setting corresponding hyperparameters for different context lengths.
 
 **🤖 Simplified Bilingual System Prompt**
@@ -85,6 +87,12 @@ This project launches the Chinese LLaMA-2 and Alpaca-2 models based on Llama-2. 
 - In the [first generation of the project](https://github.com/ymcui/Chinese-LLaMA-Alpaca), we use [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) template for our Chinese Alpaca models
 - Through preliminary experiments, we found that the lengthy system prompt by Llama-2-Chat is not as effective as a simple one
 - We use a very simple system prompt while keeping the Llama-2-Chat template to better adapt to relevant ecosystems
+
+#### 👮 Human Preference Alignment
+
+- In the [first generation of the project](https://github.com/ymcui/Chinese-LLaMA-Alpaca), the Chinese Alpaca models completed pre-training and instruction fine-tuning, and gained basic conversational ability
+- Through reinforcement learning from human feedback (RLHF) experiments, we find that the ability of the model to convey correct values can be significantly improved
+- This project introduces the Alpaca-2-RLHF series of models, which are used in the same way as the SFT models
 
 The following figure depicts all open-sourced models for our projects (including the [first-gen project](https://github.com/ymcui/Chinese-LLaMA-Alpaca)).
 
@@ -105,10 +113,11 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 | Trained on                    | [Original Llama-2](https://github.com/facebookresearch/llama) (non-chat) |                       Chinese LLaMA-2                        |
 | Training Corpus               |           Unlabeled general corpus (120G raw text)           |            Labeled instruction data (5M samples)             |
 | Vocabulary Size<sup>[1]</sup> |                            55,296                            |                            55,296                            |
-| Context Size<sup>[2]</sup>    |      Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K     |      Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K      |
+| Context Size<sup>[2]</sup>    | Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K | Standard: 4K (12K-18K)<br/>Long ctx(PI): 16K (24K-32K) <br/>Long ctx(YaRN): 64K |
 | Input Template                |                         Not required                         |          Requires specific templates<sup>[3]</sup>           |
 | Suitable Scenarios            | Text continuation: Given the context, the model generates the following text | Instruction understanding: Q&A, writing, chatting, interaction, etc. |
 | Unsuitable Scenarios          |       Instruction understanding, multi-turn chat, etc.       |                 Unrestricted text generation                 |
+| Preference Alignment          |                              No                              |                   RLHF version (1.3B, 7B)                    |
 
 > [!NOTE]
 > [1] *The vocabulary of the first and second generation models in this project are different, do not mix them. The vocabularies of the second generation LLaMA and Alpaca are the same.*</br> 
@@ -140,6 +149,12 @@ The followings are long context models, which are recommended for long context t
 | Chinese-Alpaca-2-13B-16K  | Chat model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k-gguf) |
 | Chinese-Alpaca-2-7B-16K   | Chat model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k-gguf) |
 
+The following lists the RLHF models which exhibit a better value orientation than the standard version for issues involving law, ethics, etc.
+
+| Model Name                |    Type    |  Size   |                        Download Link                         |                        GGUF                        |
+| :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| Chinese-Alpaca-2-7B-RLHF 🆕 | Chat Model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
+| Chinese-Alpaca-2-1.3B-RLHF 🆕 | Chat Model | 2.4 GB | [[Baidu]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
 
 > [!IMPORTANT] 
 >
@@ -289,6 +304,26 @@ Using speculative sampling and leveraging Chinese-LLaMA-2-1.3B and Chinese-Alpac
 | Chinese-Alpaca-2-1.3B |        8.2        | Chinese-Alpaca-2-13B |        67.0        |       41.6（1.61x）        |
 
 
+### RLHF Models Evaluation
+
+#### Alignment
+
+To assess the degree of alignment of the RLHF models with human preferences, we constructed our own evaluation dataset, which covers a number of aspects that are the focus of human value preferences, such as morality, pornography, drugs, violence, and so on. The experimental results are presented in terms of the percentage of correct value embodiment (number of systematically correct value questions / total number of questions).
+
+| Alpaca Models            | Accuracy |  Alpaca Models            | Accuracy |
+| ------------------------ | :---------------: |------------------------ | :---------------: |
+| Chinese-Alpaca-2-1.3B |   79.3%    | Chinese-Alpaca-2-7B  |    88.3%    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    95.8%    | **Chinese-Alpaca-2-7B-RLHF** |    97.5%    |
+
+
+#### NLU Performance Evaluation： C-Eval & CMMLU
+| Alpaca Models            | C-Eval (0/few-shot) | CMMLU (0/few-shot) |
+| ------------------------ | :---------------: | :---------------: |
+| Chinese-Alpaca-2-1.3B |    23.8 / 26.8    |    24.8 / 25.1    |
+| Chinese-Alpaca-2-7B  |    42.1 / 41.0    |    40.0 / 41.8    |
+| **Chinese-Alpaca-2-1.3B-RLHF** |    23.6 / 27.1    |    24.9 / 25.0    |
+| **Chinese-Alpaca-2-7B-RLHF** |    40.6 / 41.2    |    39.5 / 41.0    |
+
 
 ## Training and Fine-tuning
 
@@ -296,6 +331,8 @@ Please refer to the corresponding Wiki for information on pre-training (Chinese 
 
 - **Pre-training**: The code is adapted from [run_clm.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_clm.py) in 🤗transformers. For usage, see the [Pre-training Script Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_en).
 - **Instruction Fine-tuning**: The code refers to the relevant parts of dataset handling in the [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca) project. For usage, see the [Instruction Fine-tuning Script Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_en).
+- **RLHF Fine-tuning**: Reinforcement learning from human feedback fine-tuning using preference data and PPO algorithm based on Chinese-Alpaca-2. For details, see the [📖Reward Modeling Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rm_en)和[📖Reinforcement Learning Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/rl_en).
+
 
 ## FAQ
 
