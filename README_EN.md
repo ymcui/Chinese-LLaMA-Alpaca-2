@@ -39,7 +39,9 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 ## News
 
-**[Sep 01, 2023] Release long context models: Chinese-Alpaca-2-7B-16K and Chinese-Alpaca-2-13B-16K, which can be directly used in downstream tasks, such as privateGPT. For details, see [📚 v3.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)**
+**[Dec 29, 2023] Release long context models: Chiense-LLaMA-2-7B-64K and Chinese-Alpaca-2-7B-64K. We also release RLHF-tuned Chinese-Alpaca-2-RLHF (1.3B/7B). For details, see [📚 v4.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.0)**
+
+[Sep 01, 2023] Release long context models: Chinese-Alpaca-2-7B-16K and Chinese-Alpaca-2-13B-16K, which can be directly used in downstream tasks, such as privateGPT. For details, see [📚 v3.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)
 
 [Aug 25, 2023] Release long context models: Chinese-LLaMA-2-7B-16K and Chinese-LLaMA-2-13B-16K, which support 16K context and can be further extended up to 24K+ using NTK. For details, see [📚 v3.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.0)
 
