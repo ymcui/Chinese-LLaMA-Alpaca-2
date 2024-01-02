@@ -148,6 +148,8 @@
 | Chinese-Alpaca-2-7B | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-gguf) |
 | Chinese-Alpaca-2-1.3B | 指令模型 | 2.4 GB | [[百度]](https://pan.baidu.com/s/1PD7Ng-ltOIdUGHNorveptA?pwd=ar1p) [[Google]](https://drive.google.com/drive/folders/1h6qOy-Unvqs1_CJ8uPp0eKC61Gbbn8n7?usp=share_link)[[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-gguf) |
 
+#### 长上下文版模型
+
 以下是长上下文版模型，**推荐以长文本为主的下游任务使用**，否则建议使用上述标准版。
 
 | 模型名称                  |   类型   |  大小   |                           下载地址                           |                             GGUF                             |
@@ -159,17 +161,23 @@
 | Chinese-Alpaca-2-13B-16K  | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k-gguf) |
 | Chinese-Alpaca-2-7B-16K   | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k-gguf) |
 
+#### RLHF版模型
+
 以下是人类偏好对齐版模型，对涉及法律、道德的问题较标准版有更优的价值导向。
+
 | 模型名称                  |   类型   | 大小 |                    下载地址                    |                    GGUF                    |
 | :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | Chinese-Alpaca-2-7B-RLHF 🆕 | 指令模型 | 12.9 GB | [[百度]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
 | Chinese-Alpaca-2-1.3B-RLHF 🆕 | 指令模型 | 2.4 GB | [[百度]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
 
+#### AWQ版模型
 
-> [!IMPORTANT] 
->
-> 1. 使用长上下文模型推理时，必须按照文档要求进行设置，具体请参考各推理部署工具的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki)
-> 2. GGUF版指的是llama.cpp中的模型格式，具体请参考llama.cpp的[Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_zh)
+AWQ（Activation-aware Weight Quantization）是一种高效的模型量化方案，目前可兼容🤗transformers、llama.cpp等主流框架。
+
+本项目模型的AWQ预搜索结果可通过以下链接获取：https://huggingface.co/hfl/chinese-llama-alpaca-2-awq
+
+- 生成AWQ量化模型（AWQ官方目录）：https://github.com/mit-han-lab/llm-awq
+- llama.cpp中使用AWQ：https://github.com/ggerganov/llama.cpp/tree/master/awq-py
 
 ### LoRA模型下载
 
