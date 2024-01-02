@@ -140,6 +140,8 @@ Below are the full models, which can be used directly afterwards, without additi
 | Chinese-Alpaca-2-7B | Chat Model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1wxx-CdgbMupXVRBcaN4Slw?pwd=kpn9) [[Google]](https://drive.google.com/drive/folders/1JsJDVs7tE2y31PBNleBlDPsB7S0ZrY8d?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-gguf) |
 | Chinese-Alpaca-2-1.3B | Chat model | 2.4 GB | [[Baidu]](https://pan.baidu.com/s/1PD7Ng-ltOIdUGHNorveptA?pwd=ar1p) [[Google]](https://drive.google.com/drive/folders/1h6qOy-Unvqs1_CJ8uPp0eKC61Gbbn8n7?usp=share_link)[[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-gguf) |
 
+#### Long Context Models
+
 The followings are long context models, which are recommended for long context tasks. 
 
 | Model Name                |    Type    |  Size   |                        Download Link                         |                        GGUF                        |
@@ -151,6 +153,8 @@ The followings are long context models, which are recommended for long context t
 | Chinese-Alpaca-2-13B-16K  | Chat model | 24.7 GB | [[Baidu]](https://pan.baidu.com/s/1gIzRM1eg-Xx1xV-3nXW27A?pwd=qi7c) [[Google]](https://drive.google.com/drive/folders/1mOkYQCvEqtGoZ9DaIpYFweSkSia2Q0vl?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-13b-16k-gguf) |
 | Chinese-Alpaca-2-7B-16K   | Chat model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/1Qk3U1LyvMb1RSr5AbiatPw?pwd=bfis) [[Google]](https://drive.google.com/drive/folders/1KBRSd2xAhiVQmamfA5wpm5ovYFRKuMdr?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-16k-gguf) |
 
+#### RLHF Models
+
 The following lists the RLHF models which exhibit a better value orientation than the standard version for issues involving law, ethics, etc.
 
 | Model Name                |    Type    |  Size   |                        Download Link                         |                        GGUF                        |
@@ -158,10 +162,14 @@ The following lists the RLHF models which exhibit a better value orientation tha
 | Chinese-Alpaca-2-7B-RLHF 🆕 | Chat Model | 12.9 GB | [[Baidu]](https://pan.baidu.com/s/17GJ1y4rpPDuvWlvPaWgnqw?pwd=4feb) [[Google]](https://drive.google.com/drive/folders/1OHZVVtwM5McVEIZzyOYgGYLAxcZNVK4D?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-7b-rlhf-gguf) |
 | Chinese-Alpaca-2-1.3B-RLHF 🆕 | Chat Model | 2.4 GB | [[Baidu]](https://pan.baidu.com/s/1cLKJKieNitWbOggUXXaamw?pwd=cprp) [[Google]](https://drive.google.com/drive/folders/1zcvPUPPkq69SgqRu6YBurAZ9ptcPSZNx?usp=share_link) [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf) | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-1.3b-rlhf-gguf) |
 
-> [!IMPORTANT] 
->
-> 1. When using long context models, please follow our wiki to correctly use them. See [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki).
-> 2. GGUF is the model version for llama.cpp. Please check llama.cpp [Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/llamacpp_en)
+#### AWQ Models
+
+AWQ (Activation-aware Weight Quantization) is an efficient quantization method, which can be used with 🤗transformers, llama.cpp, etc.
+
+The pre-computed search results of our models are available: https://huggingface.co/hfl/chinese-llama-alpaca-2-awq
+
+- Generate AWQ-quantized models (AWQ official repo): https://github.com/mit-han-lab/llm-awq#usage
+- Using AWQ in llama.cpp: https://github.com/ggerganov/llama.cpp/tree/master/awq-py
 
 ### LoRA Model Download
 
