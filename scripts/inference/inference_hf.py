@@ -129,7 +129,8 @@ if __name__ == '__main__':
         model = LLM(model=args.base_model,
             tokenizer=args.tokenizer_path,
             tokenizer_mode='slow',
-            tensor_parallel_size=len(args.gpus.split(',')))
+            tensor_parallel_size=len(args.gpus.split(',')),
+            trust_remote_code=True)
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
     else:
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
