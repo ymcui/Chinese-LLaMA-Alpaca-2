@@ -77,7 +77,7 @@ if not args.only_cpu:
     if args.use_flash_attention_2:
         from flash_attn_patch_for_inference import replace_llama_attn_with_flash_attn
         replace_llama_attn_with_flash_attn()
-    else:
+    elif not args.use_vllm:
         from attn_and_long_ctx_patches import apply_attention_patch
         apply_attention_patch(use_memory_efficient_attention=True)
 if args.use_ntk:
@@ -129,7 +129,8 @@ if __name__ == '__main__':
         model = LLM(model=args.base_model,
             tokenizer=args.tokenizer_path,
             tokenizer_mode='slow',
-            tensor_parallel_size=len(args.gpus.split(',')))
+            tensor_parallel_size=len(args.gpus.split(',')),
+            trust_remote_code=True)
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
     else:
         tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer_path, legacy=True)
