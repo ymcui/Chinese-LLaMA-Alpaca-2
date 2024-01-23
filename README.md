@@ -42,7 +42,9 @@
 
 ## 新闻
 
-**[2023/12/29] 发布长上下文模型Chinese-LLaMA-2-7B-64K和Chinese-Alpaca-2-7B-64K，同时发布经过人类偏好对齐（RLHF）的Chinese-Alpaca-2-RLHF（1.3B/7B）。详情查看[📚 v4.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.0)**
+**[2024/01/23] 添加新版GGUF模型（imatrix量化）、AWQ量化模型，支持vLLM下加载YaRN长上下文模型。详情查看[📚 v4.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.1)**
+
+[2023/12/29] 发布长上下文模型Chinese-LLaMA-2-7B-64K和Chinese-Alpaca-2-7B-64K，同时发布经过人类偏好对齐（RLHF）的Chinese-Alpaca-2-RLHF（1.3B/7B）。详情查看[📚 v4.0版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.0)
 
 [2023/09/01] 发布长上下文模型Chinese-Alpaca-2-7B-16K和Chinese-Alpaca-2-13B-16K，该模型可直接应用于下游任务，例如privateGPT等。详情查看[📚 v3.1版本发布日志](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v3.1)
 
