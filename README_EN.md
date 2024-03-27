@@ -41,6 +41,8 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 ## News
 
+[Mar 27, 2024] This project is now online at the SOTA! model platform of Synced, see: https://sota.jiqizhixin.com/project/chinese-llama-alpaca-2
+
 **[Jan 23, 2024] Add new GGUF models (with imatrix), AWQ models, support YaRN under vLLM. For details, see[📚 v4.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.1)**
 
 [Dec 29, 2023] Release long context models: Chiense-LLaMA-2-7B-64K and Chinese-Alpaca-2-7B-64K. We also release RLHF-tuned Chinese-Alpaca-2-RLHF (1.3B/7B). For details, see [📚 v4.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.0)
