@@ -53,6 +53,7 @@ from peft.tuners.lora import LoraLayer
 
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
 
+DEFAULT_PAD_TOKEN = "<pad>"
 
 require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/language-modeling/requirements.txt")
 
@@ -340,6 +341,10 @@ def main():
     if (len(tokenizer)) != 55296:
         raise ValueError(f"The vocab size of the tokenizer should be 55296, but found {len(tokenizer)}.\n"
                          "Please use Chinese-LLaMA-2 tokenizer.")
+    
+    if tokenizer.pad_token is None:
+        print(f"Adding pad token {DEFAULT_PAD_TOKEN}")
+        tokenizer.add_special_tokens(dict(pad_token=DEFAULT_PAD_TOKEN))
 
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     eval_dataset=None
