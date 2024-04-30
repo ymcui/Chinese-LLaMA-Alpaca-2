@@ -1,6 +1,6 @@
 # [Chinese-LLaMA-Alpaca-3](https://github.com/ymcui/Chinese-LLaMA-Alpaca-3) is launched!
 
-[**🇨🇳中文**](./README.md) | [**🌐English**](./README_EN.md) | [**📖文档/Docs**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki) | [**❓提问/Issues**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/issues) | [**💬讨论/Discussions**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/discussions) | [**⚔️竞技场/Arena**](http://chinese-alpaca-arena.ymcui.com/)
+[**🇨🇳中文**](./README.md) | [**🌐English**](./README_EN.md) | [**📖文档/Docs**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki) | [**❓提问/Issues**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/issues) | [**💬讨论/Discussions**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/discussions) | [**⚔️竞技场/Arena**](http://llm-arena.ymcui.com/)
 
 <p align="center">
     <br>
@@ -41,9 +41,11 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 ## News
 
+**[Apr 30, 2024] Chinese-LLaMA-Alpaca-3 project introduces Llama-3-Chinese-8B and Llama-3-Chinese-8B-Instruct, based on Meta's Llama-3. Check: https://github.com/ymcui/Chinese-LLaMA-Alpaca-3**
+
 [Mar 27, 2024] This project is now online at the SOTA! model platform of Synced, see: https://sota.jiqizhixin.com/project/chinese-llama-alpaca-2
 
-**[Jan 23, 2024] Add new GGUF models (with imatrix), AWQ models, support YaRN under vLLM. For details, see[📚 v4.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.1)**
+[Jan 23, 2024] Add new GGUF models (with imatrix), AWQ models, support YaRN under vLLM. For details, see[📚 v4.1 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.1)
 
 [Dec 29, 2023] Release long context models: Chiense-LLaMA-2-7B-64K and Chinese-Alpaca-2-7B-64K. We also release RLHF-tuned Chinese-Alpaca-2-RLHF (1.3B/7B). For details, see [📚 v4.0 release note](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/releases/tag/v4.0)
 
