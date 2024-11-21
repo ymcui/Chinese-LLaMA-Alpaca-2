@@ -365,7 +365,7 @@ Question 5: Does Llama-2 series support tools that support the first-gen LLaMA?
 Question 6: Is Chinese-Alpaca-2 trained from Llama-2-Chat?
 Question 7: Why does training with 24GB VRAM lead to an OOM error when fine-tuning chinese-alpaca-2-7b?
 Question 8: Can the 16K long-context version model replace the standard version model?
-Question 9: How to interprete the results of third-party benchmarks?
+Question 9: How to interpret the results of third-party benchmarks?
 Question 10: Will you release 34B or 70B models?
 Question 11: Why the long-context model is 16K context, not 32K or 100K?
 Question 12: Why does the Alpaca model reply that it is ChatGPT?
