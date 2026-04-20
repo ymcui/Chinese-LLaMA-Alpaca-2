@@ -428,7 +428,7 @@ def main():
     if not training_args.full_finetuning:
         if training_args.peft_path is not None:
             logger.info("Peft from pre-trained model")
-            model = PeftModel.from_pretrained(model, training_args.peft_path, device_map=device_map)
+            model = PeftModel.from_pretrained(model, training_args.peft_path, device_map=device_map, is_trainable=True)
         else:
             logger.info("Init new peft model")
             target_modules = training_args.trainable.split(',')
