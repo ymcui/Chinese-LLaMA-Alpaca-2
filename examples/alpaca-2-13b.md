@@ -85,14 +85,14 @@
 def quick_sort(arr):
     if len(arr) <= 1:
         return arr
-    
+
     pivot = arr[len(arr) // 2]
     left = [x for x in arr if x < pivot]
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
-    
+
     return quick_sort(left) + middle + quick_sort(right)
-    
+
     # 测试数据
 arr = [5, 3, 6, 8, 4, 7, 9, 2]
 print(\"原数组为:\", arr)

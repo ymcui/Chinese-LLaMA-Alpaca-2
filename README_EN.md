@@ -28,8 +28,8 @@ This project is based on the Llama-2, released by Meta, and it is the second gen
 
 - Base model: Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - Instruction/chat model: Chinese-Alpaca-2 (1.3B, 7B, 13B)
-- Long context model (16K/64K): 
-  - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
+- Long context model (16K/64K):
+  - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B)
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
 - RLHF model：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
@@ -130,7 +130,7 @@ Below is a basic comparison between the Chinese LLaMA-2 and Alpaca-2 models, as 
 | Preference Alignment          |                              No                              |                   RLHF version (1.3B, 7B)                    |
 
 > [!NOTE]
-> [1] *The vocabulary of the first and second generation models in this project are different, do not mix them. The vocabularies of the second generation LLaMA and Alpaca are the same.*</br> 
+> [1] *The vocabulary of the first and second generation models in this project are different, do not mix them. The vocabularies of the second generation LLaMA and Alpaca are the same.*</br>
 > [2] *Extended context size with NTK method is depicted in brackets.*</br>
 > [3] *Alpaca-2 uses the Llama-2-chat series templates (different prompts), not the templates of the first-generation Alpaca, do not mix them.*</br>
 > [4] *1.3B models are not intended for standalone use; instead, use it together with larger models (7B, 13B) through speculative sampling.*</br>
@@ -150,7 +150,7 @@ Below are the full models, which can be used directly afterwards, without additi
 
 #### Long Context Models
 
-The followings are long context models, which are recommended for long context tasks. 
+The followings are long context models, which are recommended for long context tasks.
 
 | Model Name                |    Type    |  Size   |                        Download Link                         |                             GGUF                             |
 | :------------------------ | :--------: | :-----: | :----------------------------------------------------------: | :----------------------------------------------------------: |
@@ -190,7 +190,7 @@ Below are the LoRA models, **which cannot be used directly and must be merged wi
 | Chinese-Alpaca-2-LoRA-13B | Chat Model | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-lora-13b) [[🤖ModelScope]](https://modelscope.cn/models/ChineseAlpacaGroup/chinese-alpaca-2-lora-13b) [[Baidu]](https://pan.baidu.com/s/1Y5giIXOUUzI4Na6JOcviVA?pwd=tc2j) |
 | Chinese-Alpaca-2-LoRA-7B | Chat Model | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-lora-7b) [[🤖ModelScope]](https://modelscope.cn/models/ChineseAlpacaGroup/chinese-alpaca-2-lora-7b) [[Baidu]](https://pan.baidu.com/s/1g0olPxkB_rlZ9UUVfOnbcw?pwd=5e7w) |
 
-The followings are long context models, which are recommended for long context tasks. 
+The followings are long context models, which are recommended for long context tasks.
 
 | Model Name                      |    Type    |                  Required Model for merging                  |  Size  |                        Download Link                         |
 | :------------------------------ | :--------: | :----------------------------------------------------------: | :----: | :----------------------------------------------------------: |
@@ -201,7 +201,7 @@ The followings are long context models, which are recommended for long context t
 | Chinese-Alpaca-2-LoRA-13B-16K | Chat Model | [Llama-2-13B-hf](https://huggingface.co/meta-llama/Llama-2-13b-hf) | 1.5 GB | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-lora-13b-16k) [[🤖ModelScope]](https://modelscope.cn/models/ChineseAlpacaGroup/chinese-alpaca-2-lora-13b-16k) [[Baidu]](https://pan.baidu.com/s/1g42_X7Z0QWDyrrDqv2jifQ?pwd=bq7n) |
 | Chinese-Alpaca-2-LoRA-7B-16K  | Chat Model | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB | [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-lora-7b-16k) [[🤖ModelScope]](https://modelscope.cn/models/ChineseAlpacaGroup/chinese-alpaca-2-lora-7b-16k) [[Baidu]](https://pan.baidu.com/s/1E7GEZ6stp8EavhkhR06FwA?pwd=ewwy) |
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > As the LoRA models cannot be used separately, they must be merged with the original Llama-2 to form a complete model for model inference, quantization, or further training. Please choose one of the following methods to merge these models.
 >
 > - [**Online Conversion**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/online_conversion_en): Colab users can use the notebook provided by this project for online conversion and model quantization

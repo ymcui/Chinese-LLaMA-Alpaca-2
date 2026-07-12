@@ -30,7 +30,7 @@
 - 基座模型（4K上下文）：Chinese-LLaMA-2 (1.3B, 7B, 13B)
 - 聊天模型（4K上下文）：Chinese-Alpaca-2 (1.3B, 7B, 13B)
 - 长上下文模型（16K/64K）：
-  - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B) 
+  - Chinese-LLaMA-2-16K (7B, 13B) 、Chinese-Alpaca-2-16K (7B, 13B)
   - Chinese-LLaMA-2-64K (7B)、Chinese-Alpaca-2-64K (7B)
 - 偏好对齐模型：Chinese-Alpaca-2-RLHF (1.3B, 7B)
 
@@ -210,7 +210,7 @@ AWQ（Activation-aware Weight Quantization）是一种高效的模型量化方�
 | Chinese-Alpaca-2-LoRA-7B-16K | 指令模型 | [Llama-2-7B-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf) | 1.1 GB |  [[🤗HF]](https://huggingface.co/hfl/chinese-alpaca-2-lora-7b-16k) [[🤖ModelScope]](https://modelscope.cn/models/ChineseAlpacaGroup/chinese-alpaca-2-lora-7b-16k) [[Baidu]](https://pan.baidu.com/s/1E7GEZ6stp8EavhkhR06FwA?pwd=ewwy) |
 
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > LoRA模型无法单独使用，必须与原版Llama-2进行合并才能转为完整模型。请通过以下方法对模型进行合并。
 >
 > - [**在线转换**](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/online_conversion_zh)：Colab用户可利用本项目提供的notebook进行在线转换并量化模型
